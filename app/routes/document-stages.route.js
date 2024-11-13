@@ -3,7 +3,7 @@ const router = require("express").Router();
 const { asyncErrorHandler } = require('../middleware/error.middleware');
 const documentStageController = require('../controllers/document-stages.controller');
 
-router.get("/render", asyncErrorHandler(documentStageController.renderDocumentStages));
+router.get("/fetch", asyncErrorHandler(documentStageController.renderDocumentStages));
 router.post("/create", asyncErrorHandler(documentStageController.createDocumentStage));
 router.post("/delete", asyncErrorHandler(documentStageController.deleteDocumentStage));
 router.get("/", asyncErrorHandler(documentStageController.getDocumentStages));
