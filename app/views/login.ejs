@@ -14,7 +14,7 @@
                     <div class="login-logo">
                         <img class="h-20 w-56 mb-12" src="../img/nmims-login-logo.png" alt="login-logo">
                     </div>
-                    <form class="mb-8">
+                    <div class="mb-8">
                         <div class="login-form-header mb-8">
                             <h4 class="login-heading">Login</h4>
                             <p class="login-instructions">Login using credentials provided by the University</p>
@@ -35,8 +35,9 @@
                             </div>
                             <button id="submit-btn" class="bg-red-600 hover:bg-red-700 text-white py-4 rounded-2xl w-full">Login
                             </button>
+
                         </div>
-                    </form>
+                    </div>
 
                     <div class="forgot-password text-center mb-8">
                         <a href="" class="text-label-md md:text-label-lg">Forgot
@@ -62,13 +63,24 @@
             </div>
         </div>
     </div>
-
+    <script src="../js/fetch.js"></script>
     <script>
         document.getElementById('submit-btn').addEventListener('click',async () => {
           const username = document.getElementById('username').value;
           const password = document.getElementById('password').value;
 
-          
+          const url = '/authenticate';
+          const method = 'POST';
+          const obj = {username,password};
+
+          const data = await fetchApi(url,method,obj);
+          console.log('data ',JSON.stringify(data));
+
+          if(data.status == 200){
+            location.href = '/dashboard';
+          }else{
+            alert(data.message);
+          }
         });
     </script>
 
