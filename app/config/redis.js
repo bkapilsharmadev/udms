@@ -12,7 +12,7 @@ const redisClientConn = redis.createClient({
 const redisSubClientConn = redisClientConn.duplicate();
 
 const redisClient = redisClientConn.connect();
-redisSubClientConn.connect();
+ redisSubClientConn.connect();
 
 // Subscribe to Redis key expiration events
 redisClientConn.configSet('notify-keyspace-events', 'Ex');
@@ -28,4 +28,4 @@ redisClientConn.on('error', (err) => {
     // internalServerError({ moduleName: 'redis.js', message: 'Redis connection failed!' });
 });
 
-module.exports = { redisClient, redisSubClientConn }
+module.exports = { redisClient : redisClientConn , redisSubClientConn }

@@ -14,3 +14,4 @@ module.exports.COOKIE_OPTIONS_PERMANENT = {
     sameSite: 'strict',
     maxAge: process.env.DEVICE_TOKEN_VALIDITY * 24 * 60 * 60 * 1000
 }
+

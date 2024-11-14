@@ -33,3 +33,4 @@ module.exports.deleteEntityType = async (entityType) => {
 
 	return { message: "Entity type deleted successfully" };
 };
+
