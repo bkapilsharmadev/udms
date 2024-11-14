@@ -5,8 +5,8 @@ module.exports.renderFiles = async (req, res, next) => {
 };
 
 module.exports.createFile = async (req, res, next) => {
-    const { latest_version_id, document_id, document_uuid, created_by } = req.body;
-    const result = await fileService.createFile({ latest_version_id, document_id, document_uuid, created_by });
+    const { document_id, document_uuid, created_by } = req.body;
+    const result = await fileService.createFile({ document_id, document_uuid, created_by });
     res.status(201).json(result);
 };
 
