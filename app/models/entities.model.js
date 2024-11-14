@@ -45,3 +45,11 @@ module.exports.updateEntity = async (entity) => {
 	const result = await sqlWrite.query(query, values);
 	return result.rowCount > 0;
 };
+
+// Query to get all entity types
+module.exports.getEnitityTypes = async () => {
+	const query = `SELECT entity_type, description, created_at, updated_at, created_by, updated_by, active FROM entity_types WHERE active = true;`;
+
+	const result = await sqlRead.query(query);
+	return result.rows;
+};

@@ -47,3 +47,8 @@ module.exports.updateEntity = async (entity) => {  // New function
 
 	return { message: "Entity updated successfully" };
 };
+
+module.exports.getEnitityTypes = async () => {
+	const result = await entityModel.getEnitityTypes();
+	return result || [];
+};
