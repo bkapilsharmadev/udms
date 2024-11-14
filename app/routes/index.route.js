@@ -17,7 +17,7 @@ router.use("/document-stages", asyncErrorHandler(documentStagesRoute));
 router.use("/status-types", asyncErrorHandler(statusTypesRoute));
 router.use("/entity-types", asyncErrorHandler(entityTypesRoute));
 router.use("/entities", asyncErrorHandler(entitiesRoute));
-router.use("documents", asyncErrorHandler(documentsRoute));
+router.use("/documents", asyncErrorHandler(documentsRoute));
 router.use("/files", asyncErrorHandler(filesRoute));
 router.use("/file-versions", asyncErrorHandler(fileVersionsRoute));
 router.use("/", asyncErrorHandler(authRoute));

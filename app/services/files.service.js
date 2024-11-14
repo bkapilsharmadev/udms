@@ -2,7 +2,7 @@ const fileModel = require("../models/files.model");
 const fileVersioModel = require("../models/file-versions.model");
 
 module.exports.createFile = async (file) => {
-	const file = await fileModel.createFile(file);
+	const files = await fileModel.createFile(file);
 	if (!file?.file_id) {
 		throw new Error("Error creating file");
 	}
