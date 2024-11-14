@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Ignore clicks within the sub-menu items
       if (e.target.closest(".sub-menu")) return;
 
-      e.preventDefault();
+      // e.preventDefault();
 
       // Close other submenus
       menuItems.forEach((el) => {
