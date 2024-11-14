@@ -2,7 +2,8 @@ const { notFoundError, dbError } = require("../utils/error/error");
 const entityTypeService = require("../services/entity-types.service");
 
 module.exports.renderEntityTypes = async (req, res, next) => {
-	res.render("entity-types.ejs");
+	const enitityTypes = await entityTypeService.getEntityTypes();
+	res.render("entity-types.ejs", { enitityTypes });
 };
 
 module.exports.createEntityType = async (req, res, next) => {
