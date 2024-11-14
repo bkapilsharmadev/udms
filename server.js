@@ -8,6 +8,7 @@ const webAPI = require('./app/routes/index.route');
 
 const app = express();
 const server = require('http').createServer(app);
+const cookieParser = require('cookie-parser');
 
 app.use(express.json({ limit: process.env.PAYLOAD_SIZE_LIMIT }));
 app.use(express.urlencoded({
@@ -15,6 +16,8 @@ app.use(express.urlencoded({
   limit: process.env.PAYLOAD_SIZE_LIMIT,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cookieParser()); 
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'app/views'));

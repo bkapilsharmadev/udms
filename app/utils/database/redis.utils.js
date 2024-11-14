@@ -27,23 +27,3 @@ module.exports.getRedisData = async (key) => {
     return JSON.parse(data)
 }
 
-
-module.exports.deleteRedisData = async (key) => {
-  if(key === undefined || !key) {
-    throw new CustomError({
-        modulename :'Cookie Not Found',
-        httpStatus : 401,
-        message : 'Invalid Request'
-    });
-  }
-
-  const deleteCookies =  await redisClient.del(key);
-  console.log('deleteCookies =====>>>>>', deleteCookies);
-  return deleteCookies === 1 ? {
-           status : 200,
-           message : 'Session deleted'
-  } : {
-           status : 401,
-           message : ' Failed  to session deleted' 
-  }
-}

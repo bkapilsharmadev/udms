@@ -101,11 +101,3 @@ document.addEventListener("click", function (event) {
   });
 });
 
-// Event delegation for delete button
-document.addEventListener("click", function (event) {
-  if (event.target.closest(".delete-btn")) {
-    const row = event.target.closest("tr");
-    row.remove(); // Delete the table row
-  }
-});
-
