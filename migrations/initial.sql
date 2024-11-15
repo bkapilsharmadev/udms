@@ -23,6 +23,21 @@ CREATE TABLE document_stages (
     active BOOLEAN DEFAULT TRUE
 );
 
+DROP TYPE IF EXISTS document_stage_users;
+CREATE TABLE document_stage_users (
+    username VARCHAR(20) PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    document_stage VARCHAR(50) PRIMARY KEY,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+    created_by INT NOT NULL,
+    updated_by INT,
+    active BOOLEAN DEFAULT TRUE
+);
+
 DROP TYPE IF EXISTS status_types;
 CREATE TABLE status_types (
     status_type VARCHAR(50) PRIMARY KEY,

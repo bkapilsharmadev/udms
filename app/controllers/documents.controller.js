@@ -27,7 +27,6 @@ module.exports.createDocument = async (req, res, next) => {
 
 		try {
 			// If no error, continue with your logic
-
 			const {
 				category_id,
 				ref_no,
@@ -38,9 +37,8 @@ module.exports.createDocument = async (req, res, next) => {
 				school_entt_id,
 				department_entt_id,
 				mentor_sign,
-				document_stage,
 				status,
-				created_by,
+				comments,
 			} = req.body;
 
 			// Get the files from req.files after Multer processes them
@@ -57,15 +55,14 @@ module.exports.createDocument = async (req, res, next) => {
 				school_entt_id,
 				department_entt_id,
 				mentor_sign,
-				document_stage,
 				status,
-				created_by,
+				comments,
 				files,
+				created_by: req.session_username,
 			});
 
 			res.status(201).json(result);
 		} catch (error) {
-			// In case of any other error, pass it to the error handler
 			next(error);
 		}
 	});

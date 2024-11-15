@@ -10,8 +10,6 @@ async function serverfetch(url, options) {
             }
         }
 
-        console.log('Headers in fetchService:', headers);
-
         return {
             status: response.status,
             headers,
