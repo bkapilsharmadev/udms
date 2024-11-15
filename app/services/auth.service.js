@@ -18,7 +18,7 @@ module.exports.authenticateService = async (credentials, req, res) => {
 
     if (result.status === 500) {
         throw new CustomError({
-            moduleName: 'authenticate',
+            moduleName: 'auth.service.js',
             message: 'Request Failed !',
             httpStatus: 500,
         });
@@ -26,7 +26,7 @@ module.exports.authenticateService = async (credentials, req, res) => {
 
     if (result.status !== 200) {
         throw new CustomError({
-            moduleName: 'authenticate',
+            moduleName: 'auth.service.js',
             message: 'Failed To Authenticate !',
             httpStatus: 401,
         });

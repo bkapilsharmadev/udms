@@ -9,7 +9,7 @@ module.exports.validateUserSession = async (req, res, next) => {
 
     if (!userId || userId == undefined) {
         throw new CustomError({
-            modulename: 'Invalid Request',
+            modulename: 'auth.middleware.js',
             httpStatus: 401,
             message: 'Invalid Request !'
         });
@@ -18,7 +18,7 @@ module.exports.validateUserSession = async (req, res, next) => {
     let data = await getRedisData(userId);
     if (data.status == 401) {
         throw new CustomError({
-            modulename: 'Invalid Request',
+            modulename: 'auth.middleware.js',
             httpStatus: 401,
             message: 'Invalid Request !'
         });
@@ -40,7 +40,7 @@ module.exports.validateUserSession = async (req, res, next) => {
 
     if (status != 200) {
         throw new CustomError({
-            modulename: 'Invalid Request',
+            modulename: 'auth.middleware.js',
             httpStatus: 401,
             message: 'Invalid Request !'
         });
