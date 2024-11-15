@@ -17,6 +17,7 @@ async function fetchApi(url, method = "GET", data = null) {
 
     try {
         const response = await fetch(url, options);
+        console.log('response ',response);
 
         if (response.status === 401) {
             if (location.pathname === "/signin") {

@@ -11,7 +11,7 @@
                     <!-- <h2>title TITLE</h2> -->
                     <div class="frame-container">
                         <div class="frame-title">
-                            <span>Status Types</span>
+                            <span>Document Categories</span>
                         </div>
                         <div class="frame-content">
                             <div class="flex flex-wrap gap-y-4">
@@ -49,13 +49,13 @@
                     <!-- table -->
                     <div class="frame-container">
                         <div class="frame-title">
-                            <span>Status Types</span>
+                            <span>Document Categories</span>
                         </div>
                         <div class="frame-content">
                             <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
                                 <!-- Table Header -->
                                 <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
-                                    <h2 class="text-lg font-semibold text-gray-700">Status Types Table</h2>
+                                    <h2 class="text-lg font-semibold text-gray-700">Document Categories Table</h2>
                                     <!-- <button class="text-sm font-semibold text-gray-600">02 Document</button> -->
                                 </div>
 
@@ -65,23 +65,30 @@
                                         <thead class="text-left">
                                             <tr>
                                                 <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                                <th class="p-4 text-xs font-bold ">Status Name</th>
+                                                <th class="p-4 text-xs font-bold ">Category Name</th>
+                                                <th class="p-4 text-xs font-bold ">Category Abbr</th>
                                                 <th class="p-4 text-xs font-bold ">Description</th>
+                                                <th class="p-4 text-xs font-bold ">Parent</th>
                                                 <th class="p-4 text-xs font-bold text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <!-- Row 1 -->
-                                            <% statusTypes.forEach((type, index)=> { %>
+                                            <% documentCategories.forEach((type, index)=> { %>
                                                 <tr class="hover:bg-blue-50" data-status-type="<%= type.status_type %>">
                                                     <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                         <%= index + 1 %>
                                                     </td>
                                                     <td class="p-4 text-sm text-gray-700 ">
-                                                        <%= type.status_type %>
+                                                        <%= type.document_category %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.category_abbr %>
                                                     </td>
                                                     <td class="p-4 text-sm text-gray-700 ">
                                                         <%= type.description %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
                                                     </td>
                                                     <td class="p-4 text-center relative">
                                                         <button onclick="toggleDropdown(event)"
@@ -115,74 +122,74 @@
             <script src="../js/fetch.js"></script>
             <script>
 
-                document.getElementById('submit-btn').addEventListener('click', async () => {
-                    const status_type = document.getElementById('status-name').value;
-                    const description = document.getElementById('description').value;
+                // document.getElementById('submit-btn').addEventListener('click', async () => {
+                //     const status_type = document.getElementById('status-name').value;
+                //     const description = document.getElementById('description').value;
 
-                    const url = '/status-types/create';
-                    const method = 'POST';
-                    const obj = { status_type, description };
+                //     const url = '/status-types/create';
+                //     const method = 'POST';
+                //     const obj = { status_type, description };
 
-                    const data = await fetchApi(url, method, obj);
+                //     const data = await fetchApi(url, method, obj);
 
-                    if (data) {
-                        appendDataToTable({ status_type, description });
-                        document.getElementById('status-name').value = '';
-                        document.getElementById('description').value = '';
-                    }
-                    console.log('data ', JSON.stringify(data));
-                });
+                //     if (data) {
+                //         appendDataToTable({ status_type, description });
+                //         document.getElementById('status-name').value = '';
+                //         document.getElementById('description').value = '';
+                //     }
+                //     console.log('data ', JSON.stringify(data));
+                // });
 
-                function appendDataToTable(data) {
-                    let tableBody = document.querySelector('tbody');
-                    let rowCount = tableBody.rows.length;
+                // function appendDataToTable(data) {
+                //     let tableBody = document.querySelector('tbody');
+                //     let rowCount = tableBody.rows.length;
 
-                    let tableRow = document.createElement('tr');
-                    tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                                ${rowCount + 1}
-                            </td>
-                            <td class="p-4 text-sm text-gray-700 ">
-                                ${data.status_type}
-                            </td>
-                            <td class="p-4 text-sm text-gray-700 ">
-                                ${data.description}
-                            </td>
-                            <td class="p-4 text-center relative">
-                                <button onclick="toggleDropdown(event)"
-                                    class="focus:outline-none text-gray-600 px-4"><i
-                                        class="fa-solid fa-ellipsis-vertical"></i></button>
+                //     let tableRow = document.createElement('tr');
+                //     tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                //                 ${rowCount + 1}
+                //             </td>
+                //             <td class="p-4 text-sm text-gray-700 ">
+                //                 ${data.status_type}
+                //             </td>
+                //             <td class="p-4 text-sm text-gray-700 ">
+                //                 ${data.description}
+                //             </td>
+                //             <td class="p-4 text-center relative">
+                //                 <button onclick="toggleDropdown(event)"
+                //                     class="focus:outline-none text-gray-600 px-4"><i
+                //                         class="fa-solid fa-ellipsis-vertical"></i></button>
 
-                                <!-- Dropdown menu -->
-                                <div id="dropdown-0"
-                                    class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                    <a href="#"
-                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                                        <i class="text-red-500 fa-solid fa-trash-can"></i><span
-                                            class="ml-2">Delete</span>
-                                    </a>
-                                </div>
-                            </td>`
-                    tableRow.classList.add('"hover:bg-blue-50"');
-                    tableRow.setAttribute('data-status-type', data.status_type);
-                    tableBody.appendChild(tableRow);
-                }
+                //                 <!-- Dropdown menu -->
+                //                 <div id="dropdown-0"
+                //                     class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                //                     <a href="#"
+                //                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                //                         <i class="text-red-500 fa-solid fa-trash-can"></i><span
+                //                             class="ml-2">Delete</span>
+                //                     </a>
+                //                 </div>
+                //             </td>`
+                //     tableRow.classList.add('"hover:bg-blue-50"');
+                //     tableRow.setAttribute('data-status-type', data.status_type);
+                //     tableBody.appendChild(tableRow);
+                // }
 
-                document.addEventListener("click", async function (event) {
-                    if (event.target.closest(".delete-btn")) {
-                        const row = event.target.closest("tr");
-                        const statusType = row.getAttribute("data-status-type");
+                // document.addEventListener("click", async function (event) {
+                //     if (event.target.closest(".delete-btn")) {
+                //         const row = event.target.closest("tr");
+                //         const statusType = row.getAttribute("data-status-type");
 
-                        const url = '/status-types/delete';
-                        const method = 'POST';
-                        const obj = { statusType };
+                //         const url = '/status-types/delete';
+                //         const method = 'POST';
+                //         const obj = { statusType };
 
-                        const data = await fetchApi(url, method, obj);
-                        if (data) {
-                            row.remove();
-                            alert(data.message);
-                        }
-                    }
-                });
+                //         const data = await fetchApi(url, method, obj);
+                //         if (data) {
+                //             row.remove();
+                //             alert(data.message);
+                //         }
+                //     }
+                // });
 
 
             </script>

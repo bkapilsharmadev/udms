@@ -47,13 +47,27 @@
                             <div class="lms-input-container">
                                 <select id="received-from" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select From</option>
+                                    <% data.entities.forEach(entity => { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% }) %>
+                                </select>
+                                <div class="lms-cut-dropdown"></div>
+                                <label for="received-from" class="lms-placeholder-dropdown">From<span>*</span></label>
+                            </div>
+                        </div>
+
+                        <!-- University -->
+                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container">
+                                <select id="university" class="lms-dropdropdown">
+                                    <option value="" disabled selected hidden>Select University</option>
                                     <% data.entities.forEach(entity => { 
-                                        if(entity.entity_type === "DEPARTMENT") { %>
+                                        if(entity.entity_type === "UNIVERSITY") { %>
                                             <option value="<%= entity.entity_id %>"><%= entity.name %></option>
                                     <% } }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
-                                <label for="received-from" class="lms-placeholder-dropdown">From<span>*</span></label>
+                                <label for="university" class="lms-placeholder-dropdown">University<span>*</span></label>
                             </div>
                         </div>
 
@@ -162,6 +176,20 @@
                             <div class="lms-input-container ">
                                 <input id="comments" class="lms-input" type="text" placeholder="">
                                 <label for="comments" class="lms-placeholder">Comments</label>
+                            </div>
+                        </div>
+
+                          <!-- Forward To -->
+                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container">
+                                <select id="received-from" class="lms-dropdropdown">
+                                    <option value="" disabled selected hidden>Forward To</option>
+                                    <% data.entities.forEach(entity => { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% }) %>
+                                </select>
+                                <div class="lms-cut-dropdown"></div>
+                                <label for="forward-to" class="lms-placeholder-dropdown">Forward To<span>*</span></label>
                             </div>
                         </div>
 

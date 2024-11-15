@@ -4,7 +4,7 @@ const {asyncErrorHandler} = require('../middleware/error.middleware');
 const router = express.Router();
 
 router.post('/authenticate', asyncErrorHandler(authController.authenticate));
-router.get('/signin',asyncErrorHandler(authController.login))
+router.get('/',asyncErrorHandler(authController.login))
 // router.get('/logout', asyncErrorHandler(authController.logout));
 
 module.exports = router;

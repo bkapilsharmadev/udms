@@ -9,20 +9,13 @@ module.exports.validateUserSession = async (req, res, next) => {
 
     if (!userId || userId == undefined) {
         throw new CustomError({
-            modulename: 'Invalid Request',
+            modulename: 'auth.middleware.js',
             httpStatus: 401,
             message: 'Invalid Request !'
         });
     }
 
     let data = await getRedisData(userId);
-    if (data.status == 401) {
-        throw new CustomError({
-            modulename: 'Invalid Request',
-            httpStatus: 401,
-            message: 'Invalid Request !'
-        });
-    }
 
     const authUrl = process.env.VALIDATE_SESSION_URL
     const { status, headers, body } = await serverFetch(authUrl, {
@@ -32,16 +25,20 @@ module.exports.validateUserSession = async (req, res, next) => {
             ...data
         }
     });
-    console.log({
-        status,
-        headers,
-        body
-    });
+
+    if (status != 200) {
+        throw new CustomError({
+            modulename: 'auth.middleware.js',
+            httpStatus: 401,
+            message: 'Invalid Request !'
+        });
+    }
 
     const { accesstoken, refreshtoken } = headers;
     data = { ...data, accesstoken: accesstoken, refreshtoken: refreshtoken }
     await setRedisData(userId, data);
     console.log('username ', data.username);
+    req.session_username = data.username;
     res.locals.username = data.username;
     next();
 }
