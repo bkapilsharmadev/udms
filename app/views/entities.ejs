@@ -19,28 +19,12 @@
                                 <span>Entities</span>
                             </div>
                             <div class="frame-content">
-                                <form class="flex flex-wrap gap-y-4">
-
-                                    <!-- status_types -->
-
-                                    <!-- <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                <div class="lms-input-container">
-                                    <select id="firstname" class="lms-dropdropdown">
-                                        <option value="" disabled selected hidden>Select Entity id</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                    </select>
-                                    <div class="lms-cut-dropdown"></div>
-                                    <label for="firstname" class="lms-placeholder-dropdown">Entity id<span>*</span></label>
-                                </div>
-                            </div> -->
+                                <div class="flex flex-wrap gap-y-4">
 
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
-                                            <input id="firstname" class="lms-input" type="text" placeholder="" value="">
-                                            <label for="firstname" class="lms-placeholder">Name<span>*</span></label>
+                                            <input id="entity-name" class="lms-input" type="text" placeholder="" value="">
+                                            <label for="entity-name" class="lms-placeholder">Name<span>*</span></label>
                                         </div>
                                     </div>
 
@@ -61,6 +45,19 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <div class="lms-input-container">
+                                            <select id="parent-entity" class="lms-dropdropdown">
+                                                <option value="" disabled selected hidden>Select Parent Entity</option>
+                                                <% entities.forEach((entity, index)=> { %>
+                                                <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                                <% }) %>
+                                            </select>
+                                            <div class="lms-cut-dropdown"></div>
+                                            <label for="parent-entity" class="lms-placeholder-dropdown">Entity id<span>*</span></label>
+                                        </div>
+                                    </div>
+
                                     <!-- button -->
                                     <div class="w-full px-2">
                                         <button type="submit"
@@ -70,7 +67,7 @@
                                         </button>
                                     </div>
 
-                                </form>
+                                </div>
 
                             </div>
                         </div>
@@ -101,7 +98,10 @@
                                             </thead>
                                             <tbody>
                                                 <% entities.forEach((entity, index)=> { %>
-                                                    <tr class="hover:bg-blue-50">
+                                                    <tr class="hover:bg-blue-50"
+                                                        data-entity-id="<%= entity.entity_id %>"
+                                                        data-name="<%= entity.name %>"
+                                                        data-entity-type="<%= entity.entity_type %>">
 
                                                         <td
                                                             class="p-4 text-sm text-gray-700 text-center font-semibold ">
@@ -122,22 +122,16 @@
                                                             <!-- Dropdown menu -->
                                                             <div id="dropdown-0"
                                                                 class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                                <a href="./view page.html"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                                    <i class="text-red-500 fa-solid fa-eye"></i> <span
-                                                                        class="ml-2">View</span>
-                                                                </a>
                                                                 <a href="#"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center update-entity">
                                                                     <i
                                                                         class="text-red-500 fa-solid fa-pen-to-square"></i>
                                                                     <span class="ml-2">Update</span>
                                                                 </a>
                                                                 <a href="#"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn" data-id = "<%= entity.entity_id %>">
-                                                                    <i
-                                                                        class="text-red-500 fa-solid fa-trash-can"></i><span
-                                                                        class="ml-2">Delete</span>
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                    <i class="text-red-500 fa-solid fa-trash-can"></i>
+                                                                    <span class="ml-2">Delete</span>
                                                                 </a>
                                                             </div>
                                                         </td>
@@ -152,6 +146,28 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="modal-background"
+                        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
+                        style=" z-index: 1035;">
+                        <!-- Modal Content -->
+                        <div class="bg-white rounded-lg p-6 w-full max-w-sm">
+                            <div id="modal-content">
+
+                            </div>
+                            <!-- Buttons -->
+                            <div class="mt-6 flex justify-end space-x-4">
+                                <button onclick="closeModal()"
+                                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                                    Cancel
+                                </button>
+                                <button id="update-submit-btn"
+                                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -162,42 +178,167 @@
 
                 //Create Entity    
                 document.getElementById('submitEntity').addEventListener('click', () => {
-                    const name = document.querySelector('#firstname').value;
+                    const name = document.querySelector('#entity-name').value;
                     const entity_type = document.querySelector('#type').value;
+                    const parentEntityId = document.querySelector('#parent-entity').value;
 
                     if (!name || !entity_type) {
                         alert("Name and entity type are required.");
                         return;
                     }
 
-                    const entityData = { name: name, entity_type: entity_type, parent_id: null, created_by: 1 };
+                    const entityData = { name: name, entity_type: entity_type, parent_id: parentEntityId };
 
                     console.log('entityData', entityData);
 
                     const url = '/entities/create';
 
                     let respose = fetchApi(url, 'POST', entityData);
+                    if (respose) {
+                        appendToTable({ name, entity_type })
+                    }
                     console.log('Response', respose);
                 })
 
                 //Delete Enitity
-                const tableBody = document.querySelector('tbody');
-                tableBody.addEventListener('click', function(event) {
-        
-                if (event.target.closest('.delete-btn')) {
+                document.addEventListener("click", async function (event) {
+                    if (event.target.classList.contains("delete-btn")) {
+                        const row = event.target.closest("tr");
+                        const entityId = row.getAttribute("data-entity-id");
+
+                        console.log('entityId', entityId);
+
+
+                        const url = '/entities/delete';
+                        const method = 'POST';
+                        const obj = { entity_id: entityId };
+
+                        const data = await fetchApi(url, method, obj);
+                        if (data) {
+                            row.remove();
+                            alert(data.message);
+                        }
+                    }
+                });
+
+                //Update Entity
+                document.addEventListener("click", function (event) {
                     event.preventDefault();
-                    const deleteBtn = event.target.closest('.delete-btn');
-                    const entityId = deleteBtn.getAttribute('data-id');
+                    if (event.target.classList.contains('update-entity')) {
+                        openModal();
 
-                    console.log('data-id', entityId);
+                        const row = event.target.closest("tr");
+                        let name = row.getAttribute('data-name');
+                        let entityType = row.getAttribute('data-entity-type');
+                        let entity_id = row.getAttribute('data-entity-id');
+                        document.getElementById('update-submit-btn').setAttribute('data-entity-id', entity_id);
 
-                    const url = '/entities/delete';
+                        let divToAppend = ` <div class="frame-container">
+                            <div class="frame-title">
+                                <span>Entity Edit</span>
+                            </div>
+                            <div class="frame-content">
+                                <div class="flex flex-wrap gap-y-4">
+                            
+                                    <div class="mb-4 w-full px-2">
+                                        <div class="lms-input-container">
+                                            <input id="entity-name" class="lms-input" type="text" placeholder="" value="${name}">
+                                            <label for="entity-name" class="lms-placeholder">Name<span>*</span></label>
+                                        </div>
+                                    </div>
 
-                    let respose = fetchApi(url, 'POST', { entity_id: entityId })
-                    console.log('Response', respose);
-                    
+                                    <div class="mb-4 w-full px-2">
+                                        <div class="lms-input-container">
+                                           <select id="entity-type" class="lms-dropdropdown">
+                                            <option value="" disabled selected hidden>Select Entity Type Name</option>
+                                             <% enitityTypes.forEach((type, index)=> { %>
+                                                    <option value="<%= type.entity_type %>">
+                                                        <%= type.entity_type %>
+                                                    </option>
+                                            <% }) %>
+                                           </select>
+                                            <label for="type" class="lms-placeholder-dropdown"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+
+                        document.getElementById('modal-content').innerHTML = divToAppend;
+                        const options = document.getElementById('entity-type');
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].value === entityType) {
+                                options[i].selected = true;
+                                break;
+                            }
+                        }
+                    }
+                })
+
+                //Append new Entity
+                function appendToTable(entity) {
+                    const tableBody = document.querySelector('tbody');
+                    let rowCount = tableBody.rows.length;
+                    let lastRow = tableBody.querySelector('tr:last-child');
+                    let newId = 1;
+
+                    if (lastRow && lastRow.hasAttribute('data-entity-id')) {
+                        const lastId = parseInt(lastRow.getAttribute('data-entity-id'), 10);
+
+                        console.log('lastRow', lastRow);
+                        console.log('lastRow.getAttribute', lastRow.getAttribute('data-entity-id'));
+
+                        newId = lastId + 1;
+                    }
+
+                    const newRow = document.createElement('tr');
+                    newRow.classList.add('hover:bg-blue-50');
+                    newRow.setAttribute('data-entity-id', newId);
+
+                    newRow.innerHTML = `
+                        <td class="p-4 text-sm text-gray-700 text-center font-semibold">${rowCount + 1}</td>
+                        <td class="p-4 text-sm text-gray-700">${entity.name}</td>
+                        <td class="p-4 text-sm text-gray-700">${entity.entity_type}</td>
+                        <td class="p-4 text-center relative">
+                            <button onclick="toggleDropdown(event)" class="focus:outline-none text-gray-600 px-4">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <div class="dropdown hidden text-sm absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                <a href="./view page.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <i class="text-red-500 fa-solid fa-eye"></i><span class="ml-2">View</span>
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <i class="text-red-500 fa-solid fa-pen-to-square"></i><span class="ml-2">Update</span>
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                    <i class="text-red-500 fa-solid fa-trash-can"></i><span class="ml-2">Delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(newRow);
                 }
-            })
+
+                //submit updated entity data
+                document.getElementById('update-submit-btn').addEventListener('click', async (event) => {
+                    const name = document.getElementById('entity-name').value;
+                    const entityType = document.getElementById('entity-type').value;
+                    const entityId = document.getElementById('update-submit-btn').getAttribute('data-entity-id');
+
+                    const url = '/entities/update';
+                    const method = 'POST';
+                    const obj = { entity_id: entityId, name: name, entity_type: entityType };
+
+                    const data = await fetchApi(url, method, obj);
+                    if (data) {
+                        document.addEventListener('click', closeModal());
+                        document.getElementById('entity-name').value = name;
+
+                        alert(data.message);
+                    }
+                })
             </script>
     </body>
-</html>
+
+    </html>
