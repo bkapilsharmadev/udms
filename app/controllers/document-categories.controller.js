@@ -33,3 +33,14 @@ module.exports.updateDocumentCategory = async (req, res, next) => {
     res.status(200).json(result);
 }
 
+module.exports.deleteDocumentCategory = async (req, res, next) => {
+    const { category_id } = req.body;
+    const result = await documentCategoryService.deleteDocumentCategory(category_id);
+    res.status(200).json(result);
+}
+
+module.exports.fetchDocumentCategory = async (req, res, next) => {
+    const { category_id } = req.params;
+    const result = await documentCategoryService.fetchDocumentCategory(category_id);
+    res.status(200).json(result);
+}
