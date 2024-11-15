@@ -24,6 +24,15 @@ module.exports.getEntities = async () => {
 	return result.rows;
 };
 
+// Query to get an entity by ID
+module.exports.getEntity = async (entity_id) => {
+	const query = `SELECT entity_id, name, entity_type, parent_id, created_at, updated_at, created_by, updated_by, active FROM entities WHERE entity_id = $1 AND active = true;`;
+	const values = [entity_id];
+
+	const result = await sqlRead.query(query, values);
+	return result.rows[0];
+};
+
 // Query to delete an entity by ID
 module.exports.deleteEntity = async (entity_id) => {
 	const query = `UPDATE entities SET active = false WHERE entity_id = $1;`;

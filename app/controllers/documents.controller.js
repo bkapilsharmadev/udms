@@ -3,19 +3,19 @@ const documentService = require("../services/documents.service");
 const { uploadFile } = require("../middleware/file-upload.middleware");
 const { getEntities } = require("../services/entities.service");
 const { MENTOR_SIGNS } = require("../constants");
+const { getStatusTypes } = require("../services/status-types.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
-	const result = await Promise.all([
-		getEntities()
-	]);
+	const result = await Promise.all([getEntities(), getStatusTypes()]);
 
 	const data = {
 		entities: result[0],
+		statusTypes: result[1],
 		mentorSigns: MENTOR_SIGNS,
 	};
 
-	res.render("documents.ejs", data);
+	res.render("documents.ejs", { data });
 };
 
 module.exports.createDocument = async (req, res, next) => {
