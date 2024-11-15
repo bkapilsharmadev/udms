@@ -2,21 +2,17 @@ const { notFoundError, dbError } = require("../utils/error/error");
 const entityService = require("../services/entities.service");
 
 module.exports.renderEntities = async (req, res, next) => {
-	const []  = await Promise.all([entityService.getEnitityTypes(), entityService.getEntities()]);
-	console.log('result ', result);
-	
-	// const entities = await entityService.getEntities();
-	res.render("entities.ejs");
+	const [entities, enitityTypes]  = await Promise.all([entityService.getEntities(), entityService.getEnitityTypes() ]);
+	res.render("entities.ejs",{entities, enitityTypes});
 };
 
 module.exports.createEntity = async (req, res, next) => {
-	const created_by = res.locals.username;
 	const { name, entity_type, parent_id } = req.body;
 	const result = await entityService.createEntity({
 		name,
 		entity_type,
 		parent_id,
-		created_by,
+		created_by: req.session_username,
 	});
 	res.status(201).json(result);
 };
@@ -39,14 +35,13 @@ module.exports.deleteEntity = async (req, res, next) => {
 };
 
 module.exports.updateEntity = async (req, res, next) => {  // New function
-	const updated_by = res.locals.username;
 	const { entity_id, name, entity_type, parent_id } = req.body;
 	const result = await entityService.updateEntity({
 		entity_id,
 		name,
 		entity_type,
 		parent_id,
-		updated_by,
+		updated_by: req.session_username,
 	});
 	res.status(200).json(result);
 };

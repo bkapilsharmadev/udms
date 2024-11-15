@@ -111,4 +111,4 @@ function closeModal() {
   document.getElementById('modal-background').classList.add('hidden');
 }
 
-document.getElementById('close-modal').addEventListener('click',closeModal());
+//document.getElementById('close-modal').addEventListener('click',closeModal());
