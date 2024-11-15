@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { CustomError } = require('../error/CustomError');
 
 async function serverfetch(url, options) {
     try {
@@ -20,11 +19,11 @@ async function serverfetch(url, options) {
         };
     } catch (error) {
         console.error('Fetch error:', error);
-
-        throw new CustomError({
-            message: error.message,
-            httpStatus: error.response ? error.response.status : 500,
-        })
+        return {
+            status: error.response?.status || 500,
+            headers: error.response?.headers || {},
+            body: error.response?.data || error.message,
+        };
 
     }
 }

@@ -363,7 +363,7 @@ module.exports.slowWriteJsonKeyToFile = (req, filePath) => {
     }
 }
 
-module.exports.base64_encode = (file)=>{
+module.exports.base64_encode = (file) => {
     try {
         var bitmap = fs.readFileSync(file);
         let img = Buffer.from(bitmap).toString('base64');
@@ -376,8 +376,8 @@ module.exports.base64_encode = (file)=>{
 
 module.exports.generateRandomUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = (Math.random() * 16) | 0,
-        v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
+        var r = (Math.random() * 16) | 0,
+            v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
     });
 }
