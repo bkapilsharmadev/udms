@@ -196,6 +196,7 @@
 
                     let respose = fetchApi(url, 'POST', entityData);
                     if (respose) {
+                        alert(respose.message)
                         appendToTable({ name, entity_type })
                     }
                     console.log('Response', respose);
@@ -217,7 +218,7 @@
                         const data = await fetchApi(url, method, obj);
                         if (data) {
                             row.remove();
-                            alert(data.message);
+                            alert('Inserted successfully!');
                         }
                     }
                 });
@@ -227,9 +228,10 @@
 
                     const updateEntity = event.target.closest('.update-entity');
                     if (updateEntity) {
-
+                        
                         const id = updateEntity.querySelector('span[data-entity-id]').getAttribute('data-entity-id');
-
+                        console.log('id in edit', id);
+                        
                         const url = `/entities/fetch/${id}`;
                         const res = await fetchApi(url)
 
@@ -306,44 +308,49 @@
 
                 //Append new Entity
                 function appendToTable(entity) {
-                    const tableBody = document.querySelector('tbody');
+                    let tableBody = document.querySelector('tbody');
                     let rowCount = tableBody.rows.length;
-                    let lastRow = tableBody.querySelector('tr:last-child');
-                    let newId = 1;
 
-                    if (lastRow && lastRow.hasAttribute('data-entity-id')) {
-                        const lastId = parseInt(lastRow.getAttribute('data-entity-id'), 10);
+                    let tableRow = document.createElement('tr');
+                    let lastChildDataId = document.querySelector('tbody').lastElementChild.getAttribute('data-id');
+                    const newId = parseInt(lastChildDataId) + 1;
+                    tableRow.setAttribute('data-id', newId);
 
-                        console.log('lastRow', lastRow);
-                        console.log('lastRow.getAttribute', lastRow.getAttribute('data-entity-id'));
+                    tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                        ${rowCount + 1}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${entity.name}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${entity.entity_type}
+                                                    </td>
+                                                    <td class="p-4 text-center relative">
+                                                        <button onclick="toggleDropdown(event)"
+                                                            class="focus:outline-none text-gray-600 px-4"><i
+                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
 
-                        newId = lastId + 1;
-                    }
-
-                    const newRow = document.createElement('tr');
-                    newRow.classList.add('hover:bg-blue-50');
-                    newRow.setAttribute('data-entity-id', newId);
-
-                    newRow.innerHTML = `
-                        <td class="p-4 text-sm text-gray-700 text-center font-semibold">${rowCount + 1}</td>
-                        <td class="p-4 text-sm text-gray-700">${entity.name}</td>
-                        <td class="p-4 text-sm text-gray-700">${entity.entity_type}</td>
-                        <td class="p-4 text-center relative">
-                            <button onclick="toggleDropdown(event)" class="focus:outline-none text-gray-600 px-4">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                            <div class="dropdown hidden text-sm absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <i class="text-red-500 fa-solid fa-pen-to-square"></i><span class="ml-2">Update</span>
-                                </a>
-                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                                    <i class="text-red-500 fa-solid fa-trash-can"></i><span class="ml-2">Delete</span>
-                                </a>
-                            </div>
-                        </td>
-                    `;
-
-                    tableBody.appendChild(newRow);
+                                                        <div id="dropdown-0"
+                                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                                <a href="#"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center update-entity">
+                                                                    <i
+                                                                        class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                                                    <span class="ml-2"
+                                                                        data-entity-id="${newId}"
+                                                                        id="update-btn">Update</span>
+                                                                </a>
+                                                                <a href="#"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                    <i class="text-red-500 fa-solid fa-trash-can"></i>
+                                                                    <span class="ml-2">Delete</span>
+                                                                </a>
+                                                            </div>
+                                                    </td>
+                                        `
+                                                
+                    
+                    tableBody.appendChild(tableRow);
                 }
 
                 //submit updated entity data
