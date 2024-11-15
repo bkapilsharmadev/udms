@@ -22,7 +22,6 @@ router.use("/entities", asyncErrorHandler(authmiddleware.validateUserSession), a
 router.use("/documents", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentsRoute));
 router.use("/files", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(filesRoute));
 router.use("/file-versions", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(fileVersionsRoute));
-router.use("/document-categories", asyncErrorHandler(documentCategoriesRoute));
+router.use("/document-categories", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentCategoriesRoute));
 router.use("/", asyncErrorHandler(authRoute));
-
 module.exports = router;

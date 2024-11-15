@@ -1,9 +1,21 @@
 const { dbError } = require("../utils/error/error");
 const documentService = require("../services/documents.service");
 const { uploadFile } = require("../middleware/file-upload.middleware");
+const { getEntities } = require("../services/entities.service");
+const { MENTOR_SIGNS } = require("../constants");
+const { getStatusTypes } = require("../services/status-types.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
-	res.render("documents.ejs");
+	// fetch all entities, MENTOR_SIGNS constants and render the documents view
+	const result = await Promise.all([getEntities(), getStatusTypes()]);
+
+	const data = {
+		entities: result[0],
+		statusTypes: result[1],
+		mentorSigns: MENTOR_SIGNS,
+	};
+
+	res.render("documents.ejs", { data });
 };
 
 module.exports.createDocument = async (req, res, next) => {
@@ -15,7 +27,6 @@ module.exports.createDocument = async (req, res, next) => {
 
 		try {
 			// If no error, continue with your logic
-
 			const {
 				category_id,
 				ref_no,
@@ -26,9 +37,8 @@ module.exports.createDocument = async (req, res, next) => {
 				school_entt_id,
 				department_entt_id,
 				mentor_sign,
-				document_stage,
 				status,
-				created_by,
+				comments,
 			} = req.body;
 
 			// Get the files from req.files after Multer processes them
@@ -45,15 +55,14 @@ module.exports.createDocument = async (req, res, next) => {
 				school_entt_id,
 				department_entt_id,
 				mentor_sign,
-				document_stage,
 				status,
-				created_by,
+				comments,
 				files,
+				created_by: req.session_username,
 			});
 
 			res.status(201).json(result);
 		} catch (error) {
-			// In case of any other error, pass it to the error handler
 			next(error);
 		}
 	});
@@ -71,12 +80,12 @@ module.exports.deleteDocument = async (req, res, next) => {
 };
 
 module.exports.updateDocument = async (req, res, next) => {
-	const { document_id, ref_no, description, updated_by } = req.body;
+	const { document_id, ref_no, description } = req.body;
 	const result = await documentService.updateDocument({
 		document_id,
 		ref_no,
 		description,
-		updated_by,
+		updated_by : req.session_username,
 	});
 	res.status(200).json(result);
 };

@@ -8,7 +8,5 @@ router.post("/create", asyncErrorHandler(documentStageController.createDocumentS
 router.post("/delete", asyncErrorHandler(documentStageController.deleteDocumentStage));
 router.get("/", asyncErrorHandler(documentStageController.renderDocumentStages));
 
-
-
 module.exports = router;  
 

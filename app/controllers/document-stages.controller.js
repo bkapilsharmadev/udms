@@ -8,11 +8,10 @@ module.exports.renderDocumentStages = async (req, res, next) => {
 
 module.exports.createDocumentStage = async (req, res, next) => {
 	const { document_stage, description } = req.body;
-	const created_by = res.locals.username;
 	const result = await documentStagesService.createDocumentStage({
 		document_stage,
 		description,
-		created_by,
+		created_by : req.session_username
 	});
 
 	res.status(201).json(result);

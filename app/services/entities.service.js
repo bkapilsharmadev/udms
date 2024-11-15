@@ -20,6 +20,20 @@ module.exports.getEntities = async () => {
 	return result || [];
 };
 
+module.exports.getEntity = async (entity_id) => {
+	const entity = await entityModel.getEntity(entity_id);
+
+	if (!entity?.entity_id) {
+		throw dbError({
+			moduleName: "entities.service.js",
+			message: "Entity not found",
+			data: result,
+		});
+	}
+
+	return result;
+};
+
 module.exports.deleteEntity = async (entity_id) => {
 	const result = await entityModel.deleteEntity(entity_id);
 

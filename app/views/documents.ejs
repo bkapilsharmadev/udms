@@ -25,12 +25,7 @@
                             <div class="lms-input-container">
                                 <select id="category" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select Category</option>
-                                    <option value="1">PR /PO</option>
-                                    <option value="2">Exam</option>
-                                    <option value="3">HR - Appointment Letters </option>
-                                    <option value="4">Invoice</option>
-                                    <option value="5">IOM</option>
-                                    <option value="6">Letters</option>
+                                    <option value="1">Reimbursement</option>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="category" class="lms-placeholder-dropdown">Category<span>*</span></label>
@@ -52,14 +47,27 @@
                             <div class="lms-input-container">
                                 <select id="received-from" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select From</option>
-                                    <option value="1">Dean</option>
-                                    <option value="2">Director</option>
-                                    <option value="3">NMIMS</option>
-                                    <option value="4">SDSOS</option>
-                                    <option value="5">Vinod Malap </option>
+                                    <% data.entities.forEach(entity => { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="received-from" class="lms-placeholder-dropdown">From<span>*</span></label>
+                            </div>
+                        </div>
+
+                        <!-- University -->
+                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container">
+                                <select id="university" class="lms-dropdropdown">
+                                    <option value="" disabled selected hidden>Select University</option>
+                                    <% data.entities.forEach(entity => { 
+                                        if(entity.entity_type === "UNIVERSITY") { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% } }) %>
+                                </select>
+                                <div class="lms-cut-dropdown"></div>
+                                <label for="university" class="lms-placeholder-dropdown">University<span>*</span></label>
                             </div>
                         </div>
 
@@ -68,8 +76,10 @@
                             <div class="lms-input-container">
                                 <select id="campus" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select Campus</option>
-                                    <option value="1">Mumbai</option>
-                                    <option value="2">Navi Mumbai</option>
+                                    <% data.entities.forEach(entity => { 
+                                        if(entity.entity_type === "CAMPUS") { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% } }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="campus" class="lms-placeholder-dropdown">Campus<span>*</span></label>
@@ -81,13 +91,10 @@
                             <div class="lms-input-container">
                                 <select id="school" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select School</option>
-                                    <option value="1">MPSTME</option>
-                                    <option value="2">SPPSPTM</option>
-                                    <option value="3">ASMSOC</option>
-                                    <option value="4">BSSA</option>
-                                    <option value="5">NMIMS University level</option>
-                                    <option value="6">SDSOS</option>
-                                    <option value="7">Not Applicable</option>
+                                    <% data.entities.forEach(entity => { 
+                                        if(entity.entity_type === "SCHOOL") { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% } }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="school" class="lms-placeholder-dropdown">School<span>*</span></label>
@@ -99,12 +106,10 @@
                             <div class="lms-input-container">
                                 <select id="department" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Select Department</option>
-                                    <option value="1">Purchase</option>
-                                    <option value="2">Examination</option>
-                                    <option value="3">Academic</option>
-                                    <option value="4">Library</option>
-                                    <option value="5">Campuses /Deans</option>
-                                    <option value="6">Accounts</option>
+                                    <% data.entities.forEach(entity => { 
+                                        if(entity.entity_type === "DEPARTMENT") { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% } }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="department" class="lms-placeholder-dropdown">Department<span>*</span></label>
@@ -115,10 +120,9 @@
                         <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                             <div class="lms-input-container">
                                 <select id="mentor-sign" class="lms-dropdropdown">
-                                    <option selected value="1">Not Required</option>
-                                    <option value="2">Yes</option>
-                                    <option value="3">No</option>
-                                    <option value="4">On Leave</option>
+                                    <% data.mentorSigns.forEach(mentorSign => { %>
+                                        <option value="<%= mentorSign %>"><%= mentorSign %></option>
+                                    <% }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
                                 <label for="mentor-sign" class="lms-placeholder-dropdown">Mentor Sign<span>*</span></label>
@@ -152,6 +156,43 @@
                             <!-- File count display -->
                             <p id="fileCount" class="text-sm text-gray-500 mt-1 ml-2">No files selected</p>
                         </div>
+
+                          <!-- Status Type-->
+                          <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container">
+                                <select id="status-type" class="lms-dropdropdown">
+                                    <option value="" disabled selected hidden>Select Status</option>
+                                    <% data.statusTypes.forEach(statusType => { %>
+                                        <option value="<%= statusType.status_type %>"><%= statusType.status_type %></option>
+                                    <% }) %>
+                                </select>
+                                <div class="lms-cut-dropdown"></div>
+                                <label for="status-type" class="lms-placeholder-dropdown">Status<span>*</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container ">
+                                <input id="comments" class="lms-input" type="text" placeholder="">
+                                <label for="comments" class="lms-placeholder">Comments</label>
+                            </div>
+                        </div>
+
+                          <!-- Forward To -->
+                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                            <div class="lms-input-container">
+                                <select id="received-from" class="lms-dropdropdown">
+                                    <option value="" disabled selected hidden>Forward To</option>
+                                    <% data.entities.forEach(entity => { %>
+                                            <option value="<%= entity.entity_id %>"><%= entity.name %></option>
+                                    <% }) %>
+                                </select>
+                                <div class="lms-cut-dropdown"></div>
+                                <label for="forward-to" class="lms-placeholder-dropdown">Forward To<span>*</span></label>
+                            </div>
+                        </div>
+
 
                         <!-- button -->
                         <div class="w-full px-2">
