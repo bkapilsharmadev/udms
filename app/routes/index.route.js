@@ -13,6 +13,7 @@ const fileVersionsRoute = require("./file-versions.route");
 const authRoute = require("./auth.route");
 const authmiddleware = require("../middleware/auth.middleware");
 const documentCategoriesRoute = require("./document-categories.route");
+const documentStagesUserRoute = require("./document-stage-users.route");
 
 router.use("/dashboard", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(dashboardRoute));
 router.use("/document-stages", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentStagesRoute));
@@ -23,5 +24,6 @@ router.use("/documents", asyncErrorHandler(authmiddleware.validateUserSession), 
 router.use("/files", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(filesRoute));
 router.use("/file-versions", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(fileVersionsRoute));
 router.use("/document-categories", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentCategoriesRoute));
+router.use("/document-stage-users",asyncErrorHandler(documentStagesUserRoute));
 router.use("/", asyncErrorHandler(authRoute));
 module.exports = router;
