@@ -61,7 +61,7 @@ CREATE TABLE entities (
 DROP TYPE IF EXISTS _enum_mentor_sign_status;
 CREATE TYPE _enum_mentor_sign_status AS ENUM ('NOT REQUIRED', 'YES', 'NO', 'ON LEAVE');
 
-DROP TYPE IF EXISTS documents;
+DROP TABLE IF EXISTS documents;
 CREATE TABLE documents (
     document_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     document_uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
@@ -83,12 +83,12 @@ CREATE TABLE documents (
 	active BOOLEAN DEFAULT TRUE
 );
 
-DROP TYPE IF EXISTS files;
+DROP TABLE IF EXISTS files;
 CREATE TABLE files (
-    file_id INT GENERATED ALWAYS AS IDENTITY,
+    file_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     latest_version_id INT,
-    document_id INT,
-    document_uuid UUID,
+    document_id INT NOT NULL REFERENCES documents (document_id),
+    document_uuid UUID NOT NULL REFERENCES documents (document_uuid),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     created_by INT,
@@ -96,14 +96,14 @@ CREATE TABLE files (
     active BOOLEAN DEFAULT TRUE
 );
 
-DROP TYPE IF EXISTS file_versions;
+DROP TABLE IF EXISTS file_versions;
 CREATE TABLE file_versions (
-    version_id INT GENERATED ALWAYS AS IDENTITY,
-    file_id INT,
+    version_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    file_id INT NOT NULL REFERENCES files (file_id),
     file_name INT,
     version_number INT NOT NULL,
-    document_id INT NOT NULL,
-    document_uuid UUID,
+    document_id INT NOT NULL REFERENCES documents (document_id),
+    document_uuid UUID NOT NULL REFERENCES documents (document_uuid),
     hash VARCHAR(255),
     document_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -113,10 +113,11 @@ CREATE TABLE file_versions (
     active BOOLEAN DEFAULT TRUE
 );
 
-DROP TYPE IF EXISTS document_reviews;
+DROP TABLE IF EXISTS document_reviews;
 CREATE TABLE document_reviews (
-    review_id INT GENERATED ALWAYS AS IDENTITY,
-    document_id INTEGER NOT NULL,
+    review_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    document_id INT NOT NULL REFERENCES documents (document_id),
+    document_uuid UUID NOT NULL REFERENCES documents (document_uuid),
     reviewed_by INT NOT NULL,
     reviewed_at TIMESTAMP NOT NULL,
     document_stage VARCHAR(50),
@@ -129,4 +130,5 @@ CREATE TABLE document_reviews (
     updated_by INT,
     active BOOLEAN DEFAULT TRUE
 );
+
 

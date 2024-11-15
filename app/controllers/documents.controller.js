@@ -1,9 +1,21 @@
 const { dbError } = require("../utils/error/error");
 const documentService = require("../services/documents.service");
 const { uploadFile } = require("../middleware/file-upload.middleware");
+const { getEntities } = require("../services/entities.service");
+const { MENTOR_SIGNS } = require("../constants");
 
 module.exports.renderDocuments = async (req, res, next) => {
-	res.render("documents.ejs");
+	// fetch all entities, MENTOR_SIGNS constants and render the documents view
+	const result = await Promise.all([
+		getEntities()
+	]);
+
+	const data = {
+		entities: result[0],
+		mentorSigns: MENTOR_SIGNS,
+	};
+
+	res.render("documents.ejs", data);
 };
 
 module.exports.createDocument = async (req, res, next) => {
