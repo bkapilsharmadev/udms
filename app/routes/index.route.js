@@ -8,7 +8,6 @@ const statusTypesRoute = require('./status-types.route');
 const entityTypesRoute = require('./entity-types.route');
 const entitiesRoute = require('./entities.route');
 const authRoute = require('./auth.route');
-const authMiddleware = require('../middleware/auth.middleware');
 
 router.use('/dashboard',asyncErrorHandler(dashboardRoute));
 router.use('/document-stages', asyncErrorHandler(documentStagesRoute));

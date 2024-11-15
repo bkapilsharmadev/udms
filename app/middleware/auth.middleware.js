@@ -3,8 +3,8 @@ const { getRedisData, setRedisData } = require('../utils/database/redis.utils');
 const serverFetch = require('../utils/server-fetch/fetch');
 
 module.exports.validateUserSession = async (req, res, next) => {
-    const { user_id: cookieUserId } = req.cookies?.undefined;
-    const { user_id: headerUserId } = req.headers?.undefined;
+    const { user_id: cookieUserId } = req.cookies ?? undefined;
+    const { user_id: headerUserId } = req.headers ?? undefined;
     const userId = cookieUserId || headerUserId;
 
     if (!userId || userId == undefined) {
@@ -46,31 +46,3 @@ module.exports.validateUserSession = async (req, res, next) => {
     next();
 }
 
-// module.exports.validateUserLogin = async (req, res, next) => {
-//     const { user_id: cookieUserId } = req.cookies?.undefined;
-//     const { user_id: headerUserId } = req.headers?.undefined;
-//     const userId = cookieUserId || headerUserId;
-
-//     if (!userId || userId == undefined) {
-//         return res.render('/siginin');
-//     }
-
-//     let data = await getRedisData(userId);
-//     if (data.status == 401) {
-//        return res.render('/siginin')
-//     }
-
-//     const authUrl = process.env.VALIDATE_SESSION_URL
-//     const { status, headers, body } = await serverFetch(authUrl, {
-//         method: 'GET',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             ...data
-//         }
-//     });
-//     if(status == 200) {
-//         return res.render('/dashboard');
-//     }
-
-//     next();
-// }

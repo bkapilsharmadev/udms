@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Ignore clicks within the sub-menu items
       if (e.target.closest(".sub-menu")) return;
 
-      e.preventDefault();
+      // e.preventDefault();
 
       // Close other submenus
       menuItems.forEach((el) => {
@@ -99,13 +99,5 @@ document.addEventListener("click", function (event) {
       dropdown.classList.add("hidden");
     }
   });
-});
-
-// Event delegation for delete button
-document.addEventListener("click", function (event) {
-  if (event.target.closest(".delete-btn")) {
-    const row = event.target.closest("tr");
-    row.remove(); // Delete the table row
-  }
 });
 

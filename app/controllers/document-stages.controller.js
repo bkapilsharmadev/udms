@@ -2,11 +2,13 @@ const { notFoundError, dbError } = require("../utils/error/error");
 const documentStagesService = require("../services/document-stages.service");
 
 module.exports.renderDocumentStages = async (req, res, next) => {
-	res.render("document-stages.ejs");
+	const stages = await documentStagesService.getDocumentStages();
+	res.render("document-stages.ejs",{stages});
 };
 
 module.exports.createDocumentStage = async (req, res, next) => {
-	const { document_stage, description, created_by } = req.body;
+	const { document_stage, description } = req.body;
+	const created_by = res.locals.username;
 	const result = await documentStagesService.createDocumentStage({
 		document_stage,
 		description,
