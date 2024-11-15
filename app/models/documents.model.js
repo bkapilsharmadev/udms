@@ -6,9 +6,9 @@ const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 
 // Create a new document
 module.exports.createDocument = async (document) => {
-    const { ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by } = document;
-    const query = `INSERT INTO documents (ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`;
-    const values = [ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by];
+    const { category_id, ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by } = document;
+    const query = `INSERT INTO documents (ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING document_id, document_uuid;`;
+    const values = [category_id, ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, status, created_by];
     const result = await sqlWrite.query(query, values);
     console.log(result);
     return result.rows[0];

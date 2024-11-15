@@ -4,7 +4,7 @@ module.exports.COOKIE_OPTIONS = {
     secure: false,
     httpOnly: true,
     sameSite: 'strict'
-}
+};
 
 //age: 30 days
 module.exports.COOKIE_OPTIONS_PERMANENT = {
@@ -13,5 +13,6 @@ module.exports.COOKIE_OPTIONS_PERMANENT = {
     httpOnly: true,
     sameSite: 'strict',
     maxAge: process.env.DEVICE_TOKEN_VALIDITY * 24 * 60 * 60 * 1000
-}
+};
 
+module.exports.MENTOR_SIGNS = ['NOT REQUIRED', 'YES', 'NO', 'ON LEAVE'];
