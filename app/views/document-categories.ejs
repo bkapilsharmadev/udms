@@ -16,12 +16,19 @@
                         <div class="frame-content">
                             <div class="flex flex-wrap gap-y-4">
 
-                                <!-- status_types -->
                                 <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                     <div class="lms-input-container">
-                                        <input id="status-name" class="lms-input" type="text" placeholder="" value="">
-                                        <label for="status-name" class="lms-placeholder">Status
+                                        <input id="category-name" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="category-name" class="lms-placeholder">Category
                                             Name<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="category-abbr" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="category-abbr" class="lms-placeholder">Category
+                                            Abbreviation<span>*</span></label>
                                     </div>
                                 </div>
 
@@ -32,6 +39,23 @@
                                             class="lms-placeholder">Description<span>*</span></label>
                                     </div>
                                 </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <select id="parent-category" class="lms-dropdropdown">
+                                            <option value="" disabled selected hidden>Select Parent Category</option>
+                                            <% documentCategories.forEach((type, index)=> { %>
+                                                <option value="<%= type.category_id %>">
+                                                    <%= type.document_category %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div class="lms-cut-dropdown"></div>
+                                        <label for="type" class="lms-placeholder-dropdown">Category
+                                            Name<span>*</span></label>
+                                    </div>
+                                </div>
+
 
                                 <!-- button -->
                                 <div class="w-full px-2">
@@ -66,7 +90,7 @@
                                             <tr>
                                                 <th class="p-4 text-xs font-bold text-center">S.No</th>
                                                 <th class="p-4 text-xs font-bold ">Category Name</th>
-                                                <th class="p-4 text-xs font-bold ">Category Abbr</th>
+                                                <th class="p-4 text-xs font-bold ">Category Abbreviation</th>
                                                 <th class="p-4 text-xs font-bold ">Description</th>
                                                 <th class="p-4 text-xs font-bold ">Parent</th>
                                                 <th class="p-4 text-xs font-bold text-center">Action</th>
@@ -75,7 +99,8 @@
                                         <tbody>
                                             <!-- Row 1 -->
                                             <% documentCategories.forEach((type, index)=> { %>
-                                                <tr class="hover:bg-blue-50" data-status-type="<%= type.status_type %>">
+                                                <tr class="hover:bg-blue-50"
+                                                    data-category-type="<%= type.category_id %>">
                                                     <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                         <%= index + 1 %>
                                                     </td>
@@ -99,6 +124,11 @@
                                                         <div id="dropdown-0"
                                                             class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                                                             <a href="#"
+                                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center update-btn">
+                                                                <i class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                                                <span class="ml-2">Update</span>
+                                                            </a>
+                                                            <a href="#"
                                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
                                                                 <i class="text-red-500 fa-solid fa-trash-can"></i><span
                                                                     class="ml-2">Delete</span>
@@ -115,6 +145,28 @@
 
                         </div>
                     </div>
+
+                    <div id="modal-background"
+                        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
+                        style=" z-index: 1035;">
+                        <!-- Modal Content -->
+                        <div class="bg-white rounded-lg p-6 w-full max-w-sm">
+                            <div id="modal-content">
+
+                            </div>
+                            <!-- Buttons -->
+                            <div class="mt-6 flex justify-end space-x-4">
+                                <button onclick="closeModal()" id="close-modal"
+                                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                                    Cancel
+                                </button>
+                                <button id="update-submit-btn"
+                                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -122,75 +174,240 @@
             <script src="../js/fetch.js"></script>
             <script>
 
-                // document.getElementById('submit-btn').addEventListener('click', async () => {
-                //     const status_type = document.getElementById('status-name').value;
-                //     const description = document.getElementById('description').value;
+                document.getElementById('submit-btn').addEventListener('click', async () => {
+                    const document_category = document.getElementById('category-name').value;
+                    const category_abbr = document.getElementById('category-abbr').value;
+                    const description = document.getElementById('description').value;
+                    const parent_id = document.getElementById('parent-category').value?.null;
 
-                //     const url = '/status-types/create';
-                //     const method = 'POST';
-                //     const obj = { status_type, description };
+                    const url = '/document-categories/create';
+                    const method = 'POST';
+                    const obj = { document_category, category_abbr, description, parent_id };
 
-                //     const data = await fetchApi(url, method, obj);
+                    const data = await fetchApi(url, method, obj);
 
-                //     if (data) {
-                //         appendDataToTable({ status_type, description });
-                //         document.getElementById('status-name').value = '';
-                //         document.getElementById('description').value = '';
-                //     }
-                //     console.log('data ', JSON.stringify(data));
-                // });
+                    if (data) {
+                        appendDataToTable({ document_category, category_abbr, description, parent_id });
+                        document.getElementById('category-name').value = '';
+                        document.getElementById('category-abbr').value = '';
+                        document.getElementById('description').value = '';
+                        document.getElementById('parent-category').options[0].selected = true;
+                    }
+                    console.log('data ', JSON.stringify(data));
+                });
 
-                // function appendDataToTable(data) {
-                //     let tableBody = document.querySelector('tbody');
-                //     let rowCount = tableBody.rows.length;
+                function appendDataToTable(data) {
+                    let tableBody = document.querySelector('tbody');
+                    let rowCount = tableBody.rows.length;
 
-                //     let tableRow = document.createElement('tr');
-                //     tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                //                 ${rowCount + 1}
-                //             </td>
-                //             <td class="p-4 text-sm text-gray-700 ">
-                //                 ${data.status_type}
-                //             </td>
-                //             <td class="p-4 text-sm text-gray-700 ">
-                //                 ${data.description}
-                //             </td>
-                //             <td class="p-4 text-center relative">
-                //                 <button onclick="toggleDropdown(event)"
-                //                     class="focus:outline-none text-gray-600 px-4"><i
-                //                         class="fa-solid fa-ellipsis-vertical"></i></button>
+                    let tableRow = document.createElement('tr');
+                    tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                        ${rowCount + 1}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.document_category}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.category_abbr}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.description}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                    </td>
+                                                    <td class="p-4 text-center relative">
+                                                        <button onclick="toggleDropdown(event)"
+                                                            class="focus:outline-none text-gray-600 px-4"><i
+                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
 
-                //                 <!-- Dropdown menu -->
-                //                 <div id="dropdown-0"
-                //                     class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                //                     <a href="#"
-                //                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                //                         <i class="text-red-500 fa-solid fa-trash-can"></i><span
-                //                             class="ml-2">Delete</span>
-                //                     </a>
-                //                 </div>
-                //             </td>`
-                //     tableRow.classList.add('"hover:bg-blue-50"');
-                //     tableRow.setAttribute('data-status-type', data.status_type);
-                //     tableBody.appendChild(tableRow);
-                // }
+                                                        <div id="dropdown-0"
+                                                            class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                            <a href="#"
+                                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center update-btn">
+                                                                <i class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                                                <span class="ml-2">Update</span>
+                                                            </a>
+                                                            <a href="#"
+                                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                <i class="text-red-500 fa-solid fa-trash-can"></i><span
+                                                                    class="ml-2">Delete</span>
+                                                            </a>
+                                                        </div>
+                                                    </td>`
+                    tableRow.classList.add('"hover:bg-blue-50"');
 
-                // document.addEventListener("click", async function (event) {
-                //     if (event.target.closest(".delete-btn")) {
-                //         const row = event.target.closest("tr");
-                //         const statusType = row.getAttribute("data-status-type");
+                    let lastChildDataId = document.querySelector('tbody').lastElementChild.getAttribute('data-category-type');
+                    tableRow.setAttribute('data-category-type', (parseInt(lastChildDataId) + 1));
+                    tableBody.appendChild(tableRow);
+                }
 
-                //         const url = '/status-types/delete';
-                //         const method = 'POST';
-                //         const obj = { statusType };
+                document.addEventListener("click", async function (event) {
+                    if (event.target.closest(".delete-btn")) {
+                        const row = event.target.closest("tr");
+                        const category_id = row.getAttribute("data-category-type");
 
-                //         const data = await fetchApi(url, method, obj);
-                //         if (data) {
-                //             row.remove();
-                //             alert(data.message);
-                //         }
-                //     }
-                // });
+                        const url = '/document-categories/delete';
+                        const method = 'POST';
+                        const obj = { category_id };
 
+                        const data = await fetchApi(url, method, obj);
+                        if (data) {
+                            row.remove();
+                            alert(data.message);
+                        }
+                    }
+
+                    if (event.target.closest(".update-btn")) {
+                        const row = event.target.closest("tr");
+                        const category_id = row.getAttribute("data-category-type");
+
+                        const url = `/document-categories/fetch/${category_id}`;
+                        const method = 'GET';
+
+                        const data = await fetchApi(url, method, null);
+                        if (data) {
+                            console.log('data update ', JSON.stringify(data));
+                            appenHtmlToModal(data);
+                            openModal();
+                        }
+
+                    }
+                });
+
+
+                function appenHtmlToModal(data) {
+
+                    const category_data = data ?? [];
+                    const category_name = category_data[0].document_category;
+                    const category_abbr = category_data[0].category_abbr;
+                    const parent_id = category_data[0].parent_id ?? '';
+                    const description = category_data[0].description;
+                    const category_id = category_data[0].category_id;
+
+                    const modalContent = `<div class="frame-container">
+                        <div class="frame-title">
+                            <span>Document Categories</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="flex flex-col flex-wrap gap-y-4">
+
+                                <div class="mb-4 w-full px-2">
+                                    <div class="lms-input-container">
+                                        <input id="category-name-edit" class="lms-input" type="text" placeholder="" value="${category_name}">
+                                        <label for="category-name-edit" class="lms-placeholder">Category
+                                            Name<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full px-2">
+                                    <div class="lms-input-container">
+                                        <input id="category-abbr-edit" class="lms-input" type="text" placeholder="" value="${category_abbr}">
+                                        <label for="category-abbr-edit" class="lms-placeholder">Category
+                                            Abbreviation<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full px-2">
+                                    <div class="lms-input-container">
+                                        <input id="description-edit" class="lms-input" type="text" placeholder="" value="${description}">
+                                        <label for="description-edit"
+                                            class="lms-placeholder">Description<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full px-2">
+                                    <div class="lms-input-container">
+                                        <select id="parent-category-edit" class="lms-dropdropdown">
+                                            <option value="" disabled selected hidden>Select Parent Category</option>
+                                            <% documentCategories.forEach((type, index)=> { %>
+                                                <option value="<%= type.category_id %>">
+                                                    <%= type.document_category %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div class="lms-cut-dropdown"></div>
+                                        <label for="type" class="lms-placeholder-dropdown">Category
+                                            Name<span>*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+
+                    document.getElementById("modal-content").innerHTML = modalContent;
+                    document.getElementById("update-submit-btn").setAttribute("data-category-id", category_id);
+
+                    const options = document.getElementById("parent-category-edit");
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value == parent_id) {
+                            options[i].selected = true;
+                            break;
+                        }
+                    }
+                }
+
+                document.getElementById('update-submit-btn').addEventListener('click', async (event) => {
+                    const category_id = event.target.getAttribute("data-category-id");
+                    const document_category = document.getElementById("category-name-edit").value;
+                    const category_abbr = document.getElementById("category-abbr-edit").value;
+                    const description = document.getElementById("description-edit").value;
+                    const parent_id = document.getElementById("parent-category-edit").value;
+
+                    const url = '/document-categories/update';
+                    const method = 'POST';
+                    const obj = { category_id, document_category, category_abbr, description, parent_id };
+
+                    const data = await fetchApi(url, method, obj);
+
+                    if (data) {
+                        document.getElementById('category-name-edit').value = '';
+                        document.getElementById('category-abbr-edit').value = '';
+                        document.getElementById('description-edit').value = '';
+                        document.getElementById('parent-category-edit').options[0].selected = true;
+
+                        const row = document.querySelector(`tr[data-category-type="${category_id}"]`);
+                        const rowIndex = row.firstElementChild.innerText;
+                        const tableBody = document.querySelector('tbody');
+                        const rowCount = tableBody.rows.length;
+                        row.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                            ${rowIndex}
+                                         </td>
+                                         <td class="p-4 text-sm text-gray-700 ">
+                                           ${document_category}
+                                         </td>
+                                         <td class="p-4 text-sm text-gray-700 ">
+                                             ${category_abbr}
+                                         </td>
+                                        <td class="p-4 text-sm text-gray-700 ">
+                                            ${description}
+                                        </td>
+                                        <td class="p-4 text-sm text-gray-700 ">
+                                        </td>
+                                        <td class="p-4 text-center relative">
+                                            <button onclick="toggleDropdown(event)"
+                                                class="focus:outline-none text-gray-600 px-4"><i
+                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
+
+                                            <div id="dropdown-0"
+                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                <a href="#"
+                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center update-btn">
+                                                    <i class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                                    <span class="ml-2">Update</span>
+                                                </a>
+                                                <a href="#"
+                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                    <i class="text-red-500 fa-solid fa-trash-can"></i><span
+                                                        class="ml-2">Delete</span>
+                                                </a>
+                                            </div>
+                                        </td>`;
+
+                        closeModal();
+                        alert(data.message);
+                    }
+                    console.log('data ', JSON.stringify(data));
+                });
 
             </script>
     </body>

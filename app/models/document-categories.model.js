@@ -23,6 +23,7 @@ module.exports.createDocumentCategory = async (documentCategory) => {
     return result.rowCount > 0;
 };
 
+//Query To Update Document Query
 module.exports.updateDocumentCategory = async (documentCategory) => {
     const { category_id, document_category, category_abbr, description, parent_id, updated_by } = documentCategory;
 
@@ -33,4 +34,22 @@ module.exports.updateDocumentCategory = async (documentCategory) => {
 
     const result = await sqlWrite.query(query, values);
     return result.rowCount > 0;
+}
+
+//Query To Delete Document Query
+module.exports.deleteDocumentCategory = async (category_id) => {
+    const query = `UPDATE document_categories SET active = false WHERE category_id = $1;`;
+	const values = [category_id];
+
+	const result = await sqlWrite.query(query, values);
+	return result.rowCount > 0; 
+}
+
+//Query To Fetch Document Query
+module.exports.fetchDocumentCategory = async (category_id) => {
+    const query = `SELECT * FROM document_categories WHERE category_id = $1 AND active = true;`;
+    const values = [category_id];
+
+    const result = await sqlRead.query(query,values);
+    return result.rows;
 }

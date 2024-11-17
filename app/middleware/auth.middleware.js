@@ -39,7 +39,6 @@ module.exports.validateUserSession = async (req, res, next) => {
     await setRedisData(userId, data);
     console.log('username ', data.username);
     req.session_username = data.username;
-    res.locals.username = data.username;
     next();
 }
 

@@ -15,17 +15,35 @@ module.exports.createDocumentCategory = async (documentCategory) => {
             data: result,
         });
     }
-    return { message: "Document Category created successfully" };
+    return { message: "Document category created successfully" };
 }
 
-module.exports.updateDocumentCategory = async(documentCategory) => {
+module.exports.updateDocumentCategory = async (documentCategory) => {
     const result = documentCategoryModel.updateDocumentCategory(documentCategory);
-    if(!result){
+    if (!result) {
         throw dbError({
             moduleName: "document-categories.service.js",
             message: "Error updating document category",
             data: result,
         });
     }
-    return { message: "Document Category updated successfully" };
+    return { message: "Document category updated successfully" };
+}
+
+module.exports.deleteDocumentCategory = async (category_id) => {
+    const result = documentCategoryModel.deleteDocumentCategory(category_id);
+    if (!result) {
+        throw dbError({
+            moduleName: "entities.service.js",
+            message: "Error deleting document category",
+            data: result,
+        });
+    }
+
+    return { message: "Document category deleted successfully" };
+}
+
+module.exports.fetchDocumentCategory = async (category_id) => {
+    const result = documentCategoryModel.fetchDocumentCategory(category_id);
+    return result || [];
 }

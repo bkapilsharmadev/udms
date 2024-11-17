@@ -101,3 +101,14 @@ document.addEventListener("click", function (event) {
   });
 });
 
+
+function openModal() {
+  document.getElementById('modal-background').classList.remove('hidden');
+}
+
+// Close Modal Function
+function closeModal() {
+  document.getElementById('modal-background').classList.add('hidden');
+}
+
+document.getElementById('close-modal').addEventListener('click',closeModal());
