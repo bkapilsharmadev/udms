@@ -15,7 +15,19 @@ module.exports.renderDocuments = async (req, res, next) => {
 		mentorSigns: MENTOR_SIGNS,
 	};
 
-	res.render("documents.ejs", { data });
+	res.render("documents/documents.ejs", { data });
+};
+
+module.exports.renderMyDocumentList = async (req, res, next) => {
+	const result = await documentService.getMyDocuments(req.session_username);
+	res.render("documents/my-document-list.ejs", { documents: result });
+};
+
+module.exports.renderReceivedDocumentList = async (req, res, next) => {
+	const result = await documentService.getReceivedDocuments(
+		req.session_username
+	);
+	res.render("documents/received-document-list.ejs", { documents: result });
 };
 
 module.exports.createDocument = async (req, res, next) => {
@@ -70,6 +82,21 @@ module.exports.createDocument = async (req, res, next) => {
 	});
 };
 
+module.exports.renderSingleDocument = async (req, res, next) => {
+	const { document_id } = req.params;
+	const result = await Promise.all([
+		getStatusTypes(),
+		documentService.getDocumentById(document_id),
+	]);
+
+	const data = {
+		statusTypes: result[0],
+		document: result[1],
+	};
+
+	res.render("documents/single-document.ejs", { data });
+};
+
 module.exports.getDocuments = async (req, res, next) => {
 	const result = await documentService.getDocuments();
 	res.status(200).json(result);
@@ -87,7 +114,7 @@ module.exports.updateDocument = async (req, res, next) => {
 		document_id,
 		ref_no,
 		description,
-		updated_by : req.session_username,
+		updated_by: req.session_username,
 	});
 	res.status(200).json(result);
 };

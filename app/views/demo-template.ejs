@@ -14,77 +14,8 @@
     </div>
 
     <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const sidebar = document.querySelector('.sidebar');
-            const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-            const menuItems = document.querySelectorAll(".menu-item");
-
-            // Sidebar toggle functionality
-            function toggleSidebar() {
-                sidebar.classList.toggle('hidden');
-                document.body.classList.toggle('sidebar-hidden');
-            }
-
-            toggleSidebarBtn.addEventListener('click', toggleSidebar);
-
-            // Adjust sidebar on window resize
-            function checkWindowSize() {
-                if (window.innerWidth < 786) {
-                    sidebar.classList.add('hidden');
-                    document.body.classList.add('sidebar-hidden');
-                } else {
-                    sidebar.classList.remove('hidden');
-                    document.body.classList.remove('sidebar-hidden');
-                }
-            }
-
-            checkWindowSize();
-            window.addEventListener('resize', checkWindowSize);
-
-            // Submenu toggle functionality
-            menuItems.forEach((item) => {
-                item.addEventListener("click", function (e) {
-                    // Ignore clicks within the sub-menu items
-                    if (e.target.closest(".sub-menu")) return;
-
-                    e.preventDefault();
-
-                    // Close other submenus
-                    menuItems.forEach((el) => {
-                        if (el !== item) {
-                            const submenu = el.querySelector(".sub-menu");
-                            if (submenu) submenu.classList.remove("show");
-                            el.classList.remove("active"); // Remove active from other menu items
-                        }
-                    });
-
-                    // Toggle current submenu
-                    const submenu = item.querySelector(".sub-menu");
-                    if (submenu) {
-                        submenu.classList.toggle("show");
-                    }
-
-                    // Add active class to the clicked menu item
-                    item.classList.toggle("active");
-                });
-            });
-
-            // Sub-menu item click handler
-            document.querySelectorAll('.sub-menu-itam').forEach(subMenuItem => {
-                subMenuItem.addEventListener('click', function (event) {
-                    // Prevent default link behavior
-                    event.preventDefault();
-
-                    // Remove active class from all sub-menu items
-                    document.querySelectorAll('.sub-menu-itam').forEach(i => i.classList.remove('active'));
-
-                    // Add active class to the clicked sub-menu item
-                    subMenuItem.classList.add('active');
-                });
-            });
-        });
-    </script>
+    <script src="js/utils.js"></script>
+    <script src="js/fetch.js"></script>
 
 </body>
 
