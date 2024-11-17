@@ -8,11 +8,10 @@ module.exports.renderStatusTypes = async (req, res, next) => {
 
 module.exports.createStatusType = async (req, res, next) => {
 	const { status_type, description } = req.body;
-	const created_by = res.locals.username;
 	const result = await statusTypeService.createStatusType({
 		status_type,
 		description,
-		created_by,
+		created_by: req.session_username,
 	});
 	res.status(201).json(result);
 };

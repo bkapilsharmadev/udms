@@ -10,3 +10,8 @@ module.exports.authenticate = async(req,res,next) => {
 module.exports.login = async(req,res,next) => {
     res.render("login.ejs");
 }
+
+module.exports.logout = async(req,res,next) => {
+    await authService.logout(req,res,next);
+    res.redirect("/");
+}

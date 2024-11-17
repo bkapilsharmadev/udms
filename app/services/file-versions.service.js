@@ -1,4 +1,4 @@
-const fileVersionModel = require("../models/fileVersions.model");
+const fileVersionModel = require("../models/file-versions.model");
 
 module.exports.createFileVersion = async (fileVersion) => {
     const result = await fileVersionModel.createFileVersion(fileVersion);

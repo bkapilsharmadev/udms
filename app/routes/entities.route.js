@@ -3,6 +3,7 @@ const { asyncErrorHandler } = require('../middleware/error.middleware');
 const entityController = require('../controllers/entities.controller');
 
 router.get("/fetch", asyncErrorHandler(entityController.getEntities));
+router.get("/fetch/:id", asyncErrorHandler(entityController.getEntity));
 router.post("/create", asyncErrorHandler(entityController.createEntity));
 router.post("/delete", asyncErrorHandler(entityController.deleteEntity));
 router.post("/update", asyncErrorHandler(entityController.updateEntity));  // New route

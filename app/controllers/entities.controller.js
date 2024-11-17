@@ -23,6 +23,12 @@ module.exports.getEntities = async (req, res, next) => {
 	res.status(200).json(result);
 };
 
+module.exports.getEntity = async (req, res, next) => {
+	const { id } = req.params;
+	const result = await entityService.getEntity(id);
+	res.status(200).json(result);
+}
+
 module.exports.deleteEntity = async (req, res, next) => {
 	const { entity_id } = req.body;
 	const result = await entityService.deleteEntity(entity_id);

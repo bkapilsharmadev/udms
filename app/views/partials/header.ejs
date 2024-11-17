@@ -1,18 +1,41 @@
 <div class="navbar">
+  <!-- Toggle Sidebar Button -->
+  <button id="toggleSidebarBtn" class="toggleSidebarBtn">
+    <img
+      src="https://img.icons8.com/material-outlined/24/000000/menu--v1.png"
+      alt="Toggle Sidebar"
+    />
+  </button>
 
-    <!-- Toggle Sidebar Button -->
-    <button id="toggleSidebarBtn" class="toggleSidebarBtn">
-        <img src="https://img.icons8.com/material-outlined/24/000000/menu--v1.png" alt="Toggle Sidebar">
+  <!-- Profile -->
+  <div class="profile">
+    <button
+      class="user-dropdown-btn flex items-center focus:outline-none"
+      onclick="toggleDropdownProfile()"
+    >
+      <img
+        class="profile-img w-8 h-8 rounded-full"
+        src="https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg"
+        alt="Profile Image"
+      />
+      <h1 class="admin-heading text-gray-800 text-sm font-semibold ml-2">
+        Admin
+      </h1>
     </button>
 
-    <!-- Profile -->
-    <div class="profile">
-        <button class="user-dropdown-btn" type="">
-            <img class="profile-img"
-                src="https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg"
-                alt="">
-            <h1 class="admin-heading">Admin</h1>
-        </button>
+    <!-- Dropdown Menu -->
+    <div
+      id="profiledropdownMenu"
+      class="absolute right-1 top-12 mt-5 w-40 bg-white rounded-md shadow-lg hidden"
+    >
+      <ul class="p-1">
+        <li class="text-sm">
+          <a href="/logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+            <i class="fa-solid fa-right-from-bracket mr-2 text-red-600"></i
+            >Logout</a
+          >
+        </li>
+      </ul>
     </div>
-
+  </div>
 </div>

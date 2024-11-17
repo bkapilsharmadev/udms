@@ -2,10 +2,16 @@ const { dbError } = require("../utils/error/error");
 const documentModel = require("../models/documents.model");
 
 module.exports.createDocument = async (document) => {
-    const result = await documentModel.createDocument(document);
-    if (!result) {
+    console.log(document);
+    
+    const documents = await documentModel.createDocument(document);
+    if (!document?.document_id) {
         throw dbError({ message: "Error creating document", data: result });
     }
+
+    //handle multiple files upload by calling fileService.createFile()
+
+
     return { message: "Document created successfully" };
 };
 

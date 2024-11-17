@@ -27,6 +27,7 @@ module.exports.customErrorHandler = (err, req, res, next) => {
     let httpStatus = err.httpStatus || 500;
     let data = err.data;
     let redirectUrl = '/admin/dashboard';
+    let redirectPage = 'home/error';
 
     if (err instanceof CustomError) {
         httpStatus = err.httpStatus || httpStatus;
@@ -57,7 +58,8 @@ module.exports.customErrorHandler = (err, req, res, next) => {
 
     if(httpStatus == 401) {
         console.log('inside 401 ');
-        redirectUrl = '/signin';
+        redirectUrl = '/';
+        redirectPage = 'login.ejs';
         message = 'Unauthorized Access!';
     }
 
@@ -70,7 +72,7 @@ module.exports.customErrorHandler = (err, req, res, next) => {
         return res.status(httpStatus).json({ reqId, status, message, httpStatus, redirectUrl, data });
     } else {
         console.log('contentType >>> inside else', contentType);
-        res.render('home/error', { reqId, status, message, httpStatus, redirectUrl, data });
+        res.render(redirectPage, { reqId, status, message, httpStatus, redirectUrl, data });
     }
 }
 
