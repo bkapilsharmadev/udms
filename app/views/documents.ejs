@@ -182,14 +182,14 @@
                           <!-- Forward To -->
                         <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                             <div class="lms-input-container">
-                                <select id="received-from" class="lms-dropdropdown">
+                                <select id="forwarded-to" class="lms-dropdropdown">
                                     <option value="" disabled selected hidden>Forward To</option>
                                     <% data.entities.forEach(entity => { %>
                                             <option value="<%= entity.entity_id %>"><%= entity.name %></option>
                                     <% }) %>
                                 </select>
                                 <div class="lms-cut-dropdown"></div>
-                                <label for="forward-to" class="lms-placeholder-dropdown">Forward To<span>*</span></label>
+                                <label for="forwarded-to" class="lms-placeholder-dropdown">Forward To<span>*</span></label>
                             </div>
                         </div>
 
@@ -230,15 +230,15 @@
             formData.append('category_id', document.getElementById('category').value);
             formData.append('ref_no', document.getElementById('ref-no').value);
             formData.append('received_from', document.getElementById('received-from').value);
+            formData.append('university_entt_id', document.getElementById('university').value);
             formData.append('campus_entt_id', document.getElementById('campus').value);
             formData.append('school_entt_id', document.getElementById('school').value);
             formData.append('department_entt_id', document.getElementById('department').value);
             formData.append('description', document.getElementById('description').value);
-
-            //print the form data
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
+            formData.append('mentor_sign', document.getElementById('mentor-sign').value);
+            formData.append('status', document.getElementById('status-type').value);
+            formData.append('comments', document.getElementById('comments').value);
+            formData.append('forwarded_to', document.getElementById('forwarded-to').value);
 
             // Get file(s) selected and append them to FormData
             const files = document.getElementById('doc-files').files;

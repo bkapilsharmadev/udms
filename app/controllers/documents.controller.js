@@ -39,6 +39,7 @@ module.exports.createDocument = async (req, res, next) => {
 				mentor_sign,
 				status,
 				comments,
+				forwarded_to,
 			} = req.body;
 
 			// Get the files from req.files after Multer processes them
@@ -57,6 +58,7 @@ module.exports.createDocument = async (req, res, next) => {
 				mentor_sign,
 				status,
 				comments,
+				forwarded_to,
 				files,
 				created_by: req.session_username,
 			});

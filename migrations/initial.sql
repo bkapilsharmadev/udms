@@ -115,12 +115,12 @@ DROP TABLE IF EXISTS file_versions;
 CREATE TABLE file_versions (
     version_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     file_id INT NOT NULL REFERENCES files (file_id),
-    file_name INT,
+    file_name VARCHAR(255) NOT NULL,
     version_number INT NOT NULL,
     document_id INT NOT NULL REFERENCES documents (document_id),
     document_uuid UUID NOT NULL REFERENCES documents (document_uuid),
     hash VARCHAR(255),
-    document_url TEXT,
+    file_url VARCHAR(512),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     created_by INT,
@@ -147,3 +147,22 @@ CREATE TABLE document_reviews (
 );
 
 
+
+
+CREATE OR REPLACE FUNCTION increment_version_number()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Check if there is an existing version for the same file_id
+  SELECT COALESCE(MAX(version_number), 0) + 1 INTO NEW.version_number
+  FROM file_versions
+  WHERE file_id = NEW.file_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_increment_version_number
+BEFORE INSERT ON file_versions
+FOR EACH ROW
+EXECUTE FUNCTION increment_version_number();
