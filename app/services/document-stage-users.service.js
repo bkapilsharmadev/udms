@@ -1,3 +1,4 @@
+const { dbError } = require("../utils/error/error");
 const documentStagesUsersModel = require("../models/document-stage-users.model");
 
 module.exports.getDocumentStagesUsers = async() => {
@@ -14,7 +15,7 @@ module.exports.createDocumentStagesUsers = async(documentStagesUsers) => {
 			data: result,
 		});
     }
-    return {message : "Document Stages Users Created Successfully !"};
+    return {message : "Document Stage User Created Successfully !"};
 }
 
 module.exports.deleteDocumentStageUsers = async (username) => {
@@ -28,5 +29,5 @@ module.exports.deleteDocumentStageUsers = async (username) => {
 		});
 	}
 
-	return { message: "Document stages users deleted successfully" };
+	return { message: "Document Stage User Deleted Successfully" };
 }

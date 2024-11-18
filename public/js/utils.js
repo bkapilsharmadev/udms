@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
   //         subMenuItem.classList.add('active');
   //     });
   // });
-
 });
 
 // Toggle Dropdown action menu item
@@ -72,21 +71,20 @@ document.addEventListener("DOMContentLoaded", function () {
 // }
 
 function toggleDropdown(event) {
+  console.log("toggled ");
   // Close all other dropdowns
-  document.querySelectorAll('.dropdown').forEach(dropdown => {
-    dropdown.classList.add('hidden');
+  document.querySelectorAll(".dropdown").forEach((dropdown) => {
+    dropdown.classList.add("hidden");
   });
 
   // Toggle the dropdown next to the clicked button
   const button = event.currentTarget;
   const dropdown = button.nextElementSibling;
-  
-  if (dropdown && dropdown.classList.contains('dropdown')) {
-    dropdown.classList.toggle('hidden');
+
+  if (dropdown && dropdown.classList.contains("dropdown")) {
+    dropdown.classList.toggle("hidden");
   }
 }
-
-
 
 // Close the dropdown if clicking outside of it
 document.addEventListener("click", function (event) {
@@ -101,14 +99,25 @@ document.addEventListener("click", function (event) {
   });
 });
 
-
 function openModal() {
-  document.getElementById('modal-background').classList.remove('hidden');
+  document.getElementById("modal-background").classList.remove("hidden");
 }
 
 // Close Modal Function
 function closeModal() {
-  document.getElementById('modal-background').classList.add('hidden');
+  document.getElementById("modal-background").classList.add("hidden");
 }
 
-document.getElementById('close-modal').addEventListener('click',closeModal());
+function toggleDropdownProfile() {
+  const profiledropdownMenu = document.getElementById("profiledropdownMenu");
+  profiledropdownMenu.classList.toggle("hidden");
+}
+
+// Close dropdown when clicking outside
+window.addEventListener("click", function (e) {
+  const dropdown = document.getElementById("profiledropdownMenu");
+  const button = document.querySelector(".user-dropdown-btn");
+  if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.classList.add("hidden");
+  }
+});

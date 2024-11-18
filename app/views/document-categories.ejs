@@ -184,14 +184,20 @@
                     const method = 'POST';
                     const obj = { document_category, category_abbr, description, parent_id };
 
-                    const data = await fetchApi(url, method, obj);
+                    const {error,data} = await fetchApi(url, method, obj);
+
+                    if(error){
+                      alert(error.message); 
+                      return;
+                    }
 
                     if (data) {
                         appendDataToTable({ document_category, category_abbr, description, parent_id });
                         document.getElementById('category-name').value = '';
                         document.getElementById('category-abbr').value = '';
                         document.getElementById('description').value = '';
-                        document.getElementById('parent-category').options[0].selected = true;
+                        document.getElementById('parent-category').firstElementChild.selected = true;
+                        alert(data.message);
                     }
                     console.log('data ', JSON.stringify(data));
                 });
@@ -250,7 +256,13 @@
                         const method = 'POST';
                         const obj = { category_id };
 
-                        const data = await fetchApi(url, method, obj);
+                        const {error,data} = await fetchApi(url, method, obj);
+
+                        if(error){
+                          alert(error.message);
+                          return;
+                        }
+
                         if (data) {
                             row.remove();
                             alert(data.message);
@@ -264,7 +276,13 @@
                         const url = `/document-categories/fetch/${category_id}`;
                         const method = 'GET';
 
-                        const data = await fetchApi(url, method, null);
+                        const {error,data} = await fetchApi(url, method, null);
+                        
+                        if(error){
+                          alert(error.message);
+                          return;
+                        }
+
                         if (data) {
                             console.log('data update ', JSON.stringify(data));
                             appenHtmlToModal(data);
@@ -357,7 +375,12 @@
                     const method = 'POST';
                     const obj = { category_id, document_category, category_abbr, description, parent_id };
 
-                    const data = await fetchApi(url, method, obj);
+                    const {error,data} = await fetchApi(url, method, obj);
+                    
+                    if(error){
+                      alert(error.message);
+                      return;
+                    }
 
                     if (data) {
                         document.getElementById('category-name-edit').value = '';

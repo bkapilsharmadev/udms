@@ -31,7 +31,7 @@ module.exports.getEntity = async (entity_id) => {
 		});
 	}
 
-	return result;
+	return entity;
 };
 
 module.exports.deleteEntity = async (entity_id) => {

@@ -123,12 +123,18 @@
                     const method = 'POST';
                     const obj = { status_type, description };
 
-                    const data = await fetchApi(url, method, obj);
+                    const {error,data} = await fetchApi(url, method, obj);
+
+                    if(error) {
+                       alert(error.message); 
+                       return;
+                    }
 
                     if (data) {
                         appendDataToTable({ status_type, description });
                         document.getElementById('status-name').value = '';
                         document.getElementById('description').value = '';
+                        alert(data.message);
                     }
                     console.log('data ', JSON.stringify(data));
                 });
@@ -176,7 +182,13 @@
                         const method = 'POST';
                         const obj = { statusType };
 
-                        const data = await fetchApi(url, method, obj);
+                        const {error,data} = await fetchApi(url, method, obj);
+
+                        if(error){
+                         alert(error.message);
+                         return;
+                        }
+
                         if (data) {
                             row.remove();
                             alert(data.message);
