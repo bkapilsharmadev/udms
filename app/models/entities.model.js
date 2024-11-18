@@ -9,11 +9,11 @@ module.exports.createEntity = async (entity) => {
 	const { name, entity_type, parent_id, created_by } = entity;
 
 	const query = `INSERT INTO entities (name, entity_type, parent_id, created_by)
-	VALUES ($1, $2, $3, $4);`;
+	VALUES ($1, $2, $3, $4) RETURNING entity_id;`;
 	const values = [name, entity_type, parent_id, created_by];
 
 	const result = await sqlWrite.query(query, values);
-	return result.rowCount > 0;
+	return result.rows[0];
 };
 
 // Query to get all entities

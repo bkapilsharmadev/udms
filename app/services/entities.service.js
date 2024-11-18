@@ -12,7 +12,7 @@ module.exports.createEntity = async (entity) => {
 		});
 	}
 
-	return { message: "Entity created successfully" };
+	return result;
 };
 
 module.exports.getEntities = async () => {

@@ -16,11 +16,11 @@ module.exports.createDocumentCategory = async (documentCategory) => {
     const { document_category, category_abbr, description, parent_id, created_by } = documentCategory;
 
     const query = `INSERT INTO document_categories (document_category, category_abbr,description, parent_id, created_by)
-	VALUES ($1, $2, $3, $4, $5);`;
+	VALUES ($1, $2, $3, $4, $5) RETURNING category_id;`;
     const values = [document_category, category_abbr, description, parent_id, created_by];
 
     const result = await sqlWrite.query(query, values);
-    return result.rowCount > 0;
+    return result.rows[0];
 };
 
 //Query To Update Document Query

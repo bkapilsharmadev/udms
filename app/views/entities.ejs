@@ -202,15 +202,16 @@
                         document.querySelector('#name-entity').value = '';
                         document.querySelector('#type').value = '';
                         document.querySelector('#parent-entity').value = '';
-                        alert(data.message);
-                        appendToTable({ name, entity_type });
+                        alert("Entity Created Successfully");
+                        const entity_id = data.entity_id;
+                        appendToTable({ name, entity_type, entity_id });
                     }
                     console.log('Response', data);
                 })
 
                 //Delete Enitity
                 document.addEventListener("click", async function (event) {
-                    if (event.target.classList.contains("delete-btn")) {
+                    if (event.target.closest(".delete-btn")) {
                         const row = event.target.closest("tr");
                         const entityId = row.getAttribute("data-id");
 
@@ -324,8 +325,8 @@
 
                     let tableRow = document.createElement('tr');
                     let lastChildDataId = document.querySelector('tbody').lastElementChild.getAttribute('data-id');
-                    const newId = parseInt(lastChildDataId) + 1;
-                    tableRow.setAttribute('data-id', newId);
+                    // const newId = parseInt(lastChildDataId) + 1;
+                    tableRow.setAttribute('data-id', entity.entity_id);
 
                     tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                         ${rowCount + 1}
@@ -348,7 +349,7 @@
                                                                     <i
                                                                         class="text-red-500 fa-solid fa-pen-to-square"></i>
                                                                     <span class="ml-2"
-                                                                        data-entity-id="${newId}"
+                                                                        data-entity-id="${entity.entity_id}"
                                                                         id="update-btn">Update</span>
                                                                 </a>
                                                                 <a href="#"

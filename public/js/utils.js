@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Ignore clicks within the sub-menu items
       if (e.target.closest(".sub-menu")) return;
 
-      // e.preventDefault();
+      e.preventDefault();
 
       // Close other submenus
       menuItems.forEach((el) => {
@@ -58,32 +58,15 @@ document.addEventListener("DOMContentLoaded", function () {
   //     subMenuItem.addEventListener('click', function (event) {
   //         event.preventDefault();
   //         document.querySelectorAll('.sub-menu-itam').forEach(i => i.classList.remove('active'));
-
   //         subMenuItem.classList.add('active');
   //     });
   // });
 });
 
 // Toggle Dropdown action menu item
-// function toggleDropdown(index) {
-//   const dropdown = document.getElementById(`dropdown-${index}`);
-//   dropdown.classList.toggle("hidden");
-// }
-
-function toggleDropdown(event) {
-  console.log("toggled ");
-  // Close all other dropdowns
-  document.querySelectorAll(".dropdown").forEach((dropdown) => {
-    dropdown.classList.add("hidden");
-  });
-
-  // Toggle the dropdown next to the clicked button
-  const button = event.currentTarget;
-  const dropdown = button.nextElementSibling;
-
-  if (dropdown && dropdown.classList.contains("dropdown")) {
-    dropdown.classList.toggle("hidden");
-  }
+function toggleDropdown(index) {
+  const dropdown = document.getElementById(`dropdown-${index}`);
+  dropdown.classList.toggle("hidden");
 }
 
 // Close the dropdown if clicking outside of it
@@ -99,19 +82,23 @@ document.addEventListener("click", function (event) {
   });
 });
 
-function openModal() {
-  document.getElementById("modal-background").classList.remove("hidden");
+// Event delegation for delete button
+document.addEventListener("click", function (event) {
+  if (event.target.closest(".delete-btn")) {
+    const row = event.target.closest("tr");
+    row.remove(); // Delete the table row
+  }
+});
+
+// Input file Count in files
+function updateFileCount(event) {
+  const fileCount = event.target.files.length;
+  const fileCountText =
+    fileCount === 1 ? "1 file selected" : `${fileCount} files selected`;
+  document.getElementById("fileCount").textContent =
+    fileCount > 0 ? fileCountText : "No files selected";
 }
 
-// Close Modal Function
-function closeModal() {
-  document.getElementById("modal-background").classList.add("hidden");
-}
-
-function toggleDropdownProfile() {
-  const profiledropdownMenu = document.getElementById("profiledropdownMenu");
-  profiledropdownMenu.classList.toggle("hidden");
-}
 
 // Close dropdown when clicking outside
 window.addEventListener("click", function (e) {
@@ -121,3 +108,9 @@ window.addEventListener("click", function (e) {
     dropdown.classList.add("hidden");
   }
 });
+
+
+function toggleDropdownProfile() {
+  const profiledropdownMenu = document.getElementById("profiledropdownMenu");
+  profiledropdownMenu.classList.toggle("hidden");
+}
