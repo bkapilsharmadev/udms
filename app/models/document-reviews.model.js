@@ -52,6 +52,19 @@ module.exports.getDocumentReviewById = async (review_id) => {
 	return result.rows[0];
 };
 
+module.exports.getLatestReviewByDocumentId = async (document_id) => {
+	const query = `
+	SELECT * FROM document_reviews 
+	WHERE document_id = $1 AND active = true 
+	ORDER BY reviewed_at DESC NULLS FIRST
+	LIMIT 1;
+  `;
+	const values = [document_id];
+
+	const result = await sqlRead.query(query, values);
+	return result.rows[0];
+};
+
 module.exports.getAllDocumentReviews = async () => {
 	const query = `SELECT * FROM document_reviews WHERE active = true;`;
 

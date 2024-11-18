@@ -15,6 +15,11 @@ module.exports.getDocumentReviewById = async (review_id) => {
   return result || {};
 };
 
+module.exports.getLatestReviewByDocumentId = async (document_id) => {
+  const result = await documentReviewModel.getLatestReviewByDocumentId(document_id);
+  return result || {};
+}
+
 module.exports.getAllDocumentReviews = async () => {
   const result = await documentReviewModel.getAllDocumentReviews();
   return result || [];
