@@ -35,5 +35,5 @@ module.exports.getFileVersionsByDocumentId = async (document_id) => {
                     WHERE f.document_id = $1`;
     const values = [document_id];
     const result = await sqlRead.query(query, values);
-    return result.rowCount > 0;
+    return result.rows;
 }
