@@ -55,7 +55,7 @@
 
                                 <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                     <div class="lms-input-container">
-                                        <select id="parent-category" class="lms-dropdropdown">
+                                        <select id="document-stage" class="lms-dropdropdown">
                                             <option value="" disabled selected hidden>Select Document Stage</option>
                                             <% documentStages.forEach((type, index)=> { %>
                                                 <option value="<%= type.document_stage %>">
@@ -113,7 +113,7 @@
                                         <tbody>
                                             <!-- Row 1 -->
                                             <% users.forEach((type, index)=> { %>
-                                                <tr class="hover:bg-blue-50" data-stages-user="<%= type.username %>">
+                                                <tr class="hover:bg-blue-50" data-stage-user="<%= type.username %>">
                                                     <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                         <%= index + 1 %>
                                                     </td>
@@ -172,22 +172,28 @@
                     const email = document.getElementById('username').value;
                     const username = document.getElementById('email').value;
                     const description = document.getElementById('description').value;
-                    const document_stage = document.getElementById('document_stage').value;
+                    const document_stage = document.getElementById('document-stage').value;
 
                     const url = '/document-stage-users/create';
                     const method = 'POST';
                     const obj = { first_name, last_name, email, username, description, document_stage };
 
-                    const data = await fetchApi(url, method, obj);
+                    const { error, data } = await fetchApi(url, method, obj);
+
+                    if (error) {
+                        alert(error.message);
+                        return;
+                    }
 
                     if (data) {
                         appendDataToTable({ first_name, last_name, email, username, description, document_stage });
-                        document.getElementById('firstname').value;
-                        document.getElementById('lastname').value;
-                        document.getElementById('username').value;
-                        document.getElementById('email').value;
-                        document.getElementById('description').value;
-                        document.getElementById('document_stage').value;
+                        document.getElementById('firstname').value = "";
+                        document.getElementById('lastname').value = "";
+                        document.getElementById('username').value = "";
+                        document.getElementById('email').value = "";
+                        document.getElementById('description').value = "";
+                        document.getElementById('document-stage').firstElementChild.selected = true;
+                        alert(data.message);
                     }
                     console.log('data ', JSON.stringify(data));
                 });
@@ -197,45 +203,63 @@
                     let rowCount = tableBody.rows.length;
 
                     let tableRow = document.createElement('tr');
-                    tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                                ${rowCount + 1}
-                            </td>
-                            <td class="p-4 text-sm text-gray-700 ">
-                                ${data.status_type}
-                            </td>
-                            <td class="p-4 text-sm text-gray-700 ">
-                                ${data.description}
-                            </td>
-                            <td class="p-4 text-center relative">
-                                <button onclick="toggleDropdown(event)"
-                                    class="focus:outline-none text-gray-600 px-4"><i
-                                        class="fa-solid fa-ellipsis-vertical"></i></button>
+                    tableRow.innerHTML = ` <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                       ${rowCount + 1}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                       ${data.first_name}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.last_name}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.email}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.username}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                       ${data.document_stage}
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        ${data.description}
+                                                    </td>
+                                                    <td class="p-4 text-center relative">
+                                                        <button onclick="toggleDropdown(event)"
+                                                            class="focus:outline-none text-gray-600 px-4"><i
+                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
 
-                                <!-- Dropdown menu -->
-                                <div id="dropdown-0"
-                                    class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                    <a href="#"
-                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                                        <i class="text-red-500 fa-solid fa-trash-can"></i><span
-                                            class="ml-2">Delete</span>
-                                    </a>
-                                </div>
-                            </td>`
+                                                        <!-- Dropdown menu -->
+                                                        <div id="dropdown-0"
+                                                            class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                            <a href="#"
+                                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                <i class="text-red-500 fa-solid fa-trash-can"></i><span
+                                                                    class="ml-2">Delete</span>
+                                                            </a>
+                                                        </div>
+                                                    </td>`
                     tableRow.classList.add('"hover:bg-blue-50"');
-                    tableRow.setAttribute('data-status-type', data.status_type);
+                    tableRow.setAttribute('data-stage-user', data.username);
                     tableBody.appendChild(tableRow);
                 }
 
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
                         const row = event.target.closest("tr");
-                        const statusType = row.getAttribute("data-status-type");
+                        const username = row.getAttribute("data-stage-user");
 
-                        const url = '/status-types/delete';
+                        const url = '/document-stage-users/delete';
                         const method = 'POST';
-                        const obj = { statusType };
+                        const obj = { username };
 
-                        const data = await fetchApi(url, method, obj);
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
                         if (data) {
                             row.remove();
                             alert(data.message);

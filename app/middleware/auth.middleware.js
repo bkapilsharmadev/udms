@@ -1,6 +1,6 @@
 const { getRedisData, setRedisData } = require("../utils/database/redis.utils");
 const serverFetch = require("../utils/server-fetch/fetch");
-const { unauthorizedAccessError} = require("../utils/error/error");
+const { unauthorizedAccessError,invalidRequestError} = require("../utils/error/error");
 
 
 module.exports.validateUserSession = async (req, res, next) => {
@@ -9,7 +9,7 @@ module.exports.validateUserSession = async (req, res, next) => {
   const userId = cookieUserId || headerUserId;
 
   if (!userId || userId == undefined) {
-    throw unauthorizedAccessError({
+    throw invalidRequestError({
       modulename: "auth.middleware.js",
       message: "Invalid Request !",
     });
@@ -47,7 +47,7 @@ module.exports.validateUserLogin = async (req, res, next) => {
   const userId = cookieUserId || headerUserId;
 
   if (!userId || userId == undefined) {
-    throw unauthorizedAccessError({
+    throw invalidRequestError({
       modulename: "auth.middleware.js",
       message: "Invalid Request !",
       data : {}

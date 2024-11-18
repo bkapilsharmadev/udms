@@ -196,7 +196,8 @@
                         document.getElementById('category-name').value = '';
                         document.getElementById('category-abbr').value = '';
                         document.getElementById('description').value = '';
-                        document.getElementById('parent-category').options[0].selected = true;
+                        document.getElementById('parent-category').firstElementChild.selected = true;
+                        alert(data.message);
                     }
                     console.log('data ', JSON.stringify(data));
                 });

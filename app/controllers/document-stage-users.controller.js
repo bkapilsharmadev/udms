@@ -7,7 +7,7 @@ module.exports.renderDocumentStageUsers = async (req, res, next) => {
 };
 
 module.exports.createDocumentStagesUsers = async (req, res, next) => {
-	const { first_name, last_name, email, username, document_stage, description, created_by } = req.body;
+	const { first_name, last_name, email, username, document_stage, description } = req.body;
 	const result = await documentStagesUsersService.createDocumentStagesUsers({
 		first_name,
 		last_name,
@@ -15,7 +15,7 @@ module.exports.createDocumentStagesUsers = async (req, res, next) => {
 		username,
 		document_stage,
 		description,
-		created_by
+		created_by : req.session_username
 	});
 	res.status(201).json(result);
 }
