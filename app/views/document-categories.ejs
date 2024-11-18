@@ -192,12 +192,13 @@
                     }
 
                     if (data) {
-                        appendDataToTable({ document_category, category_abbr, description, parent_id });
+                        const category_id = data.category_id;
+                        appendDataToTable({ document_category, category_abbr, description, parent_id ,category_id });
                         document.getElementById('category-name').value = '';
                         document.getElementById('category-abbr').value = '';
                         document.getElementById('description').value = '';
                         document.getElementById('parent-category').firstElementChild.selected = true;
-                        alert(data.message);
+                        alert("Document Category Created Successfully !");
                     }
                     console.log('data ', JSON.stringify(data));
                 });
@@ -243,7 +244,7 @@
                     tableRow.classList.add('"hover:bg-blue-50"');
 
                     let lastChildDataId = document.querySelector('tbody').lastElementChild.getAttribute('data-category-type');
-                    tableRow.setAttribute('data-category-type', (parseInt(lastChildDataId) + 1));
+                    tableRow.setAttribute('data-category-type', data.category_id);
                     tableBody.appendChild(tableRow);
                 }
 

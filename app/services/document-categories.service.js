@@ -1,4 +1,4 @@
-const { invalidRequestError, dbError } = require("../utils/error/error");
+const { dbError } = require("../utils/error/error");
 const documentCategoryModel = require("../models/document-categories.model");
 
 module.exports.getDocumentCategories = async () => {
@@ -15,7 +15,7 @@ module.exports.createDocumentCategory = async (documentCategory) => {
             data: result,
         });
     }
-    return { message: "Document category created successfully" };
+    return result;
 }
 
 module.exports.updateDocumentCategory = async (documentCategory) => {

@@ -79,7 +79,7 @@ module.exports.updateDocumentReview = async (review_id, updatedData) => {
 		review_id,
 	];
 
-	const result = await sqlWrite.query(query, values);
+	const result = await sqlWrite.query(query, value);
 	return result.rows[0]; // Return the updated row
 };
 

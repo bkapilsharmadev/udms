@@ -101,7 +101,7 @@ LEFT JOIN LATERAL (
     FROM document_reviews dr
     INNER JOIN entities e ON (dr.to_be_reviewed_by::INT = e.entity_id)
     WHERE dr.document_id = d.document_id
-    ORDER BY dr.reviewed_at DESC
+    ORDER BY dr.reviewed_at DESC NULLS FIRST
     LIMIT 1
 ) dr ON true
 
@@ -191,7 +191,7 @@ LEFT JOIN LATERAL (
     INNER JOIN document_stage_users dsur ON dr.to_be_reviewed_by = dsur.username
     INNER JOIN document_stage_users dsu ON dr.created_by = dsu.username
     WHERE dr.document_id = d.document_id
-    ORDER BY dr.reviewed_at DESC
+    ORDER BY dr.reviewed_at DESC NULLS FIRST
     LIMIT 1
 ) dr ON true
 WHERE d.active = TRUE AND d.created_by::TEXT = $1::TEXT;`;
@@ -307,7 +307,7 @@ LEFT JOIN LATERAL (
     INNER JOIN document_stage_users dsur ON dr.to_be_reviewed_by = dsur.username
     INNER JOIN document_stage_users dsu ON dr.created_by = dsu.username
     WHERE dr.document_id = d.document_id
-    ORDER BY dr.reviewed_at DESC
+    ORDER BY dr.reviewed_at DESC NULLS FIRST
     LIMIT 1
 ) dr ON true
 WHERE d.active = TRUE
