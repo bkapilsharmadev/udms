@@ -14,7 +14,6 @@
                         <!-- <div class="content-title">
                 <h2>Form</h2>
             </div> -->
-
                         <!-- view section -->
                         <div class="frame-container">
                             <div class="frame-title">
@@ -23,42 +22,41 @@
                             <div class="frame-content px-6">
                                 <div class="flex flex-wrap">
 
+                                    <% data.document.forEach(document=> { %>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Category</span>
-                                        <p class="view-details">PR /PO</p>
+                                        <p class="view-details"><%= document.document_category %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Reference Number</span>
-                                        <p class="view-details">PR /PO-07102024-001</p>
+                                        <p class="view-details"><%= document.reference_no %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">From</span>
-                                        <p class="view-details">Director</p>
+                                        <p class="view-details"><%= document.entity_from %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Campus</span>
-                                        <p class="view-details">Mumbai</p>
+                                        <p class="view-details"><%= document.entity_campus %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">School</span>
-                                        <p class="view-details">MPSTME</p>
+                                        <p class="view-details"><%= document.entity_school %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Department</span>
-                                        <p class="view-details">Purchase</p>
+                                        <p class="view-details"><%= document.entity_department %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Details</span>
-                                        <p class="view-details">Bills</p>
+                                        <p class="view-details"><%= document.description %></p>
                                     </div>
                                     <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
                                         <span class="view-title">Record Entered by</span>
-                                        <p class="view-details">Omkar</p>
+                                        <p class="view-details"><%= document.created_by %></p>
                                     </div>
-                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                                        <span class="view-title">File Versions</span>
-                                        <p class="view-details">Versions 1</p>
-                                    </div>
+                                    <% }) %>
+                                  
                                 </div>
                                 <!-- <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
                     </div> -->
@@ -74,33 +72,38 @@
                                 <!-- List of files -->
                                 <ul class="">
                                     <!-- File 1 -->
+                                    <% data.fileVersions.forEach(file => { %>
+                                        <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                            <span class="text-gray-700"><%= file.file_name %></span>
+                                            <button class="">
+                                                <i class="fa-solid fa-download text-red-600"></i>
+                                            </button>
+                                        </li>
+                                    <% }) %>    
+                                    <!-- <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                        <span class="text-gray-700">File 1.docx</span>
+                                        <button class="">
+                                            <i class="fa-solid fa-download text-red-600"></i>
+                                        </button>
+                                    </li>
                                     <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
                                         <span class="text-gray-700">File 1.docx</span>
                                         <button class="">
                                             <i class="fa-solid fa-download text-red-600"></i>
                                         </button>
                                     </li>
-                                    <!-- File 2 -->
                                     <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
                                         <span class="text-gray-700">File 1.docx</span>
                                         <button class="">
                                             <i class="fa-solid fa-download text-red-600"></i>
                                         </button>
                                     </li>
-                                    <!-- File 3 -->
                                     <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
                                         <span class="text-gray-700">File 1.docx</span>
                                         <button class="">
                                             <i class="fa-solid fa-download text-red-600"></i>
                                         </button>
-                                    </li>
-                                    <!-- File 4 -->
-                                    <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
-                                        <span class="text-gray-700">File 1.docx</span>
-                                        <button class="">
-                                            <i class="fa-solid fa-download text-red-600"></i>
-                                        </button>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -142,9 +145,11 @@
                                         <div class="lms-input-container">
                                             <select id="forwarded-to" class="lms-dropdropdown">
                                                 <option value="" disabled selected hidden>Forward To</option>
-                                                <option value="50583955">Kevin Pett (DEAN)</option>
-                                                <option value="32200170_ADMIN">John Doe (REGISTRAR)</option>
-                                                <option value="VChancellor">Vice Chancellor (VC)</option>
+                                                <% data.documentStages.forEach(stage=> { %>
+                                                    <option value="<%= stage.document_stage %>">
+                                                        <%= stage.document_stage %>
+                                                    </option>
+                                                <% }) %>
                                             </select>
                                             <div class="lms-cut-dropdown"></div>
                                             <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
@@ -175,17 +180,10 @@
                     <!-- main content// -->
             </div>
 
-<<<<<<< HEAD
-    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/fetch.js"></script>
-    
-=======
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="/js/utils.js"></script>
             <script src="/js/fetch.js"></script>
             <!-- <script src="/js/script.js"></script> -->
->>>>>>> origin/harshal_dev
 
             <script>
                 document.getElementById("lms-toggle").addEventListener("click", async () => {

@@ -28,3 +28,12 @@ module.exports.deleteFileVersion = async (version_id) => {
     const result = await sqlWrite.query(query, values);
     return result.rowCount > 0;
 }
+
+module.exports.getFileVersionsByDocumentId = async (document_id) => {
+    const query = `SELECT fv.* FROM files f 
+                    INNER JOIN file_versions fv ON f.latest_version_id = fv.version_id
+                    WHERE f.document_id = $1`;
+    const values = [document_id];
+    const result = await sqlRead.query(query, values);
+    return result.rowCount > 0;
+}
