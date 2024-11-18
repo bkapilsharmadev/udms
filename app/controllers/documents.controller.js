@@ -80,12 +80,12 @@ module.exports.deleteDocument = async (req, res, next) => {
 };
 
 module.exports.updateDocument = async (req, res, next) => {
-	const { document_id, ref_no, description, updated_by } = req.body;
+	const { document_id, ref_no, description } = req.body;
 	const result = await documentService.updateDocument({
 		document_id,
 		ref_no,
 		description,
-		updated_by,
+		updated_by : req.session_username,
 	});
 	res.status(200).json(result);
 };

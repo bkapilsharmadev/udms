@@ -5,8 +5,8 @@ module.exports.renderFiles = async (req, res, next) => {
 };
 
 module.exports.createFile = async (req, res, next) => {
-    const { document_id, document_uuid, created_by } = req.body;
-    const result = await fileService.createFile({ document_id, document_uuid, created_by });
+    const { document_id, document_uuid } = req.body;
+    const result = await fileService.createFile({ document_id, document_uuid, created_by: req.session_username });
     res.status(201).json(result);
 };
 
@@ -22,7 +22,7 @@ module.exports.deleteFile = async (req, res, next) => {
 };
 
 module.exports.updateFile = async (req, res, next) => {
-    const { file_id, latest_version_id, updated_by } = req.body;
-    const result = await fileService.updateFile({ file_id, latest_version_id, updated_by });
+    const { file_id, latest_version_id } = req.body;
+    const result = await fileService.updateFile({ file_id, latest_version_id, updated_by: req.session_username });
     res.status(200).json(result);
 };

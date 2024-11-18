@@ -184,7 +184,12 @@
                     const method = 'POST';
                     const obj = { document_category, category_abbr, description, parent_id };
 
-                    const data = await fetchApi(url, method, obj);
+                    const {error,data} = await fetchApi(url, method, obj);
+
+                    if(error){
+                      alert(error.message); 
+                      return;
+                    }
 
                     if (data) {
                         appendDataToTable({ document_category, category_abbr, description, parent_id });
@@ -250,7 +255,13 @@
                         const method = 'POST';
                         const obj = { category_id };
 
-                        const data = await fetchApi(url, method, obj);
+                        const {error,data} = await fetchApi(url, method, obj);
+
+                        if(error){
+                          alert(error.message);
+                          return;
+                        }
+
                         if (data) {
                             row.remove();
                             alert(data.message);
@@ -264,7 +275,13 @@
                         const url = `/document-categories/fetch/${category_id}`;
                         const method = 'GET';
 
-                        const data = await fetchApi(url, method, null);
+                        const {error,data} = await fetchApi(url, method, null);
+                        
+                        if(error){
+                          alert(error.message);
+                          return;
+                        }
+
                         if (data) {
                             console.log('data update ', JSON.stringify(data));
                             appenHtmlToModal(data);
@@ -357,7 +374,12 @@
                     const method = 'POST';
                     const obj = { category_id, document_category, category_abbr, description, parent_id };
 
-                    const data = await fetchApi(url, method, obj);
+                    const {error,data} = await fetchApi(url, method, obj);
+                    
+                    if(error){
+                      alert(error.message);
+                      return;
+                    }
 
                     if (data) {
                         document.getElementById('category-name-edit').value = '';

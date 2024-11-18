@@ -11,7 +11,7 @@
                     <!-- <h2>title TITLE</h2> -->
                     <div class="frame-container">
                         <div class="frame-title">
-                            <span>Status Types</span>
+                            <span>Document Stage Users</span>
                         </div>
                         <div class="frame-content">
                             <div class="flex flex-wrap gap-y-4">
@@ -19,9 +19,29 @@
                                 <!-- status_types -->
                                 <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                     <div class="lms-input-container">
-                                        <input id="status-name" class="lms-input" type="text" placeholder="" value="">
-                                        <label for="status-name" class="lms-placeholder">Status
-                                            Name<span>*</span></label>
+                                        <input id="firstname" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="firstname" class="lms-placeholder">Firstame <span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="lastname" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="lastname" class="lms-placeholder">Lastname<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="username" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="username" class="lms-placeholder">Username<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="email" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="email" class="lms-placeholder">Email<span>*</span></label>
                                     </div>
                                 </div>
 
@@ -30,6 +50,22 @@
                                         <input id="description" class="lms-input" type="text" placeholder="" value="">
                                         <label for="description"
                                             class="lms-placeholder">Description<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <select id="parent-category" class="lms-dropdropdown">
+                                            <option value="" disabled selected hidden>Select Document Stage</option>
+                                            <% documentStages.forEach((type, index)=> { %>
+                                                <option value="<%= type.document_stage %>">
+                                                    <%= type.document_stage %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div class="lms-cut-dropdown"></div>
+                                        <label for="type" class="lms-placeholder-dropdown">Document
+                                            Stage<span>*</span></label>
                                     </div>
                                 </div>
 
@@ -49,13 +85,13 @@
                     <!-- table -->
                     <div class="frame-container">
                         <div class="frame-title">
-                            <span>Status Types</span>
+                            <span>Document Stage Users</span>
                         </div>
                         <div class="frame-content">
                             <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
                                 <!-- Table Header -->
                                 <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
-                                    <h2 class="text-lg font-semibold text-gray-700">Status Types Table</h2>
+                                    <h2 class="text-lg font-semibold text-gray-700">Document Stage Users Table</h2>
                                     <!-- <button class="text-sm font-semibold text-gray-600">02 Document</button> -->
                                 </div>
 
@@ -65,20 +101,36 @@
                                         <thead class="text-left">
                                             <tr>
                                                 <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                                <th class="p-4 text-xs font-bold ">Status Name</th>
+                                                <th class="p-4 text-xs font-bold ">Firstame</th>
+                                                <th class="p-4 text-xs font-bold ">Lastname</th>
+                                                <th class="p-4 text-xs font-bold ">Email</th>
+                                                <th class="p-4 text-xs font-bold ">Username</th>
+                                                <th class="p-4 text-xs font-bold ">Document Stage</th>
                                                 <th class="p-4 text-xs font-bold ">Description</th>
                                                 <th class="p-4 text-xs font-bold text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <!-- Row 1 -->
-                                            <% statusTypes.forEach((type, index)=> { %>
-                                                <tr class="hover:bg-blue-50" data-status-type="<%= type.status_type %>">
+                                            <% users.forEach((type, index)=> { %>
+                                                <tr class="hover:bg-blue-50" data-stages-user="<%= type.username %>">
                                                     <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                         <%= index + 1 %>
                                                     </td>
                                                     <td class="p-4 text-sm text-gray-700 ">
-                                                        <%= type.status_type %>
+                                                        <%= type.first_name %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.last_name %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.email %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.username %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.document_stage %>
                                                     </td>
                                                     <td class="p-4 text-sm text-gray-700 ">
                                                         <%= type.description %>
@@ -100,7 +152,6 @@
                                                     </td>
                                                 </tr>
                                                 <% }) %>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -116,24 +167,27 @@
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
-                    const status_type = document.getElementById('status-name').value;
+                    const first_name = document.getElementById('firstname').value;
+                    const last_name = document.getElementById('lastname').value;
+                    const email = document.getElementById('username').value;
+                    const username = document.getElementById('email').value;
                     const description = document.getElementById('description').value;
+                    const document_stage = document.getElementById('document_stage').value;
 
-                    const url = '/status-types/create';
+                    const url = '/document-stage-users/create';
                     const method = 'POST';
-                    const obj = { status_type, description };
+                    const obj = { first_name, last_name, email, username, description, document_stage };
 
-                    const {error,data} = await fetchApi(url, method, obj);
-
-                    if(error) {
-                       alert(error.message); 
-                       return;
-                    }
+                    const data = await fetchApi(url, method, obj);
 
                     if (data) {
-                        appendDataToTable({ status_type, description });
-                        document.getElementById('status-name').value = '';
-                        document.getElementById('description').value = '';
+                        appendDataToTable({ first_name, last_name, email, username, description, document_stage });
+                        document.getElementById('firstname').value;
+                        document.getElementById('lastname').value;
+                        document.getElementById('username').value;
+                        document.getElementById('email').value;
+                        document.getElementById('description').value;
+                        document.getElementById('document_stage').value;
                     }
                     console.log('data ', JSON.stringify(data));
                 });
@@ -181,13 +235,7 @@
                         const method = 'POST';
                         const obj = { statusType };
 
-                        const {error,data} = await fetchApi(url, method, obj);
-
-                        if(error){
-                         alert(error.message);
-                         return;
-                        }
-
+                        const data = await fetchApi(url, method, obj);
                         if (data) {
                             row.remove();
                             alert(data.message);

@@ -58,7 +58,7 @@ module.exports.customErrorHandler = (err, req, res, next) => {
 
     if(httpStatus == 401) {
         console.log('inside 401 ');
-        redirectUrl = '/signin';
+        redirectUrl = '/';
         redirectPage = 'login.ejs';
         message = 'Unauthorized Access!';
     }

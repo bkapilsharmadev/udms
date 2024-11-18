@@ -3,16 +3,15 @@ const entityTypeService = require("../services/entity-types.service");
 
 module.exports.renderEntityTypes = async (req, res, next) => {
 	const entityTypes = await entityTypeService.getEntityTypes();
-	res.render("entity-types.ejs",{entityTypes});
+	res.render("entity-types.ejs", { entityTypes });
 };
 
 module.exports.createEntityType = async (req, res, next) => {
 	const { entity_type, description } = req.body;
-	const created_by = res.locals.username;
 	const result = await entityTypeService.createEntityType({
 		entity_type,
 		description,
-		created_by,
+		created_by: req.session_username,
 	});
 	res.status(201).json(result);
 };

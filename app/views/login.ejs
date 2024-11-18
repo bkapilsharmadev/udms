@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="forgot-password text-center mb-8">
-                        <a href="" class="text-label-md md:text-label-lg">Forgot
+                        <a href="http://uat.svkm.ac.in/forgot-password-nmims" class="text-label-md md:text-label-lg">Forgot
                             Password
                             &gt;</a>
                     </div>
@@ -73,8 +73,13 @@
           const method = 'POST';
           const obj = {username,password};
 
-          const data = await fetchApi(url,method,obj);
+          const {error,data} = await fetchApi(url,method,obj);
           console.log('data ',JSON.stringify(data));
+
+          if(error) {
+            alert('Invalid Credentials!');
+            return;
+          }
 
           if(data.status == 200){
             location.href = '/dashboard';

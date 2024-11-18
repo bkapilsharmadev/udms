@@ -121,7 +121,12 @@
             const method = 'POST';
             const obj = { document_stage, description };
 
-            const data = await fetchApi(url, method, obj);
+            const {error,data} = await fetchApi(url, method, obj);
+            
+            if(error){
+              alert(error.message);
+              return;
+            }
 
             if (data) {
                 appendDataToTable({ document_stage, description });
@@ -174,7 +179,13 @@
                 const method = 'POST';
                 const obj = { documentStage };
 
-                const data = await fetchApi(url, method, obj);
+                const {error,data} = await fetchApi(url, method, obj);
+
+                if(error){
+                 alert(error.message);
+                 return;
+                }
+            
                 if (data) {
                     row.remove();
                     alert(data.message);
