@@ -24,6 +24,6 @@ router.use("/documents", asyncErrorHandler(authmiddleware.validateUserSession), 
 router.use("/files", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(filesRoute));
 router.use("/file-versions", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(fileVersionsRoute));
 router.use("/document-categories", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentCategoriesRoute));
-router.use("/document-stage-users",asyncErrorHandler(documentStagesUserRoute));
+router.use("/document-stage-users", asyncErrorHandler(authmiddleware.validateUserSession), asyncErrorHandler(documentStagesUserRoute));
 router.use("/", asyncErrorHandler(authRoute));
 module.exports = router;

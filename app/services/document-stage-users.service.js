@@ -15,7 +15,7 @@ module.exports.createDocumentStagesUsers = async(documentStagesUsers) => {
 			data: result,
 		});
     }
-    return {message : "Document Stages Users Created Successfully !"};
+    return {message : "Document Stage User Created Successfully !"};
 }
 
 module.exports.deleteDocumentStageUsers = async (username) => {
@@ -29,5 +29,5 @@ module.exports.deleteDocumentStageUsers = async (username) => {
 		});
 	}
 
-	return { message: "Document stages users deleted successfully" };
+	return { message: "Document Stage User Deleted Successfully" };
 }
