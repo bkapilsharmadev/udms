@@ -164,38 +164,54 @@
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="../js/utils.js"></script>
             <script src="../js/fetch.js"></script>
+            <script src="../js/validation.js"></script>
+
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
                     const first_name = document.getElementById('firstname').value;
                     const last_name = document.getElementById('lastname').value;
-                    const email = document.getElementById('username').value;
-                    const username = document.getElementById('email').value;
+                    const username = document.getElementById('username').value;
+                    const email = document.getElementById('email').value;
                     const description = document.getElementById('description').value;
                     const document_stage = document.getElementById('document-stage').value;
 
-                    const url = '/document-stage-users/create';
-                    const method = 'POST';
-                    const obj = { first_name, last_name, email, username, description, document_stage };
+                    const fields = [
+                        { value: first_name, name: 'Firstname' },
+                        { value: last_name, name: 'Lastname' },
+                        { value: username, name: 'Username' },
+                        { value: email, name: 'Email' },
+                        { value: description, name: 'Description' },
+                        { value: document_stage, name: 'Document Stage' },
+                    ];
 
-                    const { error, data } = await fetchApi(url, method, obj);
+                    const checkVal = isRequired(fields);
 
-                    if (error) {
-                        alert(error.message);
-                        return;
+                    if (checkVal) {
+
+                        const url = '/document-stage-users/create';
+                        const method = 'POST';
+                        const obj = { first_name, last_name, email, username, description, document_stage };
+
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
+                        if (data) {
+                            appendDataToTable({ first_name, last_name, email, username, description, document_stage });
+                            document.getElementById('firstname').value = "";
+                            document.getElementById('lastname').value = "";
+                            document.getElementById('username').value = "";
+                            document.getElementById('email').value = "";
+                            document.getElementById('description').value = "";
+                            document.getElementById('document-stage').firstElementChild.selected = true;
+                            alert(data.message);
+                        }
+                        console.log('data ', JSON.stringify(data));
                     }
-
-                    if (data) {
-                        appendDataToTable({ first_name, last_name, email, username, description, document_stage });
-                        document.getElementById('firstname').value = "";
-                        document.getElementById('lastname').value = "";
-                        document.getElementById('username').value = "";
-                        document.getElementById('email').value = "";
-                        document.getElementById('description').value = "";
-                        document.getElementById('document-stage').firstElementChild.selected = true;
-                        alert(data.message);
-                    }
-                    console.log('data ', JSON.stringify(data));
                 });
 
                 function appendDataToTable(data) {

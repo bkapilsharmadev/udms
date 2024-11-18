@@ -1,172 +1,195 @@
 <%- include("../partials/head.ejs") %>
-</head>
-<body>
+    </head>
 
-    <%- include("../partials/side-nav.ejs") %>
+    <body>
 
-    <div class="content-body">
-        <!-- navbar -->
-            <%- include("../partials/header.ejs") %>
+        <%- include("../partials/side-nav.ejs") %>
 
-        <!-- main content -->
-        <div class="content">
-            <!-- <div class="content-title">
+            <div class="content-body">
+                <!-- navbar -->
+                <%- include("../partials/header.ejs") %>
+
+                    <!-- main content -->
+                    <div class="content">
+                        <!-- <div class="content-title">
                 <h2>Form</h2>
             </div> -->
 
-            <!-- view section -->
-            <div class="frame-container">
-                <div class="frame-title">
-                    <span>Document views</span>
-                </div>
-                <div class="frame-content px-6">
-                    <div class="flex flex-wrap">
+                        <!-- view section -->
+                        <div class="frame-container">
+                            <div class="frame-title">
+                                <span>Document views</span>
+                            </div>
+                            <div class="frame-content px-6">
+                                <div class="flex flex-wrap">
 
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Category</span>
-                            <p class="view-details">PR /PO</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Reference Number</span>
-                            <p class="view-details">PR /PO-07102024-001</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">From</span>
-                            <p class="view-details">Director</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Campus</span>
-                            <p class="view-details">Mumbai</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">School</span>
-                            <p class="view-details">MPSTME</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Department</span>
-                            <p class="view-details">Purchase</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Details</span>
-                            <p class="view-details">Bills</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">Record Entered by</span>
-                            <p class="view-details">Omkar</p>
-                        </div>
-                        <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
-                            <span class="view-title">File Versions</span>
-                            <p class="view-details">Versions 1</p>
-                        </div>
-                    </div>
-                    <!-- <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Category</span>
+                                        <p class="view-details">PR /PO</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Reference Number</span>
+                                        <p class="view-details">PR /PO-07102024-001</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">From</span>
+                                        <p class="view-details">Director</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Campus</span>
+                                        <p class="view-details">Mumbai</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">School</span>
+                                        <p class="view-details">MPSTME</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Department</span>
+                                        <p class="view-details">Purchase</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Details</span>
+                                        <p class="view-details">Bills</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Record Entered by</span>
+                                        <p class="view-details">Omkar</p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">File Versions</span>
+                                        <p class="view-details">Versions 1</p>
+                                    </div>
+                                </div>
+                                <!-- <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
                     </div> -->
-                </div>
-            </div>
-
-            <!-- Upload File View Section -->
-            <div class="frame-container">
-                <div class="frame-title">
-                    <span>Files</span>
-                </div>
-                <div class="frame-content">
-                    <!-- List of files -->
-                    <ul class="">
-                        <!-- File 1 -->
-                        <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
-                            <span class="text-gray-700">File 1.docx</span>
-                            <button class="">
-                                <i class="fa-solid fa-eye text-red-600"></i>
-                            </button>
-                        </li>
-                        <!-- File 2 -->
-                        <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
-                            <span class="text-gray-700">File 1.docx</span>
-                            <button class="">
-                                <i class="fa-solid fa-eye text-red-600"></i>
-                            </button>
-                        </li>
-                        <!-- File 3 -->
-                        <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
-                            <span class="text-gray-700">File 1.docx</span>
-                            <button class="">
-                                <i class="fa-solid fa-eye text-red-600"></i>
-                            </button>
-                        </li>
-                        <!-- File 4 -->
-                        <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
-                            <span class="text-gray-700">File 1.docx</span>
-                            <button class="">
-                                <i class="fa-solid fa-eye text-red-600"></i>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <!--  -->
-             <!-- Review Actions -->
-             <div class="frame-container">
-                <div class="frame-title">
-                    <span>Actions</span>
-                </div>
-                <div class="frame-content" id="review-action-wrapper">
-                    <form class="flex flex-wrap gap-y-4" id="document-form">
-                         <!-- Status Type-->
-                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                            <div class="lms-input-container">
-                                <select id="status-type" class="lms-dropdropdown">
-                                    <option value="" disabled selected hidden>Select Status</option>
-                                    <% data.statusTypes.forEach(statusType => { %>
-                                        <option value="<%= statusType.status_type %>"><%= statusType.status_type %></option>
-                                    <% }) %>
-                                </select>
-                                <div class="lms-cut-dropdown"></div>
-                                <label for="status-type" class="lms-placeholder-dropdown">Status<span>*</span></label>
                             </div>
                         </div>
 
-                        <!-- Details -->
-                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                            <div class="lms-input-container ">
-                                <input id="comments" class="lms-input" type="text" placeholder="">
-                                <label for="comments" class="lms-placeholder">Comments</label>
+                        <!-- Upload File View Section -->
+                        <div class="frame-container">
+                            <div class="frame-title">
+                                <span>Files</span>
+                            </div>
+                            <div class="frame-content">
+                                <!-- List of files -->
+                                <ul class="">
+                                    <!-- File 1 -->
+                                    <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                        <span class="text-gray-700">File 1.docx</span>
+                                        <button class="">
+                                            <i class="fa-solid fa-download text-red-600"></i>
+                                        </button>
+                                    </li>
+                                    <!-- File 2 -->
+                                    <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                        <span class="text-gray-700">File 1.docx</span>
+                                        <button class="">
+                                            <i class="fa-solid fa-download text-red-600"></i>
+                                        </button>
+                                    </li>
+                                    <!-- File 3 -->
+                                    <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                        <span class="text-gray-700">File 1.docx</span>
+                                        <button class="">
+                                            <i class="fa-solid fa-download text-red-600"></i>
+                                        </button>
+                                    </li>
+                                    <!-- File 4 -->
+                                    <li class="flex items-center justify-between py-3 hover:bg-blue-50 rounded-md px-6">
+                                        <span class="text-gray-700">File 1.docx</span>
+                                        <button class="">
+                                            <i class="fa-solid fa-download text-red-600"></i>
+                                        </button>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
+                        <!--  -->
+                        <!-- Review Actions -->
+                        <div class="frame-container">
+                            <div class="frame-title">
+                                <span>Actions</span>
+                            </div>
+                            <div class="frame-content" id="review-action-wrapper">
+                                <form class="flex flex-wrap gap-y-4" id="document-form">
+                                    <!-- Status Type-->
+                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <div class="lms-input-container">
+                                            <select id="status-type" class="lms-dropdropdown">
+                                                <option value="" disabled selected hidden>Select Status</option>
+                                                <% data.statusTypes.forEach(statusType=> { %>
+                                                    <option value="<%= statusType.status_type %>">
+                                                        <%= statusType.status_type %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                            <div class="lms-cut-dropdown"></div>
+                                            <label for="status-type"
+                                                class="lms-placeholder-dropdown">Status<span>*</span></label>
+                                        </div>
+                                    </div>
 
-                          <!-- Forward To -->
-                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                            <div class="lms-input-container">
-                                <select id="forwarded-to" class="lms-dropdropdown">
-                                    <option value="" disabled selected hidden>Forward To</option>
-                                    <option value="50583955">Kevin Pett (DEAN)</option>
-                                    <option value="32200170_ADMIN">John Doe (REGISTRAR)</option>
-                                    <option value="VChancellor">Vice Chancellor (VC)</option>
-                                </select>
-                                <div class="lms-cut-dropdown"></div>
-                                <label for="forwarded-to" class="lms-placeholder-dropdown">Forward To<span>*</span></label>
+                                    <!-- Details -->
+                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <div class="lms-input-container ">
+                                            <input id="comments" class="lms-input" type="text" placeholder="">
+                                            <label for="comments" class="lms-placeholder">Comments</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Forward To -->
+                                    <div id="forward-document" class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <div class="lms-input-container">
+                                            <select id="forwarded-to" class="lms-dropdropdown">
+                                                <option value="" disabled selected hidden>Forward To</option>
+                                                <option value="50583955">Kevin Pett (DEAN)</option>
+                                                <option value="32200170_ADMIN">John Doe (REGISTRAR)</option>
+                                                <option value="VChancellor">Vice Chancellor (VC)</option>
+                                            </select>
+                                            <div class="lms-cut-dropdown"></div>
+                                            <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
+                                                To<span>*</span></label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Toggle -->
+                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2 pl-4 flex items-center">
+                                        <p class="mr-2">Final Approval ?</p>
+                                        <input type="checkbox" id="lms-toggle" class="lms-toggle-checkbox">
+                                        <label for="lms-toggle" class="lms-toggle-label"></label>
+                                    </div>
+
+                                    <!-- button -->
+                                    <div class="w-full px-2">
+                                        <button type="submit"
+                                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
+                                            Submit
+                                        </button>
+                                    </div>
+
+                                </form>
                             </div>
                         </div>
-                        <!-- button -->
-                        <div class="w-full px-2">
-                            <button type="submit"
-                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
-                                Submit
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
+                        <!--  Review Actions//-->
+                    </div>
+                    <!-- main content// -->
             </div>
-            <!--  Review Actions//-->
-        </div>
-         <!-- main content// -->
-    </div>
 
-    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/fetch.js"></script>
-    <!-- <script src="/js/script.js"></script> -->
+            <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
+            <script src="/js/utils.js"></script>
+            <script src="/js/fetch.js"></script>
+            <!-- <script src="/js/script.js"></script> -->
 
-</body>
+            <script>
+                document.getElementById("lms-toggle").addEventListener("click", async () => {
+                    let isChecked = document.getElementById("lms-toggle").checked;
+                    if (isChecked) {
+                        document.getElementById("forward-document").classList.add("hidden");
+                    } else {
+                        document.getElementById("forward-document").classList.remove("hidden");
+                    }
+                })
+            </script>
+    </body>
 
-</html>
+    </html>

@@ -63,12 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // });
 });
 
-// Toggle Dropdown action menu item
-function toggleDropdown(index) {
-  const dropdown = document.getElementById(`dropdown-${index}`);
-  dropdown.classList.toggle("hidden");
-}
-
 // Close the dropdown if clicking outside of it
 document.addEventListener("click", function (event) {
   const dropdowns = document.querySelectorAll(".dropdown");
@@ -100,6 +94,7 @@ function updateFileCount(event) {
 }
 
 
+
 // Close dropdown when clicking outside
 window.addEventListener("click", function (e) {
   const dropdown = document.getElementById("profiledropdownMenu");
@@ -113,4 +108,30 @@ window.addEventListener("click", function (e) {
 function toggleDropdownProfile() {
   const profiledropdownMenu = document.getElementById("profiledropdownMenu");
   profiledropdownMenu.classList.toggle("hidden");
+}
+
+
+function toggleDropdown(event) {
+  console.log("toggled ");
+  // Close all other dropdowns
+  document.querySelectorAll(".dropdown").forEach((dropdown) => {
+    dropdown.classList.add("hidden");
+  });
+
+  // Toggle the dropdown next to the clicked button
+  const button = event.currentTarget;
+  const dropdown = button.nextElementSibling;
+
+  if (dropdown && dropdown.classList.contains("dropdown")) {
+    dropdown.classList.toggle("hidden");
+  }
+}
+
+function openModal() {
+  document.getElementById("modal-background").classList.remove("hidden");
+}
+
+// Close Modal Function
+function closeModal() {
+  document.getElementById("modal-background").classList.add("hidden");
 }

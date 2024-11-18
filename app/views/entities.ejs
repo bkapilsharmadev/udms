@@ -175,38 +175,41 @@
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="../js/utils.js"></script>
             <script src="../js/fetch.js"></script>
+            <script src="../js/validation.js"></script>
 
             <script>
                 //Create Entity    
                 document.getElementById('submitEntity').addEventListener('click', async () => {
                     const name = document.querySelector('#name-entity').value;
                     const entity_type = document.querySelector('#type').value;
-                    const parentEntityId = document.querySelector('#parent-entity').value;
+                    const parentEntityId = document.querySelector('#parent-entity').value?.null;
 
-                    if (!name || !entity_type) {
-                        alert("Name and entity type are required.");
-                        return;
+                    const fields = [
+                        { value: name, name: 'Entity Name' },
+                        { value: entity_type, name: 'Entity Type' },
+                    ];
+
+                    const checkVal = isRequired(fields);
+
+                    if (checkVal) {
+                        const entityData = { name: name, entity_type: entity_type, parent_id: parentEntityId };
+                        console.log('entityData', entityData);
+                        const url = '/entities/create';
+
+                        let { error, data } = await fetchApi(url, 'POST', entityData);
+                        if (error) {
+                            alert(error.message)
+                        }
+                        if (data) {
+                            document.querySelector('#name-entity').value = '';
+                            document.querySelector('#type').value = '';
+                            document.querySelector('#parent-entity').value = '';
+                            alert("Entity Created Successfully");
+                            const entity_id = data.entity_id;
+                            appendToTable({ name, entity_type, entity_id });
+                        }
+                        console.log('Response', data);
                     }
-
-                    const entityData = { name: name, entity_type: entity_type, parent_id: parentEntityId };
-
-                    console.log('entityData', entityData);
-
-                    const url = '/entities/create';
-
-                    let { error, data } = await fetchApi(url, 'POST', entityData);
-                    if (error) {
-                        alert(error.message)
-                    }
-                    if (data) {
-                        document.querySelector('#name-entity').value = '';
-                        document.querySelector('#type').value = '';
-                        document.querySelector('#parent-entity').value = '';
-                        alert("Entity Created Successfully");
-                        const entity_id = data.entity_id;
-                        appendToTable({ name, entity_type, entity_id });
-                    }
-                    console.log('Response', data);
                 })
 
                 //Delete Enitity
@@ -372,20 +375,29 @@
                     const parentEntityType = document.getElementById('parent-entity-edit').value;
                     const entityId = document.getElementById('update-submit-btn').getAttribute('data-entity-id');
 
-                    const url = '/entities/update';
-                    const method = 'POST';
-                    const obj = { entity_id: entityId, name: name, entity_type: entityType, parent_id: parentEntityType };
+                    const fields = [
+                        { value: name, name: 'Entity Name' },
+                        { value: entityType, name: 'Entity Type' },
+                    ];
 
-                    const { error, data } = await fetchApi(url, method, obj);
-                    if (error) {
-                        alert(error.message)
-                    }
-                    if (data) {
-                        const row = document.querySelector(`tr[data-id="${entityId}"]`);
-                        const rowIndex = row.firstElementChild.innerText;
-                        const tableBody = document.querySelector('tbody');
-                        const rowCount = tableBody.rows.length;
-                        row.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                    const checkVal = isRequired(fields);
+
+                    if (checkVal) {
+
+                        const url = '/entities/update';
+                        const method = 'POST';
+                        const obj = { entity_id: entityId, name: name, entity_type: entityType, parent_id: parentEntityType };
+
+                        const { error, data } = await fetchApi(url, method, obj);
+                        if (error) {
+                            alert(error.message)
+                        }
+                        if (data) {
+                            const row = document.querySelector(`tr[data-id="${entityId}"]`);
+                            const rowIndex = row.firstElementChild.innerText;
+                            const tableBody = document.querySelector('tbody');
+                            const rowCount = tableBody.rows.length;
+                            row.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                             ${rowIndex}
                                          </td>
                                          <td class="p-4 text-sm text-gray-700 ">
@@ -418,8 +430,9 @@
                                         </td>`;
 
 
-                        closeModal()
-                        alert(data.message);
+                            closeModal()
+                            alert(data.message);
+                        }
                     }
                 })
             </script>

@@ -112,6 +112,8 @@
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="../js/fetch.js"></script>
             <script src="../js/utils.js"></script>
+            <script src="../js/validation.js"></script>
+
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
@@ -122,20 +124,30 @@
                     const method = 'POST';
                     const obj = { entity_type, description };
 
-                    const {error,data} = await fetchApi(url, method, obj);
+                    const fields = [
+                        { value: entity_type, name: 'Entity Type' },
+                        { value: description, name: 'Description' }
+                    ];
 
-                    if(error){
-                      alert(error.message);
-                      return;
-                    }
+                    const checkVal = isRequired(fields);
 
-                    if (data) {
-                        appendDataToTable({ entity_type, description });
-                        document.getElementById('entity-type').value = '';
-                        document.getElementById('description').value = '';
-                        alert(data.message);
+                    if (checkVal) {
+
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
+                        if (data) {
+                            appendDataToTable({ entity_type, description });
+                            document.getElementById('entity-type').value = '';
+                            document.getElementById('description').value = '';
+                            alert(data.message);
+                        }
+                        console.log('data ', JSON.stringify(data));
                     }
-                    console.log('data ', JSON.stringify(data));
                 });
 
 
@@ -182,19 +194,19 @@
                         const method = 'POST';
                         const obj = { entityType };
 
-                        const {error, data} = await fetchApi(url, method, obj);
+                        const { error, data } = await fetchApi(url, method, obj);
 
-                        if(error){
-                          alert(error.message);
-                          return;
+                        if (error) {
+                            alert(error.message);
+                            return;
                         }
 
                         if (data) {
                             row.remove();
                             alert(data.message);
                         }
-                    }    
+                    }
                 });
 
-        </script>
+            </script>
     </body>
