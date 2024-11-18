@@ -1,148 +1,163 @@
 <%- include("./partials/head.ejs") %>
     </head>
 
-<body>
-    <%- include("./partials/side-nav.ejs") %>
-    <div class="content">
-        <%- include("./partials/header.ejs") %>
-        <div class="content-title">
-            <h2>Form</h2>
-        </div>
-        <!-- <h2>title TITLE</h2> -->
-        <div class="frame-container">
-            <div class="frame-title">
-                <span>Document Stage Types</span>
-            </div>
-            <div class="frame-content">
-                <div class="flex flex-wrap gap-y-4">
+    <body>
+        <%- include("./partials/side-nav.ejs") %>
+            <div class="content">
+                <%- include("./partials/header.ejs") %>
+                    <div class="content-title">
+                        <h2>Form</h2>
+                    </div>
+                    <!-- <h2>title TITLE</h2> -->
+                    <div class="frame-container">
+                        <div class="frame-title">
+                            <span>Document Stage Types</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="flex flex-wrap gap-y-4">
 
-                    <!-- status_types -->
-                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                        <div class="lms-input-container">
-                            <input id="document-stage" class="lms-input" type="text" placeholder="" value="">
-                            <label for="document-stage" class="lms-placeholder">Document Stage Name<span>*</span></label>
+                                <!-- status_types -->
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="document-stage" class="lms-input" type="text" placeholder=""
+                                            value="">
+                                        <label for="document-stage" class="lms-placeholder">Document Stage
+                                            Name<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                    <div class="lms-input-container">
+                                        <input id="description" class="lms-input" type="text" placeholder="" value="">
+                                        <label for="description"
+                                            class="lms-placeholder">Description<span>*</span></label>
+                                    </div>
+                                </div>
+
+                                <!-- button -->
+                                <div class="w-full px-2">
+                                    <button id="submit-btn" type="submit"
+                                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
+                                        Add +
+                                    </button>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
 
-                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                        <div class="lms-input-container">
-                            <input id="description" class="lms-input" type="text" placeholder="" value="">
-                            <label for="description" class="lms-placeholder">Description<span>*</span></label>
+                    <!-- table -->
+                    <div class="frame-container">
+                        <div class="frame-title">
+                            <span>Document Stage Types</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
+                                <!-- Table Header -->
+                                <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
+                                    <h2 class="text-lg font-semibold text-gray-700">Document Stage Types Table</h2>
+                                    <!-- <button class="text-sm font-semibold text-gray-600">02 Document</button> -->
+                                </div>
+
+                                <!-- Table -->
+                                <div class="responsive-table overflow-x-auto">
+                                    <table class="min-w-full bg-white rounded-b-lg shadow">
+                                        <thead class="text-left">
+                                            <tr>
+                                                <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                <th class="p-4 text-xs font-bold ">Document Stage Name</th>
+                                                <th class="p-4 text-xs font-bold ">Description</th>
+                                                <th class="p-4 text-xs font-bold text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Row 1 -->
+                                            <% stages.forEach((type, index)=> { %>
+                                                <tr class="hover:bg-blue-50"
+                                                    data-document-stage="<%= type.document_stage %>">
+                                                    <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                        <%= index + 1 %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.document_stage %>
+                                                    </td>
+                                                    <td class="p-4 text-sm text-gray-700 ">
+                                                        <%= type.description %>
+                                                    </td>
+                                                    <td class="p-4 text-center relative">
+                                                        <button onclick="toggleDropdown(event)"
+                                                            class="focus:outline-none text-gray-600 px-4"><i
+                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
+
+                                                        <!-- Dropdown menu -->
+                                                        <div id="dropdown-0"
+                                                            class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                            <a href="#"
+                                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                <i class="text-red-500 fa-solid fa-trash-can"></i><span
+                                                                    class="ml-2">Delete</span>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- button -->
-                    <div class="w-full px-2">
-                        <button id="submit-btn" type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
-                            Add +
-                        </button>
-                    </div>
-
-                </div>
-
             </div>
-        </div>
 
-        <!-- table -->
-        <div class="frame-container">
-            <div class="frame-title">
-                <span>Document Stage Types</span>
-            </div>
-            <div class="frame-content">
-                <div class="mx-auto bg-gray-50 rounded-lg shadow-md">
-                    <!-- Table Header -->
-                    <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
-                        <h2 class="text-lg font-semibold text-gray-700">Document Stage Types Table</h2>
-                        <!-- <button class="text-sm font-semibold text-gray-600">02 Document</button> -->
-                    </div>
+            <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
+            <script src="../js/utils.js"></script>
+            <script src="../js/fetch.js"></script>
+            <script src="../js/validation.js"></script>
 
-                    <!-- Table -->
-                    <div class="responsive-table overflow-x-auto">
-                        <table class="min-w-full bg-white rounded-b-lg shadow">
-                            <thead class="text-left">
-                                <tr>
-                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                    <th class="p-4 text-xs font-bold ">Document Stage Name</th>
-                                    <th class="p-4 text-xs font-bold ">Description</th>
-                                    <th class="p-4 text-xs font-bold text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Row 1 -->
-                                <% stages.forEach((type, index)=> { %>
-                                    <tr class="hover:bg-blue-50" data-document-stage="<%= type.document_stage %>">
-                                        <td class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                                            <%= index + 1 %>
-                                        </td>
-                                        <td class="p-4 text-sm text-gray-700 ">
-                                            <%= type.document_stage %>
-                                        </td>
-                                        <td class="p-4 text-sm text-gray-700 ">
-                                            <%= type.description %>
-                                        </td>
-                                        <td class="p-4 text-center relative">
-                                            <button onclick="toggleDropdown(event)"
-                                                class="focus:outline-none text-gray-600 px-4"><i
-                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
+            <script>
+                document.getElementById('submit-btn').addEventListener('click', async () => {
+                    const document_stage = document.getElementById('document-stage').value;
+                    const description = document.getElementById('description').value;
 
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-0"
-                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                <a href="#"
-                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                                                    <i class="text-red-500 fa-solid fa-trash-can"></i><span
-                                                        class="ml-2">Delete</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <% }) %>
+                    const fields = [
+                        { value: document_stage, name: 'Document Stage' },
+                        { value: description, name: 'Description' },
+                    ];
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    const checkVal = isRequired(fields);
 
-            </div>
-        </div>
-    </div>
+                    if (checkVal) {
 
-    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/fetch.js"></script>
+                        const url = '/document-stages/create';
+                        const method = 'POST';
+                        const obj = { document_stage, description };
 
-    <script>
-         document.getElementById('submit-btn').addEventListener('click', async () => {
-            const document_stage = document.getElementById('document-stage').value;
-            const description = document.getElementById('description').value;
+                        const { error, data } = await fetchApi(url, method, obj);
 
-            const url = '/document-stages/create';
-            const method = 'POST';
-            const obj = { document_stage, description };
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
 
-            const {error,data} = await fetchApi(url, method, obj);
-            
-            if(error){
-              alert(error.message);
-              return;
-            }
+                        if (data) {
+                            appendDataToTable({ document_stage, description });
+                            document.getElementById('document-stage').value = '';
+                            document.getElementById('description').value = '';
+                            alert(data.message);
+                        }
+                        console.log('data ', JSON.stringify(data));
+                    }
+                });
 
-            if (data) {
-                appendDataToTable({ document_stage, description });
-                document.getElementById('document-stage').value = '';
-                document.getElementById('description').value = '';
-                alert(data.message);
-            }
-            console.log('data ', JSON.stringify(data));
-        });
+                function appendDataToTable(data) {
+                    let tableBody = document.querySelector('tbody');
+                    let rowCount = tableBody.rows.length;
 
-        function appendDataToTable(data) {
-            let tableBody = document.querySelector('tbody');
-            let rowCount = tableBody.rows.length;
-
-            let tableRow = document.createElement('tr');
-            tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                    let tableRow = document.createElement('tr');
+                    tableRow.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                 ${rowCount + 1}
                             </td>
                             <td class="p-4 text-sm text-gray-700 ">
@@ -166,32 +181,32 @@
                                     </a>
                                 </div>
                             </td>`
-            tableRow.classList.add('"hover:bg-blue-50"');
-            tableRow.setAttribute('data-document-stage', data.document_stage);
-            tableBody.appendChild(tableRow);
-        }
-
-        document.addEventListener("click", async function (event) {
-            if (event.target.closest(".delete-btn")) {
-                const row = event.target.closest("tr");
-                const documentStage = row.getAttribute("data-document-stage");
-
-                const url = '/document-stages/delete';
-                const method = 'POST';
-                const obj = { documentStage };
-
-                const {error,data} = await fetchApi(url, method, obj);
-
-                if(error){
-                 alert(error.message);
-                 return;
+                    tableRow.classList.add('"hover:bg-blue-50"');
+                    tableRow.setAttribute('data-document-stage', data.document_stage);
+                    tableBody.appendChild(tableRow);
                 }
-            
-                if (data) {
-                    row.remove();
-                    alert(data.message);
-                }
-            }    
-        });
-    </script>
-</body>
+
+                document.addEventListener("click", async function (event) {
+                    if (event.target.closest(".delete-btn")) {
+                        const row = event.target.closest("tr");
+                        const documentStage = row.getAttribute("data-document-stage");
+
+                        const url = '/document-stages/delete';
+                        const method = 'POST';
+                        const obj = { documentStage };
+
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
+                        if (data) {
+                            row.remove();
+                            alert(data.message);
+                        }
+                    }
+                });
+            </script>
+    </body>

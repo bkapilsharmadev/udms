@@ -443,4 +443,7 @@ INNER JOIN file_versions fv ON f.latest_version_id = fv.version_id
 WHERE f.document_id = 1;
 
 -- document reviews
-SELECT * FROM document_reviews WHERE document_id = 1;
+SELECT * FROM document_reviews
+WHERE document_id = 1
+ORDER BY reviewed_at DESC NULLS FIRST
+LIMIT 1

@@ -172,6 +172,8 @@
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="../js/utils.js"></script>
             <script src="../js/fetch.js"></script>
+            <script src="../js/validation.js"></script>
+
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
@@ -180,27 +182,38 @@
                     const description = document.getElementById('description').value;
                     const parent_id = document.getElementById('parent-category').value?.null;
 
-                    const url = '/document-categories/create';
-                    const method = 'POST';
-                    const obj = { document_category, category_abbr, description, parent_id };
+                    const fields = [
+                        { value: document_category, name: 'Category Name' },
+                        { value: category_abbr, name: 'Category Abbreviation' },
+                        { value: description, name: 'Description' },
+                    ];
 
-                    const {error,data} = await fetchApi(url, method, obj);
+                    const checkVal = isRequired(fields);
 
-                    if(error){
-                      alert(error.message); 
-                      return;
+                    if (checkVal) {
+
+                        const url = '/document-categories/create';
+                        const method = 'POST';
+                        const obj = { document_category, category_abbr, description, parent_id };
+
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
+                        if (data) {
+                            const category_id = data.category_id;
+                            appendDataToTable({ document_category, category_abbr, description, parent_id, category_id });
+                            document.getElementById('category-name').value = '';
+                            document.getElementById('category-abbr').value = '';
+                            document.getElementById('description').value = '';
+                            document.getElementById('parent-category').firstElementChild.selected = true;
+                            alert("Document Category Created Successfully !");
+                        }
+                        console.log('data ', JSON.stringify(data));
                     }
-
-                    if (data) {
-                        const category_id = data.category_id;
-                        appendDataToTable({ document_category, category_abbr, description, parent_id ,category_id });
-                        document.getElementById('category-name').value = '';
-                        document.getElementById('category-abbr').value = '';
-                        document.getElementById('description').value = '';
-                        document.getElementById('parent-category').firstElementChild.selected = true;
-                        alert("Document Category Created Successfully !");
-                    }
-                    console.log('data ', JSON.stringify(data));
                 });
 
                 function appendDataToTable(data) {
@@ -257,11 +270,11 @@
                         const method = 'POST';
                         const obj = { category_id };
 
-                        const {error,data} = await fetchApi(url, method, obj);
+                        const { error, data } = await fetchApi(url, method, obj);
 
-                        if(error){
-                          alert(error.message);
-                          return;
+                        if (error) {
+                            alert(error.message);
+                            return;
                         }
 
                         if (data) {
@@ -277,11 +290,11 @@
                         const url = `/document-categories/fetch/${category_id}`;
                         const method = 'GET';
 
-                        const {error,data} = await fetchApi(url, method, null);
-                        
-                        if(error){
-                          alert(error.message);
-                          return;
+                        const { error, data } = await fetchApi(url, method, null);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
                         }
 
                         if (data) {
@@ -370,30 +383,39 @@
                     const document_category = document.getElementById("category-name-edit").value;
                     const category_abbr = document.getElementById("category-abbr-edit").value;
                     const description = document.getElementById("description-edit").value;
-                    const parent_id = document.getElementById("parent-category-edit").value;
+                    const parent_id = document.getElementById("parent-category-edit").value?.null;
 
-                    const url = '/document-categories/update';
-                    const method = 'POST';
-                    const obj = { category_id, document_category, category_abbr, description, parent_id };
+                    const fields = [
+                        { value: document_category, name: 'Category Name' },
+                        { value: category_abbr, name: 'Category Abbreviation' },
+                        { value: description, name: 'Description' },
+                    ];
 
-                    const {error,data} = await fetchApi(url, method, obj);
-                    
-                    if(error){
-                      alert(error.message);
-                      return;
-                    }
+                    const checkVal = isRequired(fields);
 
-                    if (data) {
-                        document.getElementById('category-name-edit').value = '';
-                        document.getElementById('category-abbr-edit').value = '';
-                        document.getElementById('description-edit').value = '';
-                        document.getElementById('parent-category-edit').options[0].selected = true;
+                    if (checkVal) {
+                        const url = '/document-categories/update';
+                        const method = 'POST';
+                        const obj = { category_id, document_category, category_abbr, description, parent_id };
 
-                        const row = document.querySelector(`tr[data-category-type="${category_id}"]`);
-                        const rowIndex = row.firstElementChild.innerText;
-                        const tableBody = document.querySelector('tbody');
-                        const rowCount = tableBody.rows.length;
-                        row.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                        const { error, data } = await fetchApi(url, method, obj);
+
+                        if (error) {
+                            alert(error.message);
+                            return;
+                        }
+
+                        if (data) {
+                            document.getElementById('category-name-edit').value = '';
+                            document.getElementById('category-abbr-edit').value = '';
+                            document.getElementById('description-edit').value = '';
+                            document.getElementById('parent-category-edit').options[0].selected = true;
+
+                            const row = document.querySelector(`tr[data-category-type="${category_id}"]`);
+                            const rowIndex = row.firstElementChild.innerText;
+                            const tableBody = document.querySelector('tbody');
+                            const rowCount = tableBody.rows.length;
+                            row.innerHTML = `<td class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                             ${rowIndex}
                                          </td>
                                          <td class="p-4 text-sm text-gray-700 ">
@@ -427,11 +449,13 @@
                                             </div>
                                         </td>`;
 
-                        closeModal();
-                        alert(data.message);
+                            closeModal();
+                            alert(data.message);
+                        }
+                        console.log('data ', JSON.stringify(data));
                     }
-                    console.log('data ', JSON.stringify(data));
                 });
+
 
             </script>
     </body>
