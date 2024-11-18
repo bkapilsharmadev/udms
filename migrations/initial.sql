@@ -141,12 +141,14 @@ CREATE TABLE document_reviews (
     forwarded_to VARCHAR(20),
     status VARCHAR(50) REFERENCES status_types (status_type),
     comments TEXT,
+    is_final_approval BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     created_by VARCHAR(20) NOT NULL,
     updated_by VARCHAR(20),
     active BOOLEAN DEFAULT TRUE
 );
+ALTER TABLE document_reviews ADD COLUMN IF NOT EXISTS is_final_approval BOOLEAN DEFAULT FALSE;
 
 
 CREATE OR REPLACE FUNCTION increment_version_number()
@@ -403,6 +405,7 @@ WHERE d.active = TRUE
     );
 
 
+--============================
 -- fetch single document details
 SELECT 
     d.document_id, 
@@ -447,3 +450,4 @@ SELECT * FROM document_reviews
 WHERE document_id = 1
 ORDER BY reviewed_at DESC NULLS FIRST
 LIMIT 1
+--============================

@@ -72,27 +72,33 @@ module.exports.getAllDocumentReviews = async () => {
 	return result.rows;
 };
 
-module.exports.updateDocumentReview = async (review_id, updatedData) => {
-	const { document_stage, status, comments, forwarded_to, reviewed_at } =
-		updatedData;
-
-	const query = `
-    UPDATE document_reviews
-    SET document_stage = $1, status = $2, comments = $3, forwarded_to = $4, reviewed_at = $5, updated_at = CURRENT_TIMESTAMP
-    WHERE review_id = $6 AND active = true
-    RETURNING *;
-  `;
-
-	const values = [
-		document_stage,
+module.exports.updateDocumentReview = async (reviewData) => {
+	const {
+		review_id,
 		status,
 		comments,
 		forwarded_to,
 		reviewed_at,
+		is_final_approval,
+		session_username,
+	} = reviewData;
+
+	const query = `
+    UPDATE document_reviews
+    SET status = $1, comments = $2, reviewed_at = $3, reviewed_by = $4, forwarded_to = $5, is_final_approval = $6, updated_at = NOW(), updated_by = $4
+	WHERE review_id = $7 RETURNING review_id, document_id, document_uuid;`;
+
+	const values = [
+		status,
+		comments,
+		reviewed_at,
+		session_username,
+		forwarded_to,
+		is_final_approval,
 		review_id,
 	];
 
-	const result = await sqlWrite.query(query, value);
+	const result = await sqlWrite.query(query, values);
 	return result.rows[0]; // Return the updated row
 };
 
