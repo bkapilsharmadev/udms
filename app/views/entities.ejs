@@ -57,8 +57,8 @@
                                                     <% }) %>
                                             </select>
                                             <div class="lms-cut-dropdown"></div>
-                                            <label for="parent-entity" class="lms-placeholder-dropdown">Entity
-                                                id<span>*</span></label>
+                                            <label for="parent-entity" class="lms-placeholder-dropdown">Parent
+                                                Enitity<span>*</span></label>
                                         </div>
                                     </div>
 
@@ -178,7 +178,7 @@
 
             <script>
                 //Create Entity    
-                document.getElementById('submitEntity').addEventListener('click', () => {
+                document.getElementById('submitEntity').addEventListener('click', async () => {
                     const name = document.querySelector('#name-entity').value;
                     const entity_type = document.querySelector('#type').value;
                     const parentEntityId = document.querySelector('#parent-entity').value;
@@ -194,12 +194,18 @@
 
                     const url = '/entities/create';
 
-                    let respose = fetchApi(url, 'POST', entityData);
-                    if (respose) {
-                        alert(respose.message)
-                        appendToTable({ name, entity_type })
+                    let { error, data } = await fetchApi(url, 'POST', entityData);
+                    if (error) {
+                        alert(error.message)
                     }
-                    console.log('Response', respose);
+                    if (data) {
+                        document.querySelector('#name-entity').value = '';
+                        document.querySelector('#type').value = '';
+                        document.querySelector('#parent-entity').value = '';
+                        alert(data.message);
+                        appendToTable({ name, entity_type });
+                    }
+                    console.log('Response', data);
                 })
 
                 //Delete Enitity
@@ -215,10 +221,13 @@
                         const method = 'POST';
                         const obj = { entity_id: entityId };
 
-                        const data = await fetchApi(url, method, obj);
+                        const { error, data } = await fetchApi(url, method, obj);
+                        if (error) {
+                            alert(error.message)
+                        }
                         if (data) {
                             row.remove();
-                            alert('Inserted successfully!');
+                            alert('Deleted successfully!');
                         }
                     }
                 });
@@ -228,13 +237,15 @@
 
                     const updateEntity = event.target.closest('.update-entity');
                     if (updateEntity) {
-                        
+
                         const id = updateEntity.querySelector('span[data-entity-id]').getAttribute('data-entity-id');
                         console.log('id in edit', id);
-                        
-                        const url = `/entities/fetch/${id}`;
-                        const res = await fetchApi(url)
 
+                        const url = `/entities/fetch/${id}`;
+                        const { error, data } = await fetchApi(url)
+                        if (error) {
+                            alert(error.message)
+                        }
 
                         document.getElementById('update-submit-btn').setAttribute('data-entity-id', id);
 
@@ -247,7 +258,7 @@
                             
                                     <div class="mb-4 w-full px-2">
                                         <div class="lms-input-container">
-                                            <input id="entity-name-edit" class="lms-input" type="text" placeholder="" value="${res.name}">
+                                            <input id="entity-name-edit" class="lms-input" type="text" placeholder="" value="${data.name}">
                                             <label for="entity-name-edit" class="lms-placeholder">Name<span>*</span></label>
                                         </div>
                                     </div>
@@ -289,7 +300,7 @@
                         document.getElementById('modal-content').innerHTML = divToAppend;
                         const options = document.getElementById('entity-type-edit');
                         for (let i = 0; i < options.length; i++) {
-                            if (options[i].value === res.entity_type) {
+                            if (options[i].value === data.entity_type) {
                                 options[i].selected = true;
                                 break;
                             }
@@ -297,7 +308,7 @@
 
                         const parentTypeOptions = document.getElementById('parent-entity-edit');
                         for (let i = 0; i < parentTypeOptions.length; i++) {
-                            if (parentTypeOptions[i].value == res.parent_id) {
+                            if (parentTypeOptions[i].value == data.parent_id) {
                                 parentTypeOptions[i].selected = true;
                                 break;
                             }
@@ -348,8 +359,8 @@
                                                             </div>
                                                     </td>
                                         `
-                                                
-                    
+
+
                     tableBody.appendChild(tableRow);
                 }
 
@@ -364,7 +375,10 @@
                     const method = 'POST';
                     const obj = { entity_id: entityId, name: name, entity_type: entityType, parent_id: parentEntityType };
 
-                    const data = await fetchApi(url, method, obj);
+                    const { error, data } = await fetchApi(url, method, obj);
+                    if (error) {
+                        alert(error.message)
+                    }
                     if (data) {
                         const row = document.querySelector(`tr[data-id="${entityId}"]`);
                         const rowIndex = row.firstElementChild.innerText;
