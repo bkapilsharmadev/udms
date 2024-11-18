@@ -89,4 +89,6 @@ module.exports.logout = async (req, res, next) => {
     }
 
     await deleteRedisData(userId);
+    res.clearCookie('user_id');
+    res.removeHeader('user_id');
 };
