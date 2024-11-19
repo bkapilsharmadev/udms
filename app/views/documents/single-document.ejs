@@ -94,9 +94,9 @@
                                             <span class="text-gray-700">
                                                 <%= file.file_name %>
                                             </span>
-                                            <button class="download-file" data-document-url="<%= file.document_url %>">
+                                            <a href="/file-versions/download-file/<%= file.version_id %>"  >
                                                 <i class="fa-solid fa-download text-red-600"></i>
-                                            </button>
+                                            </a>
                                         </li>
                                         <% }) %>
 
@@ -233,25 +233,25 @@
                     }
                 });
 
-                document.addEventListener('click', async (event) => {
-                    event.preventDefault();
+                // document.addEventListener('click', async (event) => {
+                //     event.preventDefault();
 
-                    if (event.target.closest('.download-file')) {
-                        const button = event.target.closest('.download-file');
-                        const document_url = button.getAttribute("data-document-url");
+                //     if (event.target.closest('.download-file')) {
+                //         const button = event.target.closest('.download-file');
+                //         const document_url = button.getAttribute("data-document-url");
 
-                        const url = '/file-versions/download-file';
-                        const method = 'POST';
-                        const obj = { document_url };
+                //         const url = '/file-versions/download-file';
+                //         const method = 'POST';
+                //         const obj = { document_url };
 
-                        const { error, data } = await fetchApi(url, method, obj);
+                //         const { error, data } = await fetchApi(url, method, obj);
 
-                        if (error) {
-                            alert(error.message);
-                            return;
-                        }                   
-                    }
-                });
+                //         if (error) {
+                //             alert(error.message);
+                //             return;
+                //         }                   
+                //     }
+                // });
 
             </script>
     </body>
