@@ -677,6 +677,109 @@ table thead tr th {
 
 /* =============================login page END============================== */
 
+/* single view page */
+.view-title {
+  color: #888888;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17.4px;
+  letter-spacing: 0.30000001192092896px;
+}
+
+.view-details {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20.3px;
+  letter-spacing: 0.30000001192092896px;
+}
+
+/* .single-view-container {
+  padding: 50px;
+}
+
+.single-view-heading {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36.46px;
+  letter-spacing: 0.5px;
+} */
+
+/* Status Approved */
+.status-approved {
+  color: #3bb155;
+  background-color: #e1f6e6;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+/* Status Pending */
+.status-pending {
+  color: #eda210;
+  background-color: #fff5da;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+/* Status Rejected */
+.status-rejected {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+/* --------------Toggle start-------------- */
+.lms-toggle-checkbox {
+  display: none;
+  /* Hide the default checkbox */
+}
+
+.lms-toggle-label {
+  display: block;
+  width: 44px;
+  height: 24px;
+  background-color: #c5cddb;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.lms-toggle-label::before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.lms-toggle-checkbox:checked + .lms-toggle-label {
+  background-color: #dc2626;
+}
+
+.lms-toggle-checkbox:checked + .lms-toggle-label::before {
+  transform: translateX(20px);
+}
+/* --------------Toggle start-------------- */
+
 /* =============================@media================================= */
 
 @media (min-width: 768px) {
@@ -757,41 +860,4 @@ table thead tr th {
   .menu-item.active > a {
     text-wrap: nowrap;
   }
-}
-
-.lms-toggle-checkbox {
-  display: none;
-  /* Hide the default checkbox */
-}
-
-.lms-toggle-label {
-  display: block;
-  width: 44px;
-  height: 24px;
-  background-color: #c5cddb;
-  border-radius: 30px;
-  position: relative;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.lms-toggle-label::before {
-  content: "";
-  display: block;
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s ease;
-}
-
-.lms-toggle-checkbox:checked + .lms-toggle-label {
-  background-color: #dc2626;
-}
-
-.lms-toggle-checkbox:checked + .lms-toggle-label::before {
-  transform: translateX(20px);
 }
