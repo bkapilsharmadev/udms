@@ -56,14 +56,14 @@
                                             <td class="p-4 text-sm text-gray-700 "><%= document.entity_department %></td>
                                             <td class="p-4 text-sm text-gray-700 "><%= document.comments %></td>
                                             <td class="p-4 text-center relative">
-                                                <button onclick="toggleDropdown(0)"
+                                                <button onclick="toggleDropdown(event)"
                                                     class="focus:outline-none text-gray-600 px-4"><i
                                                         class="fa-solid fa-ellipsis-vertical"></i></button>
     
                                                 <!-- Dropdown menu -->
                                                 <div id="dropdown-0"
                                                     class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                    <a href="./single-page.html"
+                                                    <a href="<%= document.document_id %>"
                                                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
                                                         <i class="text-red-500 fa-solid fa-eye"></i> <span
                                                             class="ml-2">View</span>

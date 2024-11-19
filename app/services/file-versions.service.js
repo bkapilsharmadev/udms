@@ -33,3 +33,9 @@ module.exports.getFileVersionsByDocumentId = async (document_id) => {
     const result = await fileVersionModel.getFileVersionsByDocumentId(document_id);
     return result || [];
 };
+
+module.exports.downloadFile = async (document_url) => {
+    if(document_url == undefined){
+
+    }
+}
