@@ -41,11 +41,17 @@ module.exports.getAllDocumentReviews = async (req, res, next) => {
 };
 
 module.exports.updateDocumentReview = async (req, res, next) => {
-	const { review_id, updatedData } = req.body;
-	const result = await documentReviewService.updateDocumentReview(
+	const { review_id, status, comments, is_final_approval, forwarded_to } =
+		req.body;
+	const result = await documentReviewService.updateDocumentReview({
 		review_id,
-		updatedData
-	);
+		status,
+		comments,
+		is_final_approval,
+		forwarded_to,
+		reviewed_at: new Date(),
+		session_username: req.session_username,
+	});
 	res.status(200).json(result);
 };
 
