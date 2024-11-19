@@ -56,7 +56,7 @@ module.exports.customErrorHandler = (err, req, res, next) => {
         message = 'Redis connection failed!';
     }
 
-    if(httpStatus == 401) {
+    if(httpStatus == 401 || httpStatus == 400) {
         console.log('inside 401 ');
         redirectUrl = '/';
         redirectPage = 'login.ejs';

@@ -28,3 +28,8 @@ module.exports.updateFileVersion = async (fileVersion) => {
     }
     return { message: "File version updated successfully" };
 };
+
+module.exports.getFileVersionsByDocumentId = async (document_id) => {
+    const result = await fileVersionModel.getFileVersionsByDocumentId(document_id);
+    return result || [];
+};

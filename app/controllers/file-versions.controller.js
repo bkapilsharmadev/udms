@@ -26,3 +26,9 @@ module.exports.updateFileVersion = async (req, res, next) => {
     const result = await fileVersionService.updateFileVersion({ version_id, hash, document_url, updated_by: req.session_username });
     res.status(200).json(result);
 };
+
+module.exports.getFileVersionsByDocumentId = async (req, res, next) => {
+    const { document_id } = req.params;
+    const result = await fileVersionService.getFileVersionsByDocumentId(document_id);
+    res.status(200).json(result);
+}

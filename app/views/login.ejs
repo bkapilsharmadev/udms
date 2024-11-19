@@ -83,8 +83,13 @@
                 console.log('data ', JSON.stringify(data));
 
                 if (error) {
-                    alert('Invalid Credentials!');
-                    return;
+                    if(error.status == 403){
+                     alert('Invalid Credentials!');
+                     return;
+                    }else{
+                     alert(error.message);
+                     return;
+                    }
                 }
 
                 if (data.status == 200) {
