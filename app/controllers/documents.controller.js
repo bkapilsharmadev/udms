@@ -129,3 +129,13 @@ module.exports.updateDocument = async (req, res, next) => {
 	});
 	res.status(200).json(result);
 };
+
+module.exports.updateIsFinalApproval = async (req, res, next) => {
+	const { document_id, is_final_approval } = req.body;
+	const result = await documentService.updateIsFinalApproval({
+		document_id,
+		is_final_approval,
+		session_username: req.session_username,
+	});
+	res.status(200).json(result);
+};

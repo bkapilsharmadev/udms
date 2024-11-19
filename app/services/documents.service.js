@@ -127,3 +127,11 @@ module.exports.updateDocument = async (document) => {
 	}
 	return { message: "Document updated successfully" };
 };
+
+module.exports.updateIsFinalApproval = async (document) => {
+	const result = await documentModel.updateIsFinalApproval(document);
+	if (!result) {
+		throw dbError({ message: "Error updating document", data: result });
+	}
+	return { message: "Document updated successfully" };
+};
