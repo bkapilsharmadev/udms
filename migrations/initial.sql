@@ -450,4 +450,10 @@ SELECT * FROM document_reviews
 WHERE document_id = 1
 ORDER BY reviewed_at DESC NULLS FIRST
 LIMIT 1
+
+-- check if current user has reviewed the document
+SELECT * FROM document_reviews 
+	WHERE document_id = 10 
+	AND to_be_reviewed_by = '50583955'
+	AND reviewed_by IS NOT NULL
 --============================

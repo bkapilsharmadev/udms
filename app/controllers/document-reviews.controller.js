@@ -43,6 +43,9 @@ module.exports.getAllDocumentReviews = async (req, res, next) => {
 module.exports.updateDocumentReview = async (req, res, next) => {
 	const { review_id, status, comments, is_final_approval, forwarded_to } =
 		req.body;
+
+		console.log(req.body);
+
 	const result = await documentReviewService.updateDocumentReview({
 		review_id,
 		status,

@@ -48,7 +48,7 @@ module.exports.updateDocumentReview = async (reviewData) => {
 		});
 	}
 
-	if (is_final_approval !== "true" && status === "APPROVED") {
+	if (!is_final_approval && status === "APPROVED") {
 		//add new document review for the next stage
     console.log(">>>>> FORWARDING THE DOCUMENT");
     const { forwarded_to, session_username } = reviewData;
