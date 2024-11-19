@@ -32,3 +32,4 @@ module.exports.deleteDocumentStage = async (id) => {
 	const result = await sqlWrite.query(query, values);
 	return result.rowCount > 0;
 };
+

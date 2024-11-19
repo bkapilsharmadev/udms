@@ -8,16 +8,20 @@ const { getDocumentStages } = require("../services/document-stages.service");
 const { getFileVersionsByDocumentId } = require("../services/file-versions.service");
 const { getLatestReviewByDocumentId } = require("../services/document-reviews.service")
 const { getDocumentCategories } = require("../services/document-categories.service");
+const { checkIsDocumentReviewed } = require("../services/document-reviews.service");
+const { getDocumentStageUsersExcludingUser } = require("../services/document-stage-users.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
-	const result = await Promise.all([getEntities(), getStatusTypes(),getDocumentCategories()]);
+	const username = req.session_username;
+	const result = await Promise.all([getEntities(), getStatusTypes(), getDocumentCategories(), getDocumentStageUsersExcludingUser(username)]);
 
 	const data = {
 		entities: result[0],
 		statusTypes: result[1],
 		mentorSigns: MENTOR_SIGNS,
-		documentCategories : result[2]
+		documentCategories: result[2],
+		documentStageUsers: result[3]
 	};
 
 	res.render("documents/documents.ejs", { data });
@@ -89,20 +93,24 @@ module.exports.createDocument = async (req, res, next) => {
 
 module.exports.renderSingleDocument = async (req, res, next) => {
 	const { document_id } = req.params;
+	const username = req.session_username;
 	const result = await Promise.all([
 		getStatusTypes(),
 		documentService.getDocumentById(document_id),
-		getDocumentStages(),
+		getDocumentStageUsersExcludingUser(username),
 		getFileVersionsByDocumentId(document_id),
-		getLatestReviewByDocumentId(document_id)
+		getLatestReviewByDocumentId(document_id),
+		checkIsDocumentReviewed(document_id, username),
+
 	]);
 
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
-		documentStages: result[2],
+		documentStageUsers: result[2],
 		fileVersions: result[3],
-		documentReviews: result[4]
+		documentReviews: result[4],
+		reviewStatus: result[5]
 	};
 
 	res.render("documents/single-document.ejs", { data });

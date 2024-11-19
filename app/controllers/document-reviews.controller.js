@@ -44,7 +44,7 @@ module.exports.updateDocumentReview = async (req, res, next) => {
 	const { review_id, status, comments, is_final_approval, forwarded_to } =
 		req.body;
 
-		console.log(req.body);
+	console.log(req.body);
 
 	const result = await documentReviewService.updateDocumentReview({
 		review_id,
@@ -63,3 +63,10 @@ module.exports.deleteDocumentReview = async (req, res, next) => {
 	const result = await documentReviewService.deleteDocumentReview(review_id);
 	res.status(200).json(result);
 };
+
+module.exports.checkIsDocumentReviewed = async (req, res, next) => {
+	const { document_id } = req.body;
+	const username = req.session_username;
+	const result = await documentReviewService.checkIsDocumentReviewed(document_id, username);
+	res.status(200).json(result);
+}

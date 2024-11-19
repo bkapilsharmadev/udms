@@ -105,75 +105,77 @@
                         </div>
                         <!--  -->
                         <!-- Review Actions -->
-                        <div class="frame-container">
-                            <div class="frame-title">
-                                <span>Actions</span>
-                            </div>
-                            <div class="frame-content" id="review-action-wrapper">
-                                <form class="flex flex-wrap gap-y-4" id="document-form">
-                                    <!-- Status Type-->
-                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                        <div class="lms-input-container">
-                                            <select id="status-type" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select Status</option>
-                                                <% data.statusTypes.forEach(statusType=> { %>
-                                                    <option value="<%= statusType.status_type %>">
-                                                        <%= statusType.status_type %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                            <div class="lms-cut-dropdown"></div>
-                                            <label for="status-type"
-                                                class="lms-placeholder-dropdown">Status<span>*</span></label>
+                        <% if(!data.reviewStatus.review_status) { %>
+                            <div class="frame-container">
+                                <div class="frame-title">
+                                    <span>Actions</span>
+                                </div>
+                                <div class="frame-content" id="review-action-wrapper">
+                                    <form class="flex flex-wrap gap-y-4" id="document-form">
+                                        <!-- Status Type-->
+                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                            <div class="lms-input-container">
+                                                <select id="status-type" class="lms-dropdropdown">
+                                                    <option value="" disabled selected hidden>Select Status</option>
+                                                    <% data.statusTypes.forEach(statusType=> { %>
+                                                        <option value="<%= statusType.status_type %>">
+                                                            <%= statusType.status_type %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                                <div class="lms-cut-dropdown"></div>
+                                                <label for="status-type"
+                                                    class="lms-placeholder-dropdown">Status<span>*</span></label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Details -->
-                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                        <div class="lms-input-container ">
-                                            <input id="comments" class="lms-input" type="text" placeholder="">
-                                            <label for="comments" class="lms-placeholder">Comments</label>
+                                        <!-- Details -->
+                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                            <div class="lms-input-container ">
+                                                <input id="comments" class="lms-input" type="text" placeholder="">
+                                                <label for="comments" class="lms-placeholder">Comments</label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2 flex flex-col items-center">
+                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2 flex flex-col items-center">
                                             <p class="text-xs mb-2">Final Approval ?</p>
                                             <input type="checkbox" id="lms-toggle"
                                                 class="lms-toggle-checkbox lms-input">
                                             <label for="lms-toggle" class="lms-toggle-label"></label>
-                                    </div>
-
-                                    <!-- Forward To -->
-                                    <div id="forward-document" class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                        <div class="lms-input-container">
-                                            <select id="forwarded-to" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Forward To</option>
-                                                <% data.documentStages.forEach(stage=> { %>
-                                                    <option value="<%= stage.document_stage %>">
-                                                        <%= stage.document_stage %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                            <div class="lms-cut-dropdown"></div>
-                                            <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
-                                                To<span>*</span></label>
                                         </div>
-                                    </div>
 
-                               
-                                    <!-- button -->
-                                    <div class="w-full px-2">
-                                        <button id="document-review-submit" type="submit"
-                                            data-review-id="<%= data.documentReviews.review_id %>"
-                                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
-                                            Submit
-                                        </button>
-                                    </div>
+                                        <!-- Forward To -->
+                                        <div id="forward-document" class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                            <div class="lms-input-container">
+                                                <select id="forwarded-to" class="lms-dropdropdown">
+                                                    <option value="" disabled selected hidden>Forward To</option>
+                                                    <% data.documentStageUsers.forEach(stage=> { %>
+                                                        <option value="<%= stage.username %>">
+                                                            <%= stage.username %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                                <div class="lms-cut-dropdown"></div>
+                                                <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
+                                                    To<span>*</span></label>
+                                            </div>
+                                        </div>
 
-                                </form>
+
+                                        <!-- button -->
+                                        <div class="w-full px-2">
+                                            <button id="document-review-submit" type="submit"
+                                                data-review-id="<%= data.documentReviews.review_id %>"
+                                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
+                                                Submit
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <!--  Review Actions//-->
+                            <% } %>
+                                <!--  Review Actions//-->
                     </div>
                     <!-- main content// -->
             </div>
@@ -226,6 +228,7 @@
                             document.getElementById("comments").value = '';
                             document.getElementById("forwarded-to").firstElementChild.selected = true;
                             document.getElementById("lms-toggle").checked = false;
+                            document.querySelector(".frame-container").classList.add("hidden");
                             alert(data.message);
                         }
                         console.log('data ', JSON.stringify(data));
