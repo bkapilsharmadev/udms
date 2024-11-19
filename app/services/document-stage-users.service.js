@@ -1,33 +1,38 @@
 const { dbError } = require("../utils/error/error");
 const documentStagesUsersModel = require("../models/document-stage-users.model");
 
-module.exports.getDocumentStagesUsers = async() => {
+module.exports.getDocumentStagesUsers = async () => {
     const result = await documentStagesUsersModel.getDocumentStagesUsers();
     return result || [];
 }
 
-module.exports.createDocumentStagesUsers = async(documentStagesUsers) => {
+module.exports.createDocumentStagesUsers = async (documentStagesUsers) => {
     const result = await documentStagesUsersModel.createDocumentStagesUsers(documentStagesUsers);
-    if(!result){
+    if (!result) {
         throw dbError({
-			moduleName: "document-stages-users.service.js",
-			message: "Error creating document stages users",
-			data: result,
-		});
+            moduleName: "document-stages-users.service.js",
+            message: "Error creating document stages users",
+            data: result,
+        });
     }
-    return {message : "Document Stage User Created Successfully !"};
+    return { message: "Document Stage User Created Successfully !" };
 }
 
 module.exports.deleteDocumentStageUsers = async (username) => {
     const result = await documentStagesUsersModel.deleteDocumentStageUsers(username);
 
-	if (!result) {
-		throw dbError({
-			moduleName: "document-stages-users.service.js",
-			message: "Error deleting document stage",
-			data: result,
-		});
-	}
+    if (!result) {
+        throw dbError({
+            moduleName: "document-stages-users.service.js",
+            message: "Error deleting document stage",
+            data: result,
+        });
+    }
 
-	return { message: "Document Stage User Deleted Successfully" };
+    return { message: "Document Stage User Deleted Successfully" };
+}
+
+module.exports.getDocumentStageUserByUsername = async (username) => {
+    const result = await documentStagesUsersModel.getDocumentStageUserByUsername(username);
+    return result || [];
 }
