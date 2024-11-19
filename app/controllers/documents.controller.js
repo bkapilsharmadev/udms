@@ -7,15 +7,17 @@ const { getStatusTypes } = require("../services/status-types.service");
 const { getDocumentStages } = require("../services/document-stages.service");
 const { getFileVersionsByDocumentId } = require("../services/file-versions.service");
 const { getLatestReviewByDocumentId } = require("../services/document-reviews.service")
+const { getDocumentCategories } = require("../services/document-categories.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
-	const result = await Promise.all([getEntities(), getStatusTypes()]);
+	const result = await Promise.all([getEntities(), getStatusTypes(),getDocumentCategories()]);
 
 	const data = {
 		entities: result[0],
 		statusTypes: result[1],
 		mentorSigns: MENTOR_SIGNS,
+		documentCategories : result[2]
 	};
 
 	res.render("documents/documents.ejs", { data });
@@ -100,7 +102,7 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		document: result[1],
 		documentStages: result[2],
 		fileVersions: result[3],
-		documentReviews : result[4]
+		documentReviews: result[4]
 	};
 
 	res.render("documents/single-document.ejs", { data });

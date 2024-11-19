@@ -19,7 +19,11 @@
         alt="Profile Image"
       />
       <h1 class="admin-heading text-gray-800 text-sm font-semibold ml-2">
-        Admin
+        <% if (username) { %>
+          <%= username %> 
+        <% } else { %>
+          User 
+        <% } %> 
       </h1>
     </button>
 

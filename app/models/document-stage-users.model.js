@@ -30,3 +30,7 @@ module.exports.deleteDocumentStageUsers = async (username) => {
 	const result = await sqlWrite.query(query, values);
 	return result.rowCount > 0;
 };
+
+module.exports.getDocumentStageUserByUsername = async (username) => {
+
+}
