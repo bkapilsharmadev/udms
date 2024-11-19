@@ -37,3 +37,10 @@ module.exports.getFileVersionsByDocumentId = async (document_id) => {
     const result = await sqlRead.query(query, values);
     return result.rows;
 }
+
+module.exports.getFileByVersionId = async (version_id) => {
+    const query = `SELECT document_url FROM file_versions WHERE version_id = $1`;
+    const values = [version_id];
+    const result = await sqlRead.query(query, values);
+    return result.rows;
+}

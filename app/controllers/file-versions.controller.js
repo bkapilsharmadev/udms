@@ -32,3 +32,8 @@ module.exports.getFileVersionsByDocumentId = async (req, res, next) => {
     const result = await fileVersionService.getFileVersionsByDocumentId(document_id);
     res.status(200).json(result);
 }
+
+module.exports.downloadFile = async (req, res, next) => {
+    const { version_id } = req.params;
+    await fileVersionService.downloadFile(version_id,req,res);
+}
