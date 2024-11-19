@@ -5,19 +5,29 @@ const { getEntities } = require("../services/entities.service");
 const { MENTOR_SIGNS } = require("../constants");
 const { getStatusTypes } = require("../services/status-types.service");
 const { getDocumentStages } = require("../services/document-stages.service");
-const { getFileVersionsByDocumentId } = require("../services/file-versions.service");
-const { getLatestReviewByDocumentId } = require("../services/document-reviews.service")
-const { getDocumentCategories } = require("../services/document-categories.service");
+const {
+	getFileVersionsByDocumentId,
+} = require("../services/file-versions.service");
+const {
+	getLatestReviewByDocumentId,
+} = require("../services/document-reviews.service");
+const {
+	getDocumentCategories,
+} = require("../services/document-categories.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
-	const result = await Promise.all([getEntities(), getStatusTypes(),getDocumentCategories()]);
+	const result = await Promise.all([
+		getEntities(),
+		getStatusTypes(),
+		getDocumentCategories(),
+	]);
 
 	const data = {
 		entities: result[0],
 		statusTypes: result[1],
 		mentorSigns: MENTOR_SIGNS,
-		documentCategories : result[2]
+		documentCategories: result[2],
 	};
 
 	res.render("documents/documents.ejs", { data });
@@ -94,7 +104,7 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		documentService.getDocumentById(document_id),
 		getDocumentStages(),
 		getFileVersionsByDocumentId(document_id),
-		getLatestReviewByDocumentId(document_id)
+		getLatestReviewByDocumentId(document_id),
 	]);
 
 	const data = {
@@ -102,7 +112,7 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		document: result[1],
 		documentStages: result[2],
 		fileVersions: result[3],
-		documentReviews: result[4]
+		documentReviews: result[4],
 	};
 
 	res.render("documents/single-document.ejs", { data });
@@ -120,7 +130,20 @@ module.exports.deleteDocument = async (req, res, next) => {
 };
 
 module.exports.updateDocument = async (req, res, next) => {
-	const { document_id, ref_no, description } = req.body;
+	const {
+		category_id,
+		description,
+		received_from,
+		university_entt_id,
+		campus_entt_id,
+		school_entt_id,
+		department_entt_id,
+		mentor_sign,
+		status,
+		comments,
+		forwarded_to
+	} = req.body;
+
 	const result = await documentService.updateDocument({
 		document_id,
 		ref_no,
