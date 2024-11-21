@@ -92,12 +92,15 @@ CREATE TABLE documents (
     mentor_sign _enum_mentor_sign_status DEFAULT 'NOT REQUIRED',
     document_stage VARCHAR(50) REFERENCES document_stages (document_stage),
     status VARCHAR(50) REFERENCES status_types (status_type),
+    is_final_approval BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     created_by VARCHAR(20) NOT NULL,
     updated_by VARCHAR(20),
 	active BOOLEAN DEFAULT TRUE
 );
+
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS is_final_approval BOOLEAN DEFAULT FALSE;
 
 DROP TABLE IF EXISTS files CASCADE;
 CREATE TABLE files (

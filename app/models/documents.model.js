@@ -222,6 +222,7 @@ module.exports.getDocumentById = async (document_id) => {
     d.mentor_sign, 
     d.document_stage, 
     d.status, 
+    d.is_final_approval,
     d.created_at, 
     d.updated_at, 
     d.created_by,
@@ -342,4 +343,13 @@ module.exports.updateDocument = async (document) => {
 	const values = [ref_no, description, updated_by, document_id];
 	const result = await sqlWrite.query(query, values);
 	return result.rowCount > 0;
+};
+
+// Update the final approval status of a document
+module.exports.updateIsFinalApproval = async (documentData) => {
+    const { document_id, is_final_approval, session_username } = documentData;
+    const query = `UPDATE documents SET is_final_approval = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
+    const values = [is_final_approval, session_username, document_id];
+    const result = await sqlWrite.query(query, values);
+    return result.rowCount > 0;
 };

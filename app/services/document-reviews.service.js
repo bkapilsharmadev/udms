@@ -1,4 +1,5 @@
 const documentReviewModel = require("../models/document-reviews.model");
+const documentService = require("./documents.service");
 const { dbError } = require("../utils/error/error");
 
 module.exports.createDocumentReview = async (data) => {
@@ -32,27 +33,26 @@ module.exports.getAllDocumentReviews = async () => {
 };
 
 module.exports.updateDocumentReview = async (reviewData) => {
-  console.log("reviewData>>> ", reviewData);
+	const { is_final_approval, status } = reviewData;
 
-  const { is_final_approval, status } = reviewData;
+	const review = await documentReviewModel.updateDocumentReview(reviewData);
+	if (!review?.review_id) {
+		throw dbError({
+			message: "Error updating document review",
+			moduleName: "document-reviews.service.js",
+		});
+	}
 
-  // if (is_final_approval !== "true" && status === "APPROVED") {
-  //   console.log(">>>>> FORWARDING THE DOCUMENT");
-  // }
-  // return ;
+	const updatedDocument = await documentService.updateIsFinalApproval({
+		document_id: review.document_id,
+		is_final_approval,
+		session_username: reviewData.session_username,
+	});
 
-  const review = await documentReviewModel.updateDocumentReview(reviewData);
-  if (!review?.review_id) {
-    throw dbError({
-      message: "Error updating document review",
-      moduleName: "document-reviews.service.js",
-    });
-  }
-
-  if (!is_final_approval && status === "APPROVED") {
-    //add new document review for the next stage
-    console.log(">>>>> FORWARDING THE DOCUMENT");
-    const { forwarded_to, session_username } = reviewData;
+	if (!is_final_approval && status === "APPROVED") {
+		//add new document review for the next stage
+		console.log(">>>>> FORWARDING THE DOCUMENT");
+		const { forwarded_to, session_username } = reviewData;
 
     const nextDocumentReviewData = {
       document_id: review.document_id,
@@ -67,7 +67,9 @@ module.exports.updateDocumentReview = async (reviewData) => {
       created_by: session_username,
     };
 
-    const nextDocumentReview = await this.createDocumentReview(nextDocumentReviewData);
+		const nextDocumentReview = await this.createDocumentReview(
+			nextDocumentReviewData
+		);
 
     if (!nextDocumentReview?.review_id) {
       throw dbError({
@@ -78,9 +80,9 @@ module.exports.updateDocumentReview = async (reviewData) => {
     }
   }
 
-  return {
-    message: "Document review updated successfully",
-  }
+	return {
+		message: "Document review updated successfully",
+	};
 };
 
 module.exports.deleteDocumentReview = async (review_id) => {

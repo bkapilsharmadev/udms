@@ -105,7 +105,11 @@
                         </div>
                         <!--  -->
                         <!-- Review Actions -->
-                        <% if(!data.reviewStatus.review_status || data.document.length > 0 && !data.document[0].is_final_approval) { %>
+                        <% if(data.reviewStatus || data.document[0].is_final_approval) { %>
+                            <p>Show current status</p>
+                            <%- data.reviewStatus %>
+                            <%- data.document[0].is_final_approval %>
+                        <% } else { %>
                             <div class="frame-container">
                                 <div class="frame-title">
                                     <span>Actions</span>

@@ -9,6 +9,7 @@ router.get("/received-documents", asyncErrorHandler(documentController.renderRec
 
 router.post("/create", asyncErrorHandler(documentController.createDocument));
 router.post("/delete", asyncErrorHandler(documentController.deleteDocument));
+router.post("/update/is-final-approval", asyncErrorHandler(documentController.updateIsFinalApproval));
 router.post("/update", asyncErrorHandler(documentController.updateDocument));
 
 router.get("/:document_id", asyncErrorHandler(documentController.renderSingleDocument));

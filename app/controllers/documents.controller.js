@@ -103,15 +103,17 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		checkIsDocumentReviewed(document_id, username),
 
 	]);
-
+	
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
 		documentStageUsers: result[2],
 		fileVersions: result[3],
 		documentReviews: result[4],
-		reviewStatus: result[5]
+		reviewStatus: result[5]?.review_status
 	};
+
+
 
 	res.render("documents/single-document.ejs", { data });
 };
@@ -128,12 +130,63 @@ module.exports.deleteDocument = async (req, res, next) => {
 };
 
 module.exports.updateDocument = async (req, res, next) => {
-	const { document_id, ref_no, description } = req.body;
-	const result = await documentService.updateDocument({
+	uploadFile.array("files", 10)(req, res, async (err) => {
+		if (err) {
+			// Pass the error to the next middleware (error handler)
+			return next(err);
+		}
+
+		try {
+			// If no error, continue with your logic
+			const {
+				category_id,
+				ref_no,
+				description,
+				received_from,
+				university_entt_id,
+				campus_entt_id,
+				school_entt_id,
+				department_entt_id,
+				mentor_sign,
+				status,
+				comments,
+				forwarded_to,
+			} = req.body;
+
+			// Get the files from req.files after Multer processes them
+			const files = req.files;
+
+			// Call the service to create the document and handle the files
+			const result = await documentService.createDocument({
+				category_id,
+				ref_no,
+				description,
+				received_from,
+				university_entt_id,
+				campus_entt_id,
+				school_entt_id,
+				department_entt_id,
+				mentor_sign,
+				status,
+				comments,
+				forwarded_to,
+				files,
+				created_by: req.session_username,
+			});
+
+			res.status(201).json(result);
+		} catch (error) {
+			next(error);
+		}
+	});
+};
+
+module.exports.updateIsFinalApproval = async (req, res, next) => {
+	const { document_id, is_final_approval } = req.body;
+	const result = await documentService.updateIsFinalApproval({
 		document_id,
-		ref_no,
-		description,
-		updated_by: req.session_username,
+		is_final_approval,
+		session_username: req.session_username,
 	});
 	res.status(200).json(result);
 };
