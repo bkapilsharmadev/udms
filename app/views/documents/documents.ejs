@@ -239,9 +239,9 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="js/utils.js"></script>
-            <script src="js/fetch.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
                 document.querySelector('#doc-files').addEventListener('change', function (event) {
@@ -255,6 +255,7 @@
 
                     const fields = [
                         { value: document.getElementById('category').value, name: 'Category' },
+                        { value: document.getElementById('ref-no').value, name: 'Reference No.' },
                         { value: document.getElementById('received-from').value, name: 'Document From Selection' },
                         { value: document.getElementById('university').value, name: 'University' },
                         { value: document.getElementById('campus').value, name: 'Campus' },
@@ -264,13 +265,9 @@
                         { value: document.getElementById('forwarded-to').value, name: 'Document Forwarded To Selection' },
                     ];
 
-                    // Get file(s) selected and append them to FormData
-                    const files = document.getElementById('doc-files').files;
-
                     const checkVal = isRequired(fields);
-                    const checkFiles = areFilesValid(files);
 
-                    if (checkVal && checkFiles) {
+                    if (checkVal) {
 
                         const formData = new FormData(); // Initialize FormData
 
@@ -287,13 +284,21 @@
                         formData.append('comments', document.getElementById('comments').value);
                         formData.append('forwarded_to', document.getElementById('forwarded-to').value);
 
+                        // Get file(s) selected and append them to FormData
+                        const files = document.getElementById('doc-files').files;
+                        const checkFiles = areFilesValid(files);
+
+                        if(!checkFiles) {
+                           return;
+                        }
+
                         for (let i = 0; i < files.length; i++) {
                             formData.append('files', files[i]); // 'files' is the key
                         }
 
                         try {
                             // Send the form data to the server using Fetch API 
-                            const response = await fetch('/documents/create', {
+                            const response = await fetch('<%- BASE_URL %>documents/create', {
                                 method: 'POST',
                                 body: formData, // Send form data (including files)
                             });

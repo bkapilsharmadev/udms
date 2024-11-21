@@ -110,9 +110,9 @@
                     </div>
             </div>
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="../js/fetch.js"></script>
-            <script src="../js/utils.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
 
@@ -120,7 +120,7 @@
                     const entity_type = document.getElementById('entity-type').value;
                     const description = document.getElementById('description').value;
 
-                    const url = '/entity-types/create';
+                    const url = '<%- BASE_URL %>entity-types/create';
                     const method = 'POST';
                     const obj = { entity_type, description };
 
@@ -190,7 +190,7 @@
                         const row = event.target.closest("tr");
                         const entityType = row.getAttribute("data-entity-type");
 
-                        const url = '/entity-types/delete';
+                        const url = '<%- BASE_URL %>entity-types/delete';
                         const method = 'POST';
                         const obj = { entityType };
 

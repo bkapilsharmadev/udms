@@ -113,9 +113,9 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="../js/utils.js"></script>
-            <script src="../js/fetch.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
                 document.getElementById('submit-btn').addEventListener('click', async () => {
@@ -131,7 +131,7 @@
 
                     if (checkVal) {
 
-                        const url = '/document-stages/create';
+                        const url = '<%- BASE_URL %>document-stages/create';
                         const method = 'POST';
                         const obj = { document_stage, description };
 
@@ -191,7 +191,7 @@
                         const row = event.target.closest("tr");
                         const documentStage = row.getAttribute("data-document-stage");
 
-                        const url = '/document-stages/delete';
+                        const url = '<%- BASE_URL %>document-stages/delete';
                         const method = 'POST';
                         const obj = { documentStage };
 

@@ -111,16 +111,16 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="../js/utils.js"></script>
-            <script src="../js/fetch.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
                     const status_type = document.getElementById('status-name').value;
                     const description = document.getElementById('description').value;
 
-                    const url = '/status-types/create';
+                    const url = '<%- BASE_URL %>status-types/create';
                     const method = 'POST';
                     const obj = { status_type, description };
 
@@ -189,7 +189,7 @@
                         const row = event.target.closest("tr");
                         const statusType = row.getAttribute("data-status-type");
 
-                        const url = '/status-types/delete';
+                        const url = '<%- BASE_URL %>status-types/delete';
                         const method = 'POST';
                         const obj = { statusType };
 

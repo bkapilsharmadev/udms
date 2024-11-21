@@ -52,14 +52,16 @@
                                                         <td class="p-4 text-sm text-gray-700 ">
                                                             <%= document.to_be_reviewed_by_name %>
                                                         </td>
-                                                        <td class="p-4 text-sm text-gray-700 
-                                                            <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
-                                                            <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
-                                                            <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
-                                                            <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
-                                                            <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>
-                                                        ">
-                                                            <%= document.review_status %>
+                                                        <td class="p-4 text-sm text-gray-700">
+                                                            <span
+                                                                class="
+                                                                <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
+                                                                <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
+                                                                <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
+                                                                <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
+                                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
+                                                                <%= document.review_status %>
+                                                            </span>
                                                         </td>
                                                         <td class="p-4 text-sm text-gray-700 ">
                                                             <%= document.ref_no %>
@@ -126,9 +128,8 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="/js/utils.js"></script>
-            <script src="/js/fetch.js"></script>
-            <!--  -->
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
 
     </body>
 

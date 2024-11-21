@@ -170,9 +170,9 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="../js/utils.js"></script>
-            <script src="../js/fetch.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
 
@@ -192,7 +192,7 @@
 
                     if (checkVal) {
 
-                        const url = '/document-categories/create';
+                        const url = '<%- BASE_URL %>document-categories/create';
                         const method = 'POST';
                         const obj = { document_category, category_abbr, description, parent_id };
 
@@ -266,7 +266,7 @@
                         const row = event.target.closest("tr");
                         const category_id = row.getAttribute("data-category-type");
 
-                        const url = '/document-categories/delete';
+                        const url = '<%- BASE_URL %>document-categories/delete';
                         const method = 'POST';
                         const obj = { category_id };
 
@@ -287,7 +287,7 @@
                         const row = event.target.closest("tr");
                         const category_id = row.getAttribute("data-category-type");
 
-                        const url = `/document-categories/fetch/${category_id}`;
+                        const url = `<%- BASE_URL %>document-categories/fetch/${category_id}`;
                         const method = 'GET';
 
                         const { error, data } = await fetchApi(url, method, null);
@@ -394,7 +394,7 @@
                     const checkVal = isRequired(fields);
 
                     if (checkVal) {
-                        const url = '/document-categories/update';
+                        const url = '<%- BASE_URL %>document-categories/update';
                         const method = 'POST';
                         const obj = { category_id, document_category, category_abbr, description, parent_id };
 

@@ -173,9 +173,9 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="../js/utils.js"></script>
-            <script src="../js/fetch.js"></script>
-            <script src="../js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
                 //Create Entity    
@@ -194,7 +194,7 @@
                     if (checkVal) {
                         const entityData = { name: name, entity_type: entity_type, parent_id: parentEntityId };
                         console.log('entityData', entityData);
-                        const url = '/entities/create';
+                        const url = '<%- BASE_URL %>entities/create';
 
                         let { error, data } = await fetchApi(url, 'POST', entityData);
                         if (error) {
@@ -221,7 +221,7 @@
                         console.log('entityId', entityId);
 
 
-                        const url = '/entities/delete';
+                        const url = '<%- BASE_URL %>entities/delete';
                         const method = 'POST';
                         const obj = { entity_id: entityId };
 
@@ -245,7 +245,7 @@
                         const id = updateEntity.querySelector('span[data-entity-id]').getAttribute('data-entity-id');
                         console.log('id in edit', id);
 
-                        const url = `/entities/fetch/${id}`;
+                        const url = `<%- BASE_URL %>entities/fetch/${id}`;
                         const { error, data } = await fetchApi(url)
                         if (error) {
                             alert(error.message)
@@ -384,7 +384,7 @@
 
                     if (checkVal) {
 
-                        const url = '/entities/update';
+                        const url = '<%- BASE_URL %>entities/update';
                         const method = 'POST';
                         const obj = { entity_id: entityId, name: name, entity_type: entityType, parent_id: parentEntityType };
 
