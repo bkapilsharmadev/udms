@@ -15,8 +15,8 @@ module.exports.createStatusType = async (statusType) => {
 	return { message: "Status type created successfully" };
 };
 
-module.exports.getStatusTypes = async () => {
-	const result = await statusTypeModel.getStatusTypes();
+module.exports.getStatusTypes = async (pgTransaction) => {
+	const result = await statusTypeModel.getStatusTypes(pgTransaction);
 	return result || [];
 };
 

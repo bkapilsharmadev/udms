@@ -1,8 +1,8 @@
 const fileModel = require("../models/files.model");
 const fileVersioModel = require("../models/file-versions.model");
 
-module.exports.createFile = async (fileData) => {
-	const file = await fileModel.createFile(fileData);
+module.exports.createFile = async (fileData, dbTransaction) => {
+	const file = await fileModel.createFile(fileData, dbTransaction);
 	if (!file?.file_id) {
 		throw new Error("Error creating file");
 	}
@@ -19,15 +19,21 @@ module.exports.createFile = async (fileData) => {
 	};
 
 	console.log("File Version Data>>>> ", fileVersionData);
-	const fileVersion = await fileVersioModel.createFileVersion(fileVersionData);
+	const fileVersion = await fileVersioModel.createFileVersion(
+		fileVersionData,
+		dbTransaction
+	);
 	console.log("File Version>>>> ", fileVersion);
 
 	//update latest_version_id in files
-	const updatedFile = await this.updateFile({
-		file_id: fileVersion.file_id,
-		latest_version_id: fileVersion.version_id,
-		updated_by: fileData.created_by,
-	});
+	const updatedFile = await this.updateFile(
+		{
+			file_id: fileVersion.file_id,
+			latest_version_id: fileVersion.version_id,
+			updated_by: fileData.created_by,
+		},
+		dbTransaction
+	);
 
 	console.log("Updated File>>>> ", updatedFile);
 
@@ -51,8 +57,8 @@ module.exports.deleteFile = async (file_id) => {
 	return { message: "File deleted successfully" };
 };
 
-module.exports.updateFile = async (file) => {
-	const result = await fileModel.updateFile(file);
+module.exports.updateFile = async (file, dbTransaction) => {
+	const result = await fileModel.updateFile(file, dbTransaction);
 	if (!result) {
 		throw new Error("Error updating file");
 	}

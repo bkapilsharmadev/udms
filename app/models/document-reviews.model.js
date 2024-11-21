@@ -4,7 +4,7 @@ const dbPoolManager = require("../config/db-pool-manager");
 const sqlRead = dbPoolManager.get("sqlRead", read_db_config);
 const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 
-module.exports.createDocumentReview = async (data) => {
+module.exports.createDocumentReview = async (data, dbTransaction) => {
 	const {
 		to_be_reviewed_by,
 		document_id,
@@ -39,20 +39,24 @@ module.exports.createDocumentReview = async (data) => {
 		comments,
 		created_by,
 	];
+	
+	//throw new Error(">>> SLEF MADE NEW ERROR");
 
-	const result = await sqlWrite.query(query, values);
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result.rows[0]; // Return the created row
 };
 
-module.exports.getDocumentReviewById = async (review_id) => {
+module.exports.getDocumentReviewById = async (review_id, dbTransaction) => {
 	const query = `SELECT * FROM document_reviews WHERE review_id = $1 AND active = true;`;
 	const values = [review_id];
 
-	const result = await sqlRead.query(query, values);
+	const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	return result.rows[0];
 };
 
-module.exports.getLatestReviewByDocumentId = async (document_id) => {
+module.exports.getLatestReviewByDocumentId = async (document_id, dbTransaction) => {
 	const query = `
 	SELECT * FROM document_reviews 
 	WHERE document_id = $1 AND active = true 
@@ -61,18 +65,20 @@ module.exports.getLatestReviewByDocumentId = async (document_id) => {
   `;
 	const values = [document_id];
 
-	const result = await sqlRead.query(query, values);
+	const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	return result.rows[0];
 };
 
-module.exports.getAllDocumentReviews = async () => {
+module.exports.getAllDocumentReviews = async (dbTransaction) => {
 	const query = `SELECT * FROM document_reviews WHERE active = true;`;
 
-	const result = await sqlRead(query);
+	const client = dbTransaction || sqlRead;
+	const result = await client(query);
 	return result.rows;
 };
 
-module.exports.updateDocumentReview = async (reviewData) => {
+module.exports.updateDocumentReview = async (reviewData, dbTransaction) => {
 	const {
 		review_id,
 		status,
@@ -98,19 +104,21 @@ module.exports.updateDocumentReview = async (reviewData) => {
 		review_id,
 	];
 
-	const result = await sqlWrite.query(query, values);
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result.rows[0]; // Return the updated row
 };
 
-module.exports.deleteDocumentReview = async (review_id) => {
+module.exports.deleteDocumentReview = async (review_id, dbTransaction) => {
 	const query = `UPDATE document_reviews SET active = false WHERE review_id = $1 RETURNING *;`;
 	const values = [review_id];
 
-	const result = await sqlWrite.query(query, values);
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result.rows[0]; // Return the deleted row
 };
 
-module.exports.checkIsDocumentReviewed = async (document_id, username) => {
+module.exports.checkIsDocumentReviewed = async (document_id, username, dbTransaction) => {
 	const query = `SELECT 
 					CASE 
 						WHEN EXISTS (
@@ -124,6 +132,7 @@ module.exports.checkIsDocumentReviewed = async (document_id, username) => {
 					END AS review_status;`;
 	const values = [document_id, username];
 
-	const result = await sqlWrite.query(query, values);
+	const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	return result.rows[0];
 }

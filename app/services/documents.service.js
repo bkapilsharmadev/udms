@@ -3,9 +3,14 @@ const documentModel = require("../models/documents.model");
 const fileService = require("./files.service");
 const documentReviewService = require("./document-reviews.service");
 
-module.exports.createDocument = async (documentData) => {
+module.exports.createDocument = async (documentData, dbTransaction) => {
 	console.log("Create Document>>>> ", documentData);
-	const document = await documentModel.createDocument(documentData);
+	console.log("Transaction object>>>> ", dbTransaction);
+
+	const document = await documentModel.createDocument(
+		documentData,
+		dbTransaction
+	);
 	if (!document?.document_id) {
 		throw dbError({ message: "Error creating document", data: result });
 	}
@@ -25,7 +30,7 @@ module.exports.createDocument = async (documentData) => {
 		};
 
 		console.log("File Data>>>> ", fileData);
-		filesPromises.push(fileService.createFile(fileData));
+		filesPromises.push(fileService.createFile(fileData, dbTransaction));
 	}
 
 	const filesResult = await Promise.allSettled(filesPromises);
@@ -56,7 +61,8 @@ module.exports.createDocument = async (documentData) => {
 
 	console.log("Document Review Data>>>> ", documentReviewData);
 	const documentReview = await documentReviewService.createDocumentReview(
-		documentReviewData
+		documentReviewData,
+		dbTransaction
 	);
 
 	if (documentReviewData.status === "APPROVED") {
@@ -77,7 +83,8 @@ module.exports.createDocument = async (documentData) => {
 		console.log("Next Document Review Data>>>> ", nextDocumentReviewData);
 
 		const nextDocumentReview = await documentReviewService.createDocumentReview(
-			nextDocumentReviewData
+			nextDocumentReviewData,
+			dbTransaction
 		);
 
 		if (!nextDocumentReview?.review_id) {
@@ -110,7 +117,7 @@ module.exports.getReceivedDocuments = async (sessionUsername) => {
 module.exports.getDocumentById = async (document_id) => {
 	const result = await documentModel.getDocumentById(document_id);
 	return result || {};
-}
+};
 
 module.exports.deleteDocument = async (document_id) => {
 	const result = await documentModel.deleteDocument(document_id);

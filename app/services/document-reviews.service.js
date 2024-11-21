@@ -2,9 +2,9 @@ const documentReviewModel = require("../models/document-reviews.model");
 const documentService = require("./documents.service");
 const { dbError } = require("../utils/error/error");
 
-module.exports.createDocumentReview = async (data) => {
+module.exports.createDocumentReview = async (data, dbTransaction) => {
   // Call the model to insert the document review
-  const result = await documentReviewModel.createDocumentReview(data);
+  const result = await documentReviewModel.createDocumentReview(data, dbTransaction);
   if (!result?.review_id) {
     throw dbError({
       message: "Error creating document review",

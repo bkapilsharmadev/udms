@@ -5,7 +5,7 @@ const sqlRead = dbPoolManager.get("sqlRead", read_db_config);
 const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 
 // Create a new document
-module.exports.createDocument = async (documentData) => {
+module.exports.createDocument = async (documentData, dbTransaction = null) => {
 	const {
 		category_id,
 		ref_no,
@@ -34,12 +34,14 @@ module.exports.createDocument = async (documentData) => {
 		document_stage,
 		created_by,
 	];
-	const result = await sqlWrite.query(query, values);
+
+    const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result?.rows?.[0] ?? [];
 };
 
 // Get all documents
-module.exports.getDocuments = async (sessionUsername) => {
+module.exports.getDocuments = async (sessionUsername, dbTransaction = null) => {
 	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -119,13 +121,14 @@ WHERE d.active = TRUE
     )
   );`;
 	const values = [sessionUsername];
-	const result = await sqlRead.query(query, values);
-	console.log(result.rows);
+
+    const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	return result.rows;
 };
 
 // Get all my documents
-module.exports.getMyDocuments = async (sessionUsername) => {
+module.exports.getMyDocuments = async (sessionUsername, dbTransaction = null) => {
 	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -196,12 +199,13 @@ LEFT JOIN LATERAL (
 ) dr ON true
 WHERE d.active = TRUE AND d.created_by::TEXT = $1::TEXT;`;
 	const values = [sessionUsername];
-	const result = await sqlRead.query(query, values);
-	console.log(result.rows);
+    
+    const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	return result.rows;
 };
 
-module.exports.getDocumentById = async (document_id) => {
+module.exports.getDocumentById = async (document_id, dbTransaction = null) => {
     const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -237,13 +241,15 @@ INNER JOIN entities es ON d.school_entt_id = es.entity_id
 INNER JOIN entities ed ON d.department_entt_id = ed.entity_id
 WHERE d.document_id = $1;`
 	const values = [document_id];
-	const result = await sqlRead.query(query, values);
+    
+    const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	console.log(result.rows);
 	return result.rows;
 };
 
 // Get all documents
-module.exports.getReceivedDocuments = async (sessionUsername) => {
+module.exports.getReceivedDocuments = async (sessionUsername, dbTransaction = null) => {
 	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -323,33 +329,41 @@ WHERE d.active = TRUE
     )
     );`;
 	const values = [sessionUsername];
-	const result = await sqlRead.query(query, values);
+    
+    const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
 	console.log(result.rows);
 	return result.rows;
 };
 
 // Delete a document by ID
-module.exports.deleteDocument = async (document_id) => {
+module.exports.deleteDocument = async (document_id, dbTransaction = null) => {
 	const query = `UPDATE documents SET active = false WHERE document_id = $1;`;
 	const values = [document_id];
-	const result = await sqlWrite.query(query, values);
+    
+    const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result.rowCount > 0;
 };
 
 // Update a document
-module.exports.updateDocument = async (document) => {
+module.exports.updateDocument = async (document, dbTransaction = null) => {
 	const { document_id, ref_no, description, updated_by } = document;
 	const query = `UPDATE documents SET ref_no = $1, description = $2, updated_by = $3, updated_at = CURRENT_TIMESTAMP WHERE document_id = $4;`;
 	const values = [ref_no, description, updated_by, document_id];
-	const result = await sqlWrite.query(query, values);
+
+    const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
 	return result.rowCount > 0;
 };
 
 // Update the final approval status of a document
-module.exports.updateIsFinalApproval = async (documentData) => {
+module.exports.updateIsFinalApproval = async (documentData, dbTransaction = null) => {
     const { document_id, is_final_approval, session_username } = documentData;
     const query = `UPDATE documents SET is_final_approval = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
     const values = [is_final_approval, session_username, document_id];
-    const result = await sqlWrite.query(query, values);
+
+    const client = dbTransaction || sqlWrite;
+    const result = await client.query(query, values);
     return result.rowCount > 0;
 };
