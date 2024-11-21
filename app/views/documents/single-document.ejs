@@ -106,80 +106,108 @@
                         <!--  -->
                         <!-- Review Actions -->
                         <% if(data.reviewStatus || data.document[0].is_final_approval) { %>
-                            <p>Show current status</p>
-                            <%- data.reviewStatus %>
-                            <%- data.document[0].is_final_approval %>
-                        <% } else { %>
+
                             <div class="frame-container">
                                 <div class="frame-title">
-                                    <span>Actions</span>
+                                    <span>Review Status</span>
                                 </div>
-                                <div class="frame-content" id="review-action-wrapper">
-                                    <form class="flex flex-wrap gap-y-4" id="document-form">
-                                        <!-- Status Type-->
-                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                            <div class="lms-input-container">
-                                                <select id="status-type" class="lms-dropdropdown">
-                                                    <option value="" disabled selected hidden>Select Status</option>
-                                                    <% data.statusTypes.forEach(statusType=> { %>
-                                                        <option value="<%= statusType.status_type %>">
-                                                            <%= statusType.status_type %>
-                                                        </option>
-                                                        <% }) %>
-                                                </select>
-                                                <div class="lms-cut-dropdown"></div>
-                                                <label for="status-type"
-                                                    class="lms-placeholder-dropdown">Status<span>*</span></label>
-                                            </div>
-                                        </div>
-
-                                        <!-- Details -->
-                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                            <div class="lms-input-container ">
-                                                <input id="comments" class="lms-input" type="text" placeholder="">
-                                                <label for="comments" class="lms-placeholder">Comments</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2 flex flex-col items-center">
-                                            <p class="text-xs mb-2">Final Approval ?</p>
-                                            <input type="checkbox" id="lms-toggle"
-                                                class="lms-toggle-checkbox lms-input">
-                                            <label for="lms-toggle" class="lms-toggle-label"></label>
-                                        </div>
-
-                                        <!-- Forward To -->
-                                        <div id="forward-document" class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                            <div class="lms-input-container">
-                                                <select id="forwarded-to" class="lms-dropdropdown">
-                                                    <option value="" disabled selected hidden>Forward To</option>
-                                                    <% data.documentStageUsers.forEach(stage=> { %>
-                                                        <option value="<%= stage.username %>">
-                                                            <%= stage.first_name + " " + stage.last_name + " - (" + stage.document_stage + ")" %>
-                                                        </option>
-                                                        <% }) %>
-                                                </select>
-                                                <div class="lms-cut-dropdown"></div>
-                                                <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
-                                                    To<span>*</span></label>
-                                            </div>
-                                        </div>
-
-
-                                        <!-- button -->
-                                        <div class="w-full px-2">
-                                            <button id="document-review-submit" type="submit"
-                                                data-review-id="<%= data.documentReviews.review_id %>"
-                                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
-                                                Submit
-                                            </button>
-                                        </div>
-
-                                    </form>
+                                <div class="frame-content px-6">
+                                    <!-- <div class="flex"> -->
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <span class="view-title">Current Reviewer</span>
+                                        <p class="view-details">
+                                            <%= data.documentReviews.to_be_reviewed_by_name %>
+                                        </p>
+                                    </div>
+                                    <div class="lg:w-1/2 md:w-1/2 w-full mb-6">
+                                        <p><span class="view-title pl-2">Status</span></p>
+                                        <p><span
+                                                class="
+                                                <% if ( data.documentReviews.status === 'PENDING') { %> status-pending <% } %>
+                                                <% if ( data.documentReviews.status === 'APPROVED') { %> status-approved <% } %>
+                                                <% if ( data.documentReviews.status === 'REJECTED') { %> status-rejected <% } %>
+                                                <% if ( data.documentReviews.status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
+                                                <% if ( data.documentReviews.status === 'SENT FOR OB') { %> status-ob <% } %>">
+                                                <%= data.documentReviews.status %>
+                                            </span></p>
+                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
-                            <% } %>
-                                <!--  Review Actions//-->
+
+
+                            <% } else { %>
+                                <div class="frame-container">
+                                    <div class="frame-title">
+                                        <span>Actions</span>
+                                    </div>
+                                    <div class="frame-content" id="review-action-wrapper">
+                                        <form class="flex flex-wrap gap-y-4" id="document-form">
+                                            <!-- Status Type-->
+                                            <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                                <div class="lms-input-container">
+                                                    <select id="status-type" class="lms-dropdropdown">
+                                                        <option value="" disabled selected hidden>Select Status</option>
+                                                        <% data.statusTypes.forEach(statusType=> { %>
+                                                            <option value="<%= statusType.status_type %>">
+                                                                <%= statusType.status_type %>
+                                                            </option>
+                                                            <% }) %>
+                                                    </select>
+                                                    <div class="lms-cut-dropdown"></div>
+                                                    <label for="status-type"
+                                                        class="lms-placeholder-dropdown">Status<span>*</span></label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Details -->
+                                            <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                                <div class="lms-input-container ">
+                                                    <input id="comments" class="lms-input" type="text" placeholder="">
+                                                    <label for="comments" class="lms-placeholder">Comments</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2 flex flex-col items-center">
+                                                <p class="text-xs mb-2">Final Approval ?</p>
+                                                <input type="checkbox" id="lms-toggle"
+                                                    class="lms-toggle-checkbox lms-input">
+                                                <label for="lms-toggle" class="lms-toggle-label"></label>
+                                            </div>
+
+                                            <!-- Forward To -->
+                                            <div id="forward-document" class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                                <div class="lms-input-container">
+                                                    <select id="forwarded-to" class="lms-dropdropdown">
+                                                        <option value="" disabled selected hidden>Forward To</option>
+                                                        <% data.documentStageUsers.forEach(stage=> { %>
+                                                            <option value="<%= stage.username %>">
+                                                                <%= stage.first_name + " " + stage.last_name + " - (" +
+                                                                    stage.document_stage + ")" %>
+                                                            </option>
+                                                            <% }) %>
+                                                    </select>
+                                                    <div class="lms-cut-dropdown"></div>
+                                                    <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
+                                                        To<span>*</span></label>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- button -->
+                                            <div class="w-full px-2">
+                                                <button id="document-review-submit" type="submit"
+                                                    data-review-id="<%= data.documentReviews.review_id %>"
+                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
+                                                    Submit
+                                                </button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <!--  Review Actions//-->
                     </div>
                     <!-- main content// -->
             </div>
