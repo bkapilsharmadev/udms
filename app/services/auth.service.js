@@ -4,6 +4,7 @@ const { setRedisData, getRedisData, deleteRedisData } = require("../utils/databa
 const { COOKIE_OPTIONS } = require("../constants/index");
 const { CustomError } = require("../utils/error/CustomError");
 const serverFetch = require("../utils/server-fetch/fetch");
+const { getUserDocumentStage } = require("../services/document-stage-users.service");
 const { internalServerError, forbiddenAccessError, unauthorizedAccessError, invalidRequestError, dbError } = require("../utils/error/error");
 
 
@@ -34,9 +35,16 @@ module.exports.authenticateService = async (credentials, req, res) => {
         });
     }
 
+    const documentStage = await getUserDocumentStage(credentials.username);
+    const userDocumentStage = documentStage?.[0]?.document_stage ?? '';
+    const firstName = documentStage?.[0]?.first_name ?? '';
+    const lastName = documentStage?.[0]?.last_name ?? '';
     const randomId = generateRandomUUID();
     const redisData = {
         username: credentials.username,
+        documentStage: userDocumentStage,
+        firstName,
+        lastName,
         accesstoken: result.headers.accesstoken,
         refreshtoken: result.headers.refreshtoken,
         devicetoken: result.headers.devicetoken,
