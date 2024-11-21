@@ -75,7 +75,7 @@
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
 
-                const url = '/authenticate';
+                const url = '<%- BASE_URL %>authenticate';
                 const method = 'POST';
                 const obj = { username, password };
 

@@ -10,6 +10,12 @@ const app = express();
 const server = require('http').createServer(app);
 const cookieParser = require('cookie-parser');
 
+app.use((req, res, next) => {
+  res.locals.BASE_URL = process.env.BASE_URL;
+  next();
+});
+
+
 app.use(express.json({ limit: process.env.PAYLOAD_SIZE_LIMIT }));
 app.use(express.urlencoded({
   extended: true,
@@ -17,7 +23,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'app/views'));
