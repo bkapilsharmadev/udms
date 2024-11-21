@@ -103,15 +103,17 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		checkIsDocumentReviewed(document_id, username),
 
 	]);
-
+	
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
 		documentStageUsers: result[2],
 		fileVersions: result[3],
 		documentReviews: result[4],
-		reviewStatus: result[5]
+		reviewStatus: result[5]?.review_status
 	};
+
+
 
 	res.render("documents/single-document.ejs", { data });
 };
