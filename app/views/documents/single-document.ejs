@@ -94,7 +94,7 @@
                                             <span class="text-gray-700">
                                                 <%= file.file_name %>
                                             </span>
-                                            <a href="/file-versions/download-file/<%= file.version_id %>">
+                                            <a href="<%- BASE_URL %>file-versions/download-file/<%= file.version_id %>">
                                                 <i class="fa-solid fa-download text-red-600"></i>
                                             </a>
                                         </li>
@@ -213,9 +213,9 @@
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="/js/utils.js"></script>
-            <script src="/js/fetch.js"></script>
-            <script src="/js/validation.js"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
+            <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
                 document.getElementById("lms-toggle").addEventListener("click", async () => {
