@@ -208,9 +208,11 @@
                                         <div class="lms-input-container">
                                             <select id="forwarded-to" class="lms-dropdropdown">
                                                 <option value="" disabled selected hidden>Forward To</option>
-                                                <option value="50583955">Kevin Pett (DEAN)</option>
-                                                <option value="32200170_ADMIN">John Doe (REGISTRAR)</option>
-                                                <option value="VChancellor">Vice Chancellor (VC)</option>
+                                                <% data.documentStageUsers.forEach(stage=> { %>
+                                                    <option value="<%= stage.username %>">
+                                                        <%= stage.username %>
+                                                    </option>
+                                                 <% }) %>
                                             </select>
                                             <div class="lms-cut-dropdown"></div>
                                             <label for="forwarded-to" class="lms-placeholder-dropdown">Forward

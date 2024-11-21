@@ -23,5 +23,6 @@ router.delete(
 	"/delete",
 	asyncErrorHandler(documentReviewController.deleteDocumentReview)
 );
+router.post("/checkIsDocumentReviewed", asyncErrorHandler(documentReviewController.checkIsDocumentReviewed));
 
 module.exports = router;

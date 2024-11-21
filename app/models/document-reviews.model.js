@@ -109,3 +109,21 @@ module.exports.deleteDocumentReview = async (review_id) => {
 	const result = await sqlWrite.query(query, values);
 	return result.rows[0]; // Return the deleted row
 };
+
+module.exports.checkIsDocumentReviewed = async (document_id, username) => {
+	const query = `SELECT 
+					CASE 
+						WHEN EXISTS (
+							SELECT 1 
+							FROM document_reviews
+							WHERE document_id = $1 
+							AND to_be_reviewed_by = $2
+							AND reviewed_by IS NOT NULL
+						) THEN TRUE
+						ELSE FALSE
+					END AS review_status;`;
+	const values = [document_id, username];
+
+	const result = await sqlWrite.query(query, values);
+	return result.rows[0];
+}

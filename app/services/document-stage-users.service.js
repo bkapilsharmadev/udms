@@ -4,7 +4,7 @@ const documentStagesUsersModel = require("../models/document-stage-users.model")
 module.exports.getDocumentStagesUsers = async () => {
     const result = await documentStagesUsersModel.getDocumentStagesUsers();
     return result || [];
-}
+};
 
 module.exports.createDocumentStagesUsers = async (documentStagesUsers) => {
     const result = await documentStagesUsersModel.createDocumentStagesUsers(documentStagesUsers);
@@ -16,7 +16,7 @@ module.exports.createDocumentStagesUsers = async (documentStagesUsers) => {
         });
     }
     return { message: "Document Stage User Created Successfully !" };
-}
+};
 
 module.exports.deleteDocumentStageUsers = async (username) => {
     const result = await documentStagesUsersModel.deleteDocumentStageUsers(username);
@@ -30,9 +30,10 @@ module.exports.deleteDocumentStageUsers = async (username) => {
     }
 
     return { message: "Document Stage User Deleted Successfully" };
-}
+};
 
-module.exports.getDocumentStageUserByUsername = async (username) => {
-    const result = await documentStagesUsersModel.getDocumentStageUserByUsername(username);
+
+module.exports.getDocumentStageUsersExcludingUser = async (username) => {
+    const result = await documentStagesUsersModel.getDocumentStageUsersExcludingUser(username);
     return result || [];
-}
+};

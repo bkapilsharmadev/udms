@@ -31,6 +31,11 @@ module.exports.deleteDocumentStageUsers = async (username) => {
 	return result.rowCount > 0;
 };
 
-module.exports.getDocumentStageUserByUsername = async (username) => {
+module.exports.getDocumentStageUsersExcludingUser = async (username) => {
+	const query = `SELECT dsu.first_name, dsu.last_name, dsu.username, dsu.email, dsu.description, ds.document_stage, dsu.created_by, dsu.updated_by, dsu.active FROM document_stage_users dsu
+	INNER JOIN document_stages ds ON ds.document_stage = dsu.document_stage WHERE dsu.username != $1 AND dsu.active = true AND ds.active = TRUE;`;
+	const values = [username];
 
+	const result = await sqlRead.query(query, values);
+	return result.rows;
 }

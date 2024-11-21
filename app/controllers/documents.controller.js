@@ -5,29 +5,23 @@ const { getEntities } = require("../services/entities.service");
 const { MENTOR_SIGNS } = require("../constants");
 const { getStatusTypes } = require("../services/status-types.service");
 const { getDocumentStages } = require("../services/document-stages.service");
-const {
-	getFileVersionsByDocumentId,
-} = require("../services/file-versions.service");
-const {
-	getLatestReviewByDocumentId,
-} = require("../services/document-reviews.service");
-const {
-	getDocumentCategories,
-} = require("../services/document-categories.service");
+const { getFileVersionsByDocumentId } = require("../services/file-versions.service");
+const { getLatestReviewByDocumentId } = require("../services/document-reviews.service")
+const { getDocumentCategories } = require("../services/document-categories.service");
+const { checkIsDocumentReviewed } = require("../services/document-reviews.service");
+const { getDocumentStageUsersExcludingUser } = require("../services/document-stage-users.service");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
-	const result = await Promise.all([
-		getEntities(),
-		getStatusTypes(),
-		getDocumentCategories(),
-	]);
+	const username = req.session_username;
+	const result = await Promise.all([getEntities(), getStatusTypes(), getDocumentCategories(), getDocumentStageUsersExcludingUser(username)]);
 
 	const data = {
 		entities: result[0],
 		statusTypes: result[1],
 		mentorSigns: MENTOR_SIGNS,
 		documentCategories: result[2],
+		documentStageUsers: result[3]
 	};
 
 	res.render("documents/documents.ejs", { data });
@@ -99,20 +93,24 @@ module.exports.createDocument = async (req, res, next) => {
 
 module.exports.renderSingleDocument = async (req, res, next) => {
 	const { document_id } = req.params;
+	const username = req.session_username;
 	const result = await Promise.all([
 		getStatusTypes(),
 		documentService.getDocumentById(document_id),
-		getDocumentStages(),
+		getDocumentStageUsersExcludingUser(username),
 		getFileVersionsByDocumentId(document_id),
 		getLatestReviewByDocumentId(document_id),
+		checkIsDocumentReviewed(document_id, username),
+
 	]);
 
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
-		documentStages: result[2],
+		documentStageUsers: result[2],
 		fileVersions: result[3],
 		documentReviews: result[4],
+		reviewStatus: result[5]
 	};
 
 	res.render("documents/single-document.ejs", { data });
@@ -130,27 +128,55 @@ module.exports.deleteDocument = async (req, res, next) => {
 };
 
 module.exports.updateDocument = async (req, res, next) => {
-	const {
-		category_id,
-		description,
-		received_from,
-		university_entt_id,
-		campus_entt_id,
-		school_entt_id,
-		department_entt_id,
-		mentor_sign,
-		status,
-		comments,
-		forwarded_to
-	} = req.body;
+	uploadFile.array("files", 10)(req, res, async (err) => {
+		if (err) {
+			// Pass the error to the next middleware (error handler)
+			return next(err);
+		}
 
-	const result = await documentService.updateDocument({
-		document_id,
-		ref_no,
-		description,
-		updated_by: req.session_username,
+		try {
+			// If no error, continue with your logic
+			const {
+				category_id,
+				ref_no,
+				description,
+				received_from,
+				university_entt_id,
+				campus_entt_id,
+				school_entt_id,
+				department_entt_id,
+				mentor_sign,
+				status,
+				comments,
+				forwarded_to,
+			} = req.body;
+
+			// Get the files from req.files after Multer processes them
+			const files = req.files;
+
+			// Call the service to create the document and handle the files
+			const result = await documentService.createDocument({
+				category_id,
+				ref_no,
+				description,
+				received_from,
+				university_entt_id,
+				campus_entt_id,
+				school_entt_id,
+				department_entt_id,
+				mentor_sign,
+				status,
+				comments,
+				forwarded_to,
+				files,
+				created_by: req.session_username,
+			});
+
+			res.status(201).json(result);
+		} catch (error) {
+			next(error);
+		}
 	});
-	res.status(200).json(result);
 };
 
 module.exports.updateIsFinalApproval = async (req, res, next) => {
