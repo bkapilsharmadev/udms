@@ -52,20 +52,20 @@ module.exports.authenticateService = async (credentials, req, res) => {
     };
 
     await setRedisData(randomId, redisData);
-    res.cookie("user_id", randomId, {
+    res.cookie("user_data_id", randomId, {
         COOKIE_OPTIONS,
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
         domain: process.env.COOKIE_DOMAIN,
     });
 
-    res.setHeader("user_id", randomId);
+    res.setHeader("user_data_id", randomId);
     return { status: 200, message: result.body.message };
 };
 
 module.exports.logout = async (req, res, next) => {
-    const { user_id: cookieUserId } = req.cookies ?? undefined;
-    const { user_id: headerUserId } = req.headers ?? undefined;
+    const { user_data_id: cookieUserId } = req.cookies ?? undefined;
+    const { user_data_id: headerUserId } = req.headers ?? undefined;
     const userId = cookieUserId || headerUserId;
 
     if (!userId || userId == undefined) {
