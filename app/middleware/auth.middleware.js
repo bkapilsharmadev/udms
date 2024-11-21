@@ -4,8 +4,8 @@ const { unauthorizedAccessError, invalidRequestError } = require("../utils/error
 
 
 module.exports.validateUserSession = async (req, res, next) => {
-    const { user_data_id: cookieUserId } = req.cookies ?? undefined;
-    const { user_data_id: headerUserId } = req.headers ?? undefined;
+    const { user_id: cookieUserId } = req.cookies ?? undefined;
+    const { user_id: headerUserId } = req.headers ?? undefined;
     const userId = cookieUserId || headerUserId;
 
     if (!userId || userId == undefined) {
@@ -45,8 +45,8 @@ module.exports.validateUserSession = async (req, res, next) => {
 };
 
 module.exports.validateUserLogin = async (req, res, next) => {
-    const { user_data_id: cookieUserId } = req.cookies ?? undefined;
-    const { user_data_id: headerUserId } = req.headers ?? undefined;
+    const { user_id: cookieUserId } = req.cookies ?? undefined;
+    const { user_id: headerUserId } = req.headers ?? undefined;
     const userId = cookieUserId || headerUserId;
 
     if (!userId || userId == undefined) {

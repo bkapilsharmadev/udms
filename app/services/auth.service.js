@@ -36,6 +36,7 @@ module.exports.authenticateService = async (credentials, req, res) => {
     }
 
     const documentStage = await getUserDocumentStage(credentials.username);
+    console.log("document stage ",documentStage);
     const userDocumentStage = documentStage?.[0]?.document_stage ?? '';
     const firstName = documentStage?.[0]?.first_name ?? '';
     const lastName = documentStage?.[0]?.last_name ?? '';
@@ -52,20 +53,20 @@ module.exports.authenticateService = async (credentials, req, res) => {
     };
 
     await setRedisData(randomId, redisData);
-    res.cookie("user_data_id", randomId, {
+    res.cookie("user_id", randomId, {
         COOKIE_OPTIONS,
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
         domain: process.env.COOKIE_DOMAIN,
     });
 
-    res.setHeader("user_data_id", randomId);
+    res.setHeader("user_id", randomId);
     return { status: 200, message: result.body.message };
 };
 
 module.exports.logout = async (req, res, next) => {
-    const { user_data_id: cookieUserId } = req.cookies ?? undefined;
-    const { user_data_id: headerUserId } = req.headers ?? undefined;
+    const { user_id: cookieUserId } = req.cookies ?? undefined;
+    const { user_id: headerUserId } = req.headers ?? undefined;
     const userId = cookieUserId || headerUserId;
 
     if (!userId || userId == undefined) {
@@ -97,6 +98,6 @@ module.exports.logout = async (req, res, next) => {
     }
 
     await deleteRedisData(userId);
-    res.clearCookie('user_data_id');
-    res.removeHeader('user_data_id');
+    res.clearCookie('user_id');
+    res.removeHeader('user_id');
 };
