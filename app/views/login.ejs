@@ -93,7 +93,7 @@
                 }
 
                 if (data.status == 200) {
-                    location.href = '/dashboard';
+                    location.href = '<%- BASE_URL %>dashboard';
                 } else {
                     alert(data.message);
                 }

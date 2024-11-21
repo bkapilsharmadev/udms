@@ -236,7 +236,7 @@
                     const is_final_approval = document.getElementById("lms-toggle").checked;
                     let forwarded_to = is_final_approval != true ? document.getElementById("forwarded-to").value : null;
 
-                    const url = '/document-reviews/update';
+                    const url = '<%- BASE_URL %>document-reviews/update';
                     const method = 'POST';
                     const obj = { review_id, status, comments, is_final_approval, forwarded_to };
 

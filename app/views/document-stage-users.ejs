@@ -189,7 +189,7 @@
 
                     if (checkVal) {
 
-                        const url = '/document-stage-users/create';
+                        const url = '<%- BASE_URL %>document-stage-users/create';
                         const method = 'POST';
                         const obj = { first_name, last_name, email, username, description, document_stage };
 
@@ -265,7 +265,7 @@
                         const row = event.target.closest("tr");
                         const username = row.getAttribute("data-stage-user");
 
-                        const url = '/document-stage-users/delete';
+                        const url = '<%- BASE_URL %>document-stage-users/delete';
                         const method = 'POST';
                         const obj = { username };
 

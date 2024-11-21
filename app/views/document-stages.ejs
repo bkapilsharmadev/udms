@@ -131,7 +131,7 @@
 
                     if (checkVal) {
 
-                        const url = '/document-stages/create';
+                        const url = '<%- BASE_URL %>document-stages/create';
                         const method = 'POST';
                         const obj = { document_stage, description };
 
@@ -191,7 +191,7 @@
                         const row = event.target.closest("tr");
                         const documentStage = row.getAttribute("data-document-stage");
 
-                        const url = '/document-stages/delete';
+                        const url = '<%- BASE_URL %>document-stages/delete';
                         const method = 'POST';
                         const obj = { documentStage };
 

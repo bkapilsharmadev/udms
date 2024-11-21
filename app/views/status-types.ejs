@@ -120,7 +120,7 @@
                     const status_type = document.getElementById('status-name').value;
                     const description = document.getElementById('description').value;
 
-                    const url = '/status-types/create';
+                    const url = '<%- BASE_URL %>status-types/create';
                     const method = 'POST';
                     const obj = { status_type, description };
 
@@ -189,7 +189,7 @@
                         const row = event.target.closest("tr");
                         const statusType = row.getAttribute("data-status-type");
 
-                        const url = '/status-types/delete';
+                        const url = '<%- BASE_URL %>status-types/delete';
                         const method = 'POST';
                         const obj = { statusType };
 
