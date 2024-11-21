@@ -778,7 +778,64 @@ table thead tr th {
 .lms-toggle-checkbox:checked + .lms-toggle-label::before {
   transform: translateX(20px);
 }
+
+
 /* --------------Toggle start-------------- */
+.status-approved {
+  color: #3bb155;
+  background-color: #e1f6e6;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+.status-pending {
+  color: #eda210;
+  background-color: #fff5da;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+.status-rejected {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+.status-discussed {
+  color: #f97316;
+  background-color: #ffedd5;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
+.status-ob {
+  color: #a855f7;
+  background-color: #f3e8ff;
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 5px 15px;
+}
+
 
 /* =============================@media================================= */
 
@@ -861,3 +918,4 @@ table thead tr th {
     text-wrap: nowrap;
   }
 }
+

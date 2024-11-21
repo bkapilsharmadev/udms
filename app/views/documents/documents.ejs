@@ -30,7 +30,7 @@
                                                     <option value="<%= category.category_id %>">
                                                         <%= category.document_category %>
                                                     </option>
-                                                <% }) %>
+                                                    <% }) %>
                                             </select>
                                             <div class="lms-cut-dropdown"></div>
                                             <label for="category"
@@ -210,9 +210,10 @@
                                                 <option value="" disabled selected hidden>Forward To</option>
                                                 <% data.documentStageUsers.forEach(stage=> { %>
                                                     <option value="<%= stage.username %>">
-                                                        <%= stage.username %>
+                                                        <%= stage.first_name + " " + stage.last_name + " - (" +
+                                                            stage.document_stage + ")" %>
                                                     </option>
-                                                 <% }) %>
+                                                    <% }) %>
                                             </select>
                                             <div class="lms-cut-dropdown"></div>
                                             <label for="forwarded-to" class="lms-placeholder-dropdown">Forward
@@ -263,9 +264,13 @@
                         { value: document.getElementById('forwarded-to').value, name: 'Document Forwarded To Selection' },
                     ];
 
-                    const checkVal = isRequired(fields);
+                    // Get file(s) selected and append them to FormData
+                    const files = document.getElementById('doc-files').files;
 
-                    if (checkVal) {
+                    const checkVal = isRequired(fields);
+                    const checkFiles = areFilesValid(files);
+
+                    if (checkVal && checkFiles) {
 
                         const formData = new FormData(); // Initialize FormData
 
@@ -281,9 +286,6 @@
                         formData.append('mentor_sign', document.getElementById('mentor-sign').value);
                         formData.append('comments', document.getElementById('comments').value);
                         formData.append('forwarded_to', document.getElementById('forwarded-to').value);
-
-                        // Get file(s) selected and append them to FormData
-                        const files = document.getElementById('doc-files').files;
 
                         for (let i = 0; i < files.length; i++) {
                             formData.append('files', files[i]); // 'files' is the key

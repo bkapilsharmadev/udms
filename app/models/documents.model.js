@@ -225,7 +225,8 @@ module.exports.getDocumentById = async (document_id) => {
     d.is_final_approval,
     d.created_at, 
     d.updated_at, 
-    d.created_by
+    d.created_by,
+    d.is_final_approval
 FROM documents d
 INNER JOIN document_categories dc ON d.category_id = dc.category_id
 -- Join with entities table for document-related entity information

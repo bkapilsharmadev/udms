@@ -25,42 +25,52 @@ document.addEventListener("DOMContentLoaded", function () {
   checkWindowSize();
   window.addEventListener("resize", checkWindowSize);
 
-  // Submenu toggle functionality
-  menuItems.forEach((item) => {
-    item.addEventListener("click", function (e) {
-      // Ignore clicks within the sub-menu items
-      if (e.target.closest(".sub-menu")) return;
+  //Menu Items Hover
+  menuItems.forEach((menu) => {
+    const link = menu.querySelector("a");
+    const path = link.getAttribute("href");
 
-      e.preventDefault();
-
-      // Close other submenus
-      menuItems.forEach((el) => {
-        if (el !== item) {
-          const submenu = el.querySelector(".sub-menu");
-          if (submenu) submenu.classList.remove("show");
-          el.classList.remove("active"); // Remove active from other menu items
+    if (location.pathname === path) {
+      menu.classList.add("active");
+    } else if (path === "#") {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        menu.classList.add("active");
+        const subMenu = menu.querySelector(".sub-menu");
+        if (subMenu) {
+          subMenu.classList.add("show");
         }
+
+        // Close other menus with href="#"
+        menuItems.forEach((otherMenu) => {
+          if (otherMenu !== menu) {
+            otherMenu.classList.remove("active");
+            const otherSubMenu = otherMenu.querySelector(".sub-menu");
+            if (otherSubMenu) {
+              otherSubMenu.classList.remove("show");
+            }
+          }
+        });
       });
-
-      // Toggle current submenu
-      const submenu = item.querySelector(".sub-menu");
-      if (submenu) {
-        submenu.classList.toggle("show");
-      }
-
-      // Add active class to the clicked menu item
-      item.classList.toggle("active");
-    });
+    } else {
+      menu.classList.remove("active");
+    }
   });
 
-  // Sub-menu item click handler
-  // document.querySelectorAll('.sub-menu-itam').forEach(subMenuItem => {
-  //     subMenuItem.addEventListener('click', function (event) {
-  //         event.preventDefault();
-  //         document.querySelectorAll('.sub-menu-itam').forEach(i => i.classList.remove('active'));
-  //         subMenuItem.classList.add('active');
-  //     });
-  // });
+  const subMenuItems = document.querySelectorAll(".sub-menu a");
+
+  //Sub Menu Items Active
+  subMenuItems.forEach((subMenuItem) => {
+    if (location.pathname === subMenuItem.getAttribute("href")) {
+
+      const parentMenuItem = subMenuItem.closest(".menu-item");
+      const menuList = subMenuItem.closest(".sub-menu-itam");
+      console.log("parent menu item ", parentMenuItem);
+
+      menuList.classList.add("active");
+      parentMenuItem.classList.add("active");
+    }
+  });
 });
 
 // Close the dropdown if clicking outside of it
@@ -76,14 +86,6 @@ document.addEventListener("click", function (event) {
   });
 });
 
-// Event delegation for delete button
-document.addEventListener("click", function (event) {
-  if (event.target.closest(".delete-btn")) {
-    const row = event.target.closest("tr");
-    row.remove(); // Delete the table row
-  }
-});
-
 // Input file Count in files
 function updateFileCount(event) {
   const fileCount = event.target.files.length;
@@ -92,8 +94,6 @@ function updateFileCount(event) {
   document.getElementById("fileCount").textContent =
     fileCount > 0 ? fileCountText : "No files selected";
 }
-
-
 
 // Close dropdown when clicking outside
 window.addEventListener("click", function (e) {
@@ -104,12 +104,10 @@ window.addEventListener("click", function (e) {
   }
 });
 
-
 function toggleDropdownProfile() {
   const profiledropdownMenu = document.getElementById("profiledropdownMenu");
   profiledropdownMenu.classList.toggle("hidden");
 }
-
 
 function toggleDropdown(event) {
   console.log("toggled ");
@@ -131,7 +129,6 @@ function openModal() {
   document.getElementById("modal-background").classList.remove("hidden");
 }
 
-// Close Modal Function
 function closeModal() {
   document.getElementById("modal-background").classList.add("hidden");
 }

@@ -37,3 +37,8 @@ module.exports.getDocumentStageUsersExcludingUser = async (username) => {
     const result = await documentStagesUsersModel.getDocumentStageUsersExcludingUser(username);
     return result || [];
 };
+
+module.exports.getUserDocumentStage = async (username) => {
+    const result = await documentStagesUsersModel.getUserDocumentStage(username);
+    return result || [];
+}

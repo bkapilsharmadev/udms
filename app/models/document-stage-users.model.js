@@ -39,3 +39,11 @@ module.exports.getDocumentStageUsersExcludingUser = async (username) => {
 	const result = await sqlRead.query(query, values);
 	return result.rows;
 }
+
+module.exports.getUserDocumentStage = async (username) => {
+	const query = `SELECT first_name, last_name, document_stage FROM document_stage_users WHERE username = $1 AND active = TRUE`;
+	const values = [username];
+
+	const result = await sqlRead.query(query, values);
+	return result.rows;
+}

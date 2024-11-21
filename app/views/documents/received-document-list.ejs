@@ -46,7 +46,13 @@
                                         <tr class="hover:bg-blue-50">
                                             <td class="p-4 text-sm text-gray-700 text-center font-semibold "><%= ++index %></td>
                                             <td class="p-4 text-sm text-gray-700 "><%= document.to_be_reviewed_by_name %></td>
-                                            <td class="p-4 text-sm text-gray-700 "><%= document.review_status %></td>
+                                            <td class="p-4 text-sm text-gray-700  
+                                                <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
+                                                <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
+                                                <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
+                                                <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
+                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>
+                                            "><%= document.review_status %></td>
                                             <td class="p-4 text-sm text-gray-700 "><%= document.ref_no %></td>
                                             <td class="p-4 text-sm text-gray-700 "><%= document.document_category %></td>
                                             <td class="p-4 text-sm text-gray-700 "><%= document.entity_from %></td>
