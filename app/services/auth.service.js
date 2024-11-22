@@ -36,6 +36,7 @@ module.exports.authenticateService = async (credentials, req, res) => {
     }
 
     const documentStage = await getUserDocumentStage(credentials.username);
+    console.log("document stage ",documentStage);
     const userDocumentStage = documentStage?.[0]?.document_stage ?? '';
     const firstName = documentStage?.[0]?.first_name ?? '';
     const lastName = documentStage?.[0]?.last_name ?? '';

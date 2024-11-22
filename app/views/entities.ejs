@@ -372,7 +372,7 @@
                 document.getElementById('update-submit-btn').addEventListener('click', async (event) => {
                     const name = document.getElementById('entity-name-edit').value;
                     const entityType = document.getElementById('entity-type-edit').value;
-                    const parentEntityType = document.getElementById('parent-entity-edit').value;
+                    const parentEntityType = document.getElementById('parent-entity-edit').value?.null;
                     const entityId = document.getElementById('update-submit-btn').getAttribute('data-entity-id');
 
                     const fields = [
