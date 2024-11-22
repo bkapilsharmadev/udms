@@ -121,8 +121,6 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		checkIsDocumentReviewed(document_id, username, req.pgTransaction),
 	]);
 
-	console.log('Document Data>>>> ', result[1]);
-
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
