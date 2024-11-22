@@ -142,3 +142,11 @@ module.exports.updateIsFinalApproval = async (document) => {
 	}
 	return { message: "Document updated successfully" };
 };
+
+module.exports.updateDocumentStatus = async (document) => {
+	const result = await documentModel.updateDocumentStatus(document);
+	if (!result) {
+		throw dbError({ message: "Error updating document", data: result });
+	}
+	return { message: "Document updated successfully" };
+};

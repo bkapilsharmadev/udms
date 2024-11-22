@@ -164,7 +164,7 @@
                                             <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                                 <div class="lms-input-container ">
                                                     <input id="comments" class="lms-input" type="text" placeholder="">
-                                                    <label for="comments" class="lms-placeholder">Comments</label>
+                                                    <label for="comments" class="lms-placeholder">Comments <span>*</span></label>
                                                 </div>
                                             </div>
 
@@ -240,6 +240,21 @@
                     const method = 'POST';
                     const obj = { review_id, status, comments, is_final_approval, forwarded_to };
 
+                    if(!status){
+                        alert('Please select a status.');
+                        return;
+                    }
+
+                    if(!comments){
+                        alert('Please enter comments.');
+                        return;
+                    }
+
+                    if(!is_final_approval && !forwarded_to){
+                        alert('Please select a user to forward to.');
+                        return;
+                    }
+
                     const fields = [
                         { value: status, name: 'Status' },
                         { value: comments, name: 'Comments' },
@@ -255,15 +270,9 @@
                             return;
                         }
 
-                        if (data) {
-                            document.getElementById("status-type").firstElementChild.selected = true;
-                            document.getElementById("comments").value = '';
-                            document.getElementById("forwarded-to").firstElementChild.selected = true;
-                            document.getElementById("lms-toggle").checked = false;
-                            document.querySelector(".frame-container").classList.add("hidden");
-                            alert(data.message);
-                        }
-                        console.log('data ', JSON.stringify(data));
+                        alert("Review updated successfully.");
+
+                        location.reload();
                     }
                 });
 

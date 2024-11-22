@@ -367,3 +367,14 @@ module.exports.updateIsFinalApproval = async (documentData, dbTransaction = null
     const result = await client.query(query, values);
     return result.rowCount > 0;
 };
+
+//update document status
+module.exports.updateDocumentStatus = async (documentData, dbTransaction = null) => {
+    const { document_id, status, session_username } = documentData;
+    const query = `UPDATE documents SET status = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
+    const values = [status, session_username, document_id];
+
+    const client = dbTransaction || sqlWrite;
+    const result = await client.query(query, values);
+    return result.rowCount > 0;
+};
