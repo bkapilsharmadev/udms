@@ -90,7 +90,7 @@
 
                                     <!-- Table -->
                                     <div class="responsive-table overflow-x-auto">
-                                        <table class="min-w-full bg-white rounded-b-lg shadow">
+                                        <table class="min-w-full bg-white rounded-b-lg shadow" id="document-table">
                                             <thead class="text-left">
                                                 <tr>
                                                     <th class="p-4 text-xs font-bold text-center">S.No</th>
@@ -109,7 +109,7 @@
                                             </thead>
                                             <tbody>
                                                 <% data.myDocuments.forEach((document, index)=> { %>
-                                                    <tr class="hover:bg-blue-50">
+                                                    <tr class="hover:bg-blue-50 trigger-context-menu">
                                                         <td
                                                             class="p-4 text-sm text-gray-700 text-center font-semibold ">
                                                             <%= ++index %>
@@ -153,7 +153,7 @@
                                                             <%= document.comments %>
                                                         </td>
                                                         <td class="p-4 text-center relative">
-                                                            <button onclick="toggleDropdown(event)"
+                                                            <button 
                                                                 class="focus:outline-none text-gray-600 px-4"><i
                                                                     class="fa-solid fa-ellipsis-vertical"></i></button>
 
@@ -176,6 +176,7 @@
                                                                         class="ml-2">Delete</span>
                                                                 </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
                                                     <% }) %>
@@ -187,112 +188,6 @@
                             </div>
                         </div>
 
-                        <!-- Received Documents -->
-                        <div class="frame-container">
-                            <div class="frame-title">
-                                <span>Received Documents</span>
-                            </div>
-                            <div class="frame-content">
-                                <div class="mx-auto bg-gray-50 rounded-lg ">
-                                    <!-- Table Header -->
-                                    <!-- <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
-                            <h2 class="text-lg font-semibold text-gray-700">Document Data</h2>
-                        </div> -->
-
-                                    <!-- Table -->
-                                    <div class="responsive-table overflow-x-auto">
-                                        <table class="min-w-full bg-white rounded-b-lg shadow">
-                                            <thead class="text-left">
-                                                <tr>
-                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                                    <th class="p-4 text-xs font-bold">Current Reviewer</th>
-                                                    <th class="p-4 text-xs font-bold">Review Status</th>
-                                                    <th class="p-4 text-xs font-bold">Reference Number</th>
-                                                    <th class="p-4 text-xs font-bold">Category</th>
-                                                    <th class="p-4 text-xs font-bold">Received From</th>
-                                                    <th class="p-4 text-xs font-bold">University</th>
-                                                    <th class="p-4 text-xs font-bold">Campus</th>
-                                                    <th class="p-4 text-xs font-bold">School</th>
-                                                    <th class="p-4 text-xs font-bold">Department</th>
-                                                    <th class="p-4 text-xs font-bold">Comments</th>
-                                                    <th class="p-4 text-xs font-bold text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% data.receivedDocuments.forEach((document, index)=> { %>
-                                                    <tr class="hover:bg-blue-50">
-                                                        <td
-                                                            class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                                                            <%= ++index %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.to_be_reviewed_by_name %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700">
-                                                            <span
-                                                                class="
-                                                                <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
-                                                                <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
-                                                                <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
-                                                                <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
-                                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
-                                                                <%= document.review_status %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.ref_no %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.document_category %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_from %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_university %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_campus %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_school %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_department %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.comments %>
-                                                        </td>
-                                                        <td class="p-4 text-center relative">
-                                                            <button onclick="toggleDropdown(event)"
-                                                                class="focus:outline-none text-gray-600 px-4"><i
-                                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
-
-                                                            <!-- Dropdown menu -->
-                                                            <div id="dropdown-0"
-                                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                                    <i class="text-red-500 fa-solid fa-eye"></i> <span
-                                                                        class="ml-2">View</span>
-                                                                </a>
-                                                                <a href="#"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
-                                                                    <i
-                                                                        class="text-red-500 fa-solid fa-trash-can"></i><span
-                                                                        class="ml-2">Delete</span>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
 
                     </div>
                     <!-- main content// -->
@@ -383,6 +278,18 @@
 
                 var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
                 barChart.render();
+
+                document.getElementById('document-table').addEventListener('click', (e) => {
+                    const row = e.target.closest('.trigger-context-menu');
+                    console.log('row ',row);
+                    if (row) {
+                        const dropdown = row.querySelector('.dropdown');
+                        if (dropdown) {
+                            dropdown.classList.toggle('hidden');
+                        }
+                    }
+                });
+
             </script>
 
 

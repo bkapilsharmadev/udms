@@ -153,6 +153,16 @@ CREATE TABLE document_reviews (
 );
 ALTER TABLE document_reviews ADD COLUMN IF NOT EXISTS is_final_approval BOOLEAN DEFAULT FALSE;
 
+CREATE TABLE IF NOT EXISTS document_review_files (
+    review_id INT NOT NULL REFERENCES document_reviews (review_id),
+    file_id INT NOT NULL REFERENCES files (file_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+    created_by VARCHAR(20) NOT NULL,
+    updated_by VARCHAR(20),
+    active BOOLEAN DEFAULT TRUE
+);
+
 
 CREATE OR REPLACE FUNCTION increment_version_number()
 RETURNS TRIGGER AS $$
@@ -460,3 +470,21 @@ SELECT * FROM document_reviews
 	AND to_be_reviewed_by = '50583955'
 	AND reviewed_by IS NOT NULL
 --============================
+
+    -- let perPageData = `<%- dataPerPage %>`;
+    -- let totalDataCount = `<%- totalDataCount %>`;
+    -- let totalPages = Math.ceil(Number(totalDataCount) / perPageData);
+    -- let paginationArr = [];
+    -- let dataFilterObj = {
+    --   getTotalCount: false,
+    --   pageNo: 1,
+    --   cursor: undefined,
+    --   filterCriteria: [],
+    --   searchCriteria: {
+    --     searchColumns: [],
+    --     searchTerms: []
+    --   },
+    --   orderCriteria: [],
+    --   pageSize: perPageData,
+    --   findById: false
+    -- };

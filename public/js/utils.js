@@ -109,21 +109,20 @@ function toggleDropdownProfile() {
   profiledropdownMenu.classList.toggle("hidden");
 }
 
-function toggleDropdown(event) {
-  console.log("toggled ");
-  // Close all other dropdowns
-  document.querySelectorAll(".dropdown").forEach((dropdown) => {
-    dropdown.classList.add("hidden");
-  });
+// function toggleDropdown(event) {
+//   console.log("toggled ");
 
-  // Toggle the dropdown next to the clicked button
-  const button = event.currentTarget;
-  const dropdown = button.nextElementSibling;
+//   document.querySelectorAll(".dropdown").forEach((dropdown) => {
+//     dropdown.classList.add("hidden");
+//   });
 
-  if (dropdown && dropdown.classList.contains("dropdown")) {
-    dropdown.classList.toggle("hidden");
-  }
-}
+//   const button = event.currentTarget;
+//   const dropdown = button.nextElementSibling;
+
+//   if (dropdown && dropdown.classList.contains("dropdown")) {
+//     dropdown.classList.toggle("hidden");
+//   }
+// }
 
 function openModal() {
   document.getElementById("modal-background").classList.remove("hidden");
