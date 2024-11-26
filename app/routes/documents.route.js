@@ -11,7 +11,7 @@ router.get("/received-documents", asyncErrorHandler(documentController.renderRec
 router.post("/create", transactionMiddleware, asyncErrorHandler(documentController.createDocument));
 router.post("/delete", asyncErrorHandler(documentController.deleteDocument));
 router.post("/update/is-final-approval", asyncErrorHandler(documentController.updateIsFinalApproval));
-router.post("/update", asyncErrorHandler(documentController.updateDocument));
+router.post("/update", transactionMiddleware, asyncErrorHandler(documentController.updateDocument));
 
 router.get("/:document_id", asyncErrorHandler(documentController.renderSingleDocument));
 

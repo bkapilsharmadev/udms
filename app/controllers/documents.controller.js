@@ -172,7 +172,7 @@ module.exports.updateDocument = async (req, res, next) => {
 			const files = req.files;
 
 			// Call the service to create the document and handle the files
-			const result = await documentService.createDocument({
+			const result = await documentService.updateDocument({
 				category_id,
 				ref_no,
 				description,

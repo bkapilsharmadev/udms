@@ -347,10 +347,35 @@ module.exports.deleteDocument = async (document_id, dbTransaction = null) => {
 };
 
 // Update a document
-module.exports.updateDocument = async (document, dbTransaction = null) => {
-	const { document_id, ref_no, description, updated_by } = document;
-	const query = `UPDATE documents SET ref_no = $1, description = $2, updated_by = $3, updated_at = CURRENT_TIMESTAMP WHERE document_id = $4;`;
-	const values = [ref_no, description, updated_by, document_id];
+module.exports.updateDocument = async (documentData, dbTransaction = null) => {
+	const {
+		category_id,
+		ref_no,
+		description,
+		received_from,
+		university_entt_id,
+		campus_entt_id,
+		school_entt_id,
+		department_entt_id,
+		mentor_sign,
+		document_stage,
+		created_by,
+	} = documentData;
+
+	const query = `UPDATE documents SET category_id = $1, ref_no = $2, description = $3, received_from = $4, university_entt_id = $5, campus_entt_id = $6, school_entt_id = $7, department_entt_id = $8, mentor_sign = $9, document_stage = $10, updated_by = $11, updated_at = NOW() WHERE document_id = $12;`;
+	const values = [
+        category_id,
+        ref_no,
+        description,
+        received_from,
+		university_entt_id,
+		campus_entt_id,
+		school_entt_id,
+		department_entt_id,
+		mentor_sign,
+		document_stage,
+		created_by
+    ];
 
     const client = dbTransaction || sqlWrite;
 	const result = await client.query(query, values);

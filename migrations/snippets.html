@@ -1,0 +1,82 @@
+<!-- Context Menu -->
+<div id="context-menu" class="dropdown-menu dropdown-menu-end font-12px">
+    <a class="dropdown-item view" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Edit" src="/img/view.png">
+      <span>View Details</span>
+    </a>
+    <a class="dropdown-item edit" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Edit" src="/img/edit.png">
+      <span>Edit</span>
+    </a>
+    <a class="dropdown-item approve" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Approve" src="/img/approve.png">
+      <span>Approve</span>
+    </a>
+    <a class="dropdown-item allocate-duty" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Edit Duty" src="/img/car-driver.png">
+      <span>Edit Duty</span>
+    </a>
+    <a class="dropdown-item close-duty" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Close Duty" src="/img/close-duty.png">
+      <span>Close Duty</span>
+    </a>
+  
+   <!--
+    <a class="dropdown-item edit-duty-slip" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Edit Duty Slip" src="/img/close-duty.png">
+      <span>Edit Duty Slip</span>
+    </a>
+  -->
+    <a class="dropdown-item cancel-booking" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Cancel Booking" src="/img/cancel-by-operation.png">
+      <span>Cancel Booking</span>
+    </a>
+    <a class="dropdown-item show-history" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Show History" src="/img/history.png">
+      <span>Show History</span>
+    </a>
+    <a class="dropdown-item notification-logs" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Notification Logs" src="/img/notification.png">
+      <span>Notification Logs</span>
+    </a>
+    <a class="dropdown-item raise-issue" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Raise Issue" src="/img/report.png">
+      <span>Raise Issue</span>
+    </a>
+    <a class="dropdown-item copy-booking" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Copy Booking" src="/img/copy.png">
+      <span>Copy Booking</span>
+    </a>
+    <a class="dropdown-item view-duty-slip" href="#" data-booking-lid="" data-duty-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="View Duty Slip" src="/img/duty-slip.png">
+      <span>View Duty Slip</span>
+    </a>
+    <a class="dropdown-item invoicing" href="#" data-booking-lid="">
+      <img data-bs-toggle="tooltip" data-bs-title="Generate Invoice" src="/img/invoice.png">
+      <span>Generate Invoice</span>
+    </a>
+  </div>
+
+  <script>
+    // Context Menu
+           // trigger context menu buttons trigger right
+           mainTable.on('click', 'tr .trigger-context-menu', function(e) {
+          // trigger right click
+          let thisTr = $(this).closest('tr');
+          thisTr.trigger('contextmenu');
+
+          var top = e.pageY - 10;
+          var left = e.pageX - 90;
+          contextMenuElem.css({
+            display: "block",
+            top: top,
+            left: left
+          }).addClass("show");
+
+          // Prevent the default context menu
+          e.preventDefault();
+          return false; //blocks default Webbrowser right click menu
+        })
+
+
+  </script>
