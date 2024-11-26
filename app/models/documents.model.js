@@ -6,43 +6,43 @@ const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 
 // Create a new document
 module.exports.createDocument = async (documentData, dbTransaction = null) => {
-	const {
-		category_id,
-		ref_no,
-		description,
-		received_from,
-		university_entt_id,
-		campus_entt_id,
-		school_entt_id,
-		department_entt_id,
-		mentor_sign,
-		document_stage,
-		created_by,
-	} = documentData;
+    const {
+        category_id,
+        ref_no,
+        description,
+        received_from,
+        university_entt_id,
+        campus_entt_id,
+        school_entt_id,
+        department_entt_id,
+        mentor_sign,
+        document_stage,
+        created_by,
+    } = documentData;
 
-	const query = `INSERT INTO documents (category_id, ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING document_id, document_uuid;`;
-	const values = [
-		category_id,
-		ref_no,
-		description,
-		received_from,
-		university_entt_id,
-		campus_entt_id,
-		school_entt_id,
-		department_entt_id,
-		mentor_sign,
-		document_stage,
-		created_by,
-	];
+    const query = `INSERT INTO documents (category_id, ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING document_id, document_uuid;`;
+    const values = [
+        category_id,
+        ref_no,
+        description,
+        received_from,
+        university_entt_id,
+        campus_entt_id,
+        school_entt_id,
+        department_entt_id,
+        mentor_sign,
+        document_stage,
+        created_by,
+    ];
 
     const client = dbTransaction || sqlWrite;
-	const result = await client.query(query, values);
-	return result?.rows?.[0] ?? [];
+    const result = await client.query(query, values);
+    return result?.rows?.[0] ?? [];
 };
 
 // Get all documents
 module.exports.getDocuments = async (sessionUsername, dbTransaction = null) => {
-	const query = `SELECT 
+    const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
     d.ref_no, 
@@ -120,16 +120,16 @@ WHERE d.active = TRUE
       AND dr.forwarded_to::INT = $1::INT
     )
   );`;
-	const values = [sessionUsername];
+    const values = [sessionUsername];
 
     const client = dbTransaction || sqlRead;
-	const result = await client.query(query, values);
-	return result.rows;
+    const result = await client.query(query, values);
+    return result.rows;
 };
 
 // Get all my documents
 module.exports.getMyDocuments = async (sessionUsername, dbTransaction = null) => {
-	const query = `SELECT 
+    const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
     d.ref_no, 
@@ -198,11 +198,11 @@ LEFT JOIN LATERAL (
     LIMIT 1
 ) dr ON true
 WHERE d.active = TRUE AND d.created_by::TEXT = $1::TEXT;`;
-	const values = [sessionUsername];
-    
+    const values = [sessionUsername];
+
     const client = dbTransaction || sqlRead;
-	const result = await client.query(query, values);
-	return result.rows;
+    const result = await client.query(query, values);
+    return result.rows;
 };
 
 module.exports.getDocumentById = async (document_id, dbTransaction = null) => {
@@ -240,17 +240,17 @@ INNER JOIN entities ec ON d.campus_entt_id = ec.entity_id
 INNER JOIN entities es ON d.school_entt_id = es.entity_id
 INNER JOIN entities ed ON d.department_entt_id = ed.entity_id
 WHERE d.document_id = $1;`
-	const values = [document_id];
-    
+    const values = [document_id];
+
     const client = dbTransaction || sqlRead;
-	const result = await client.query(query, values);
-	console.log(result.rows);
-	return result.rows;
+    const result = await client.query(query, values);
+    console.log(result.rows);
+    return result.rows;
 };
 
 // Get all documents
 module.exports.getReceivedDocuments = async (sessionUsername, dbTransaction = null) => {
-	const query = `SELECT 
+    const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
     d.ref_no, 
@@ -328,33 +328,33 @@ WHERE d.active = TRUE
         AND dr.forwarded_to::TEXT = $1::TEXT
     )
     );`;
-	const values = [sessionUsername];
-    
+    const values = [sessionUsername];
+
     const client = dbTransaction || sqlRead;
-	const result = await client.query(query, values);
-	console.log(result.rows);
-	return result.rows;
+    const result = await client.query(query, values);
+    console.log(result.rows);
+    return result.rows;
 };
 
 // Delete a document by ID
 module.exports.deleteDocument = async (document_id, dbTransaction = null) => {
-	const query = `UPDATE documents SET active = false WHERE document_id = $1;`;
-	const values = [document_id];
-    
+    const query = `UPDATE documents SET active = false WHERE document_id = $1;`;
+    const values = [document_id];
+
     const client = dbTransaction || sqlWrite;
-	const result = await client.query(query, values);
-	return result.rowCount > 0;
+    const result = await client.query(query, values);
+    return result.rowCount > 0;
 };
 
 // Update a document
 module.exports.updateDocument = async (document, dbTransaction = null) => {
-	const { document_id, ref_no, description, updated_by } = document;
-	const query = `UPDATE documents SET ref_no = $1, description = $2, updated_by = $3, updated_at = CURRENT_TIMESTAMP WHERE document_id = $4;`;
-	const values = [ref_no, description, updated_by, document_id];
+    const { document_id, ref_no, description, updated_by } = document;
+    const query = `UPDATE documents SET ref_no = $1, description = $2, updated_by = $3, updated_at = CURRENT_TIMESTAMP WHERE document_id = $4;`;
+    const values = [ref_no, description, updated_by, document_id];
 
     const client = dbTransaction || sqlWrite;
-	const result = await client.query(query, values);
-	return result.rowCount > 0;
+    const result = await client.query(query, values);
+    return result.rowCount > 0;
 };
 
 // Update the final approval status of a document
@@ -378,3 +378,5 @@ module.exports.updateDocumentStatus = async (documentData, dbTransaction = null)
     const result = await client.query(query, values);
     return result.rowCount > 0;
 };
+
+

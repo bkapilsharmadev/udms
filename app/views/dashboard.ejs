@@ -1,169 +1,391 @@
 <%- include("./partials/head.ejs") %>
-<style>
-    .dashboard-stat-card {
-        border: 1px solid #e5e9f1;
-        box-shadow: 0px 2px 8px 0px #00000012;
-        border-radius: 16px;
-    }
+    <style>
+        .dashboard-stat-card {
+            border: 1px solid #e5e9f1;
+            box-shadow: 0px 2px 8px 0px #00000012;
+            border-radius: 16px;
+        }
 
-    .chart-pie {
-        border: 1px solid #e5e9f1;
-        box-shadow: 0px 2px 8px 0px #00000012;
-        border-radius: 16px;
-        height: 400px;
-    }
+        .chart-pie {
+            border: 1px solid #e5e9f1;
+            box-shadow: 0px 2px 8px 0px #00000012;
+            border-radius: 16px;
+            height: 400px;
+        }
 
-    .chart-bar {
-        border: 1px solid #e5e9f1;
-        box-shadow: 0px 2px 8px 0px #00000012;
-        border-radius: 16px;
-    }
+        .chart-bar {
+            border: 1px solid #e5e9f1;
+            box-shadow: 0px 2px 8px 0px #00000012;
+            border-radius: 16px;
+        }
 
-    #chart {
-        max-width: 650px;
-        margin: 35px auto;
-    }
-</style>
-</head>
-<body>
+        #chart {
+            max-width: 650px;
+            margin: 35px auto;
+        }
+    </style>
+    </head>
 
-    <%- include("./partials/side-nav.ejs") %>
+    <body>
 
-    <div class="content-body">
-        <!-- navbar -->
-            <%- include("./partials/header.ejs") %>
+        <%- include("./partials/side-nav.ejs") %>
 
-        <!-- main content -->
-        <div class="content space-y-7">
-            <!-- Stats -->
-            <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">20</span>
-                    <p class="stat-label text-gray-600">Docs Created</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">06</span>
-                    <p class="stat-label text-gray-600">Docs Received</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">02</span>
-                    <p class="stat-label text-gray-600">Pending</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">16</span>
-                    <p class="stat-label text-gray-600">Approved</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">02</span>
-                    <p class="stat-label text-gray-600">Rejected</p>
-                </div>
+            <div class="content-body">
+                <!-- navbar -->
+                <%- include("./partials/header.ejs") %>
+
+                    <!-- main content -->
+                    <div class="content space-y-7">
+                        <!-- Stats -->
+                        <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
+                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                                <span class="stat-value text-3xl font-bold">20</span>
+                                <p class="stat-label text-gray-600">Docs Created</p>
+                            </div>
+                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                                <span class="stat-value text-3xl font-bold">06</span>
+                                <p class="stat-label text-gray-600">Docs Received</p>
+                            </div>
+                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                                <span class="stat-value text-3xl font-bold">02</span>
+                                <p class="stat-label text-gray-600">Pending</p>
+                            </div>
+                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                                <span class="stat-value text-3xl font-bold">16</span>
+                                <p class="stat-label text-gray-600">Approved</p>
+                            </div>
+                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                                <span class="stat-value text-3xl font-bold">02</span>
+                                <p class="stat-label text-gray-600">Rejected</p>
+                            </div>
+                        </div>
+
+                        <!-- Charts -->
+                        <div class="dashboard-charts grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-7">
+                            <div
+                                class="chart-pie flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
+                                <!-- <span class="font-bold text-lg mb-4">Pie Chart</span> -->
+                                <div id="pie-chart" class="w-full"></div>
+                            </div>
+
+                            <div
+                                class="chart-bar flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
+                                <!-- <span class="font-bold text-lg mb-4">Bar Chart</span> -->
+                                <div id="bar-chart" class="w-full"></div>
+                            </div>
+                        </div>
+
+
+                        <!-- My Documents -->
+                        <div class="frame-container">
+                            <div class="frame-title">
+                                <span>My Documents</span>
+                            </div>
+                            <div class="frame-content">
+                                <div class="mx-auto bg-gray-50 rounded-lg ">
+                                    <!-- Table Header -->
+                                    <!-- <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
+                <h2 class="text-lg font-semibold text-gray-700">Document Data</h2>
+            </div> -->
+
+                                    <!-- Table -->
+                                    <div class="responsive-table overflow-x-auto">
+                                        <table class="min-w-full bg-white rounded-b-lg shadow">
+                                            <thead class="text-left">
+                                                <tr>
+                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                    <th class="p-4 text-xs font-bold">Current Reviewer</th>
+                                                    <th class="p-4 text-xs font-bold">Review Status</th>
+                                                    <th class="p-4 text-xs font-bold">Reference Number</th>
+                                                    <th class="p-4 text-xs font-bold">Category</th>
+                                                    <th class="p-4 text-xs font-bold">Received From</th>
+                                                    <th class="p-4 text-xs font-bold">University</th>
+                                                    <th class="p-4 text-xs font-bold">Campus</th>
+                                                    <th class="p-4 text-xs font-bold">School</th>
+                                                    <th class="p-4 text-xs font-bold">Department</th>
+                                                    <th class="p-4 text-xs font-bold">Comments</th>
+                                                    <th class="p-4 text-xs font-bold text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% data.myDocuments.forEach((document, index)=> { %>
+                                                    <tr class="hover:bg-blue-50">
+                                                        <td
+                                                            class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                            <%= ++index %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.to_be_reviewed_by_name %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700">
+                                                            <span
+                                                                class="
+                                                    <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
+                                                    <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
+                                                    <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
+                                                    <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
+                                                    <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
+                                                                <%= document.review_status %>
+                                                            </span>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.ref_no %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.document_category %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_from %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_university %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_campus %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_school %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_department %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.comments %>
+                                                        </td>
+                                                        <td class="p-4 text-center relative">
+                                                            <button onclick="toggleDropdown(event)"
+                                                                class="focus:outline-none text-gray-600 px-4"><i
+                                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
+
+                                                            <!-- Dropdown menu -->
+                                                            <div id="dropdown-0"
+                                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                                    <i class="text-red-500 fa-solid fa-eye"></i> <span
+                                                                        class="ml-2">View</span>
+                                                                </a>
+                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                                    <i class="text-red-500 fa-solid fa-pen"></i> <span
+                                                                        class="ml-2">Edit</span>
+                                                                </a>
+                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                                    <i class="text-red-500 fa-solid fa-trash"></i> <span
+                                                                        class="ml-2">Delete</span>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Received Documents -->
+                        <div class="frame-container">
+                            <div class="frame-title">
+                                <span>Received Documents</span>
+                            </div>
+                            <div class="frame-content">
+                                <div class="mx-auto bg-gray-50 rounded-lg ">
+                                    <!-- Table Header -->
+                                    <!-- <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
+                            <h2 class="text-lg font-semibold text-gray-700">Document Data</h2>
+                        </div> -->
+
+                                    <!-- Table -->
+                                    <div class="responsive-table overflow-x-auto">
+                                        <table class="min-w-full bg-white rounded-b-lg shadow">
+                                            <thead class="text-left">
+                                                <tr>
+                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                    <th class="p-4 text-xs font-bold">Current Reviewer</th>
+                                                    <th class="p-4 text-xs font-bold">Review Status</th>
+                                                    <th class="p-4 text-xs font-bold">Reference Number</th>
+                                                    <th class="p-4 text-xs font-bold">Category</th>
+                                                    <th class="p-4 text-xs font-bold">Received From</th>
+                                                    <th class="p-4 text-xs font-bold">University</th>
+                                                    <th class="p-4 text-xs font-bold">Campus</th>
+                                                    <th class="p-4 text-xs font-bold">School</th>
+                                                    <th class="p-4 text-xs font-bold">Department</th>
+                                                    <th class="p-4 text-xs font-bold">Comments</th>
+                                                    <th class="p-4 text-xs font-bold text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% data.receivedDocuments.forEach((document, index)=> { %>
+                                                    <tr class="hover:bg-blue-50">
+                                                        <td
+                                                            class="p-4 text-sm text-gray-700 text-center font-semibold ">
+                                                            <%= ++index %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.to_be_reviewed_by_name %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700">
+                                                            <span
+                                                                class="
+                                                                <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
+                                                                <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
+                                                                <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
+                                                                <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
+                                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
+                                                                <%= document.review_status %>
+                                                            </span>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.ref_no %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.document_category %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_from %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_university %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_campus %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_school %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.entity_department %>
+                                                        </td>
+                                                        <td class="p-4 text-sm text-gray-700 ">
+                                                            <%= document.comments %>
+                                                        </td>
+                                                        <td class="p-4 text-center relative">
+                                                            <button onclick="toggleDropdown(event)"
+                                                                class="focus:outline-none text-gray-600 px-4"><i
+                                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
+
+                                                            <!-- Dropdown menu -->
+                                                            <div id="dropdown-0"
+                                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                                    <i class="text-red-500 fa-solid fa-eye"></i> <span
+                                                                        class="ml-2">View</span>
+                                                                </a>
+                                                                <a href="#"
+                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center delete-btn">
+                                                                    <i
+                                                                        class="text-red-500 fa-solid fa-trash-can"></i><span
+                                                                        class="ml-2">Delete</span>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- main content// -->
             </div>
 
-            <!-- Charts -->
-            <div class="dashboard-charts grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-7">
-                <div class="chart-pie flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
-                    <!-- <span class="font-bold text-lg mb-4">Pie Chart</span> -->
-                    <div id="pie-chart" class="w-full"></div>
-                </div>
+            <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            <script src="<%- BASE_URL %>js/utils.js"></script>
+            <script src="<%- BASE_URL %>js/fetch.js"></script>
 
-                <div class="chart-bar flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
-                    <!-- <span class="font-bold text-lg mb-4">Bar Chart</span> -->
-                    <div id="bar-chart" class="w-full"></div>
-                </div>
-            </div>
-
-        </div>
-         <!-- main content// -->
-    </div>
-
-    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="<%- BASE_URL %>js/utils.js"></script>
-    <script src="<%- BASE_URL %>js/fetch.js"></script>
-
-    <script>
-        // Pie Chart Configuration
-        var pieOptions = {
-            chart: {
-                type: 'pie',
-                width: '100%',
-                height: '100%'
-            },
-            series: [20, 6, 2, 16, 2],
-            labels: ['Docs Created', 'Docs Received', 'Pending', 'Approved', 'Rejected'],
-            colors: ['#4CAF50', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
-            dataLabels: {
-                enabled: true,
-                formatter: function (val, opts) {
-                    // Show the number (raw value) instead of percentage
-                    return opts.w.config.series[opts.seriesIndex];
-                },
-                style: {
-                    fontSize: '14px',
-                    fontWeight: 'bold'
-                }
-            },
-        };
-
-
-        var pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
-        pieChart.render();
-
-        // Bar Chart Configuration
-        var barOptions = {
-            chart: {
-                type: 'bar',
-                width: '100%',
-                height: '100%'
-            },
-            series: [{
-                name: 'Approval Time (in minutes)',
-                data: [20, 5, 40] // Avg, Min, Max Approval Times
-            }],
-            xaxis: {
-                categories: ['Avg. Approval Time', 'Min. Approval Time', 'Max. Approval Time']
-            },
-            colors: ['#4CAF50', '#2196F3', '#F44336'], // Custom colors for bars
-            plotOptions: {
-                bar: {
-                    distributed: true, // Distribute colors to each bar
+            <script>
+                // Pie Chart Configuration
+                var pieOptions = {
+                    chart: {
+                        type: 'pie',
+                        width: '100%',
+                        height: '100%'
+                    },
+                    series: [20, 6, 2, 16, 2],
+                    labels: ['Docs Created', 'Docs Received', 'Pending', 'Approved', 'Rejected'],
+                    colors: ['#4CAF50', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
                     dataLabels: {
-                        position: 'top' // Display data labels above bars
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            // Show the number (raw value) instead of percentage
+                            return opts.w.config.series[opts.seriesIndex];
+                        },
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold'
+                        }
+                    },
+                };
+
+
+                var pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
+                pieChart.render();
+
+                // Bar Chart Configuration
+                var barOptions = {
+                    chart: {
+                        type: 'bar',
+                        width: '100%',
+                        height: '100%'
+                    },
+                    series: [{
+                        name: 'Approval Time (in minutes)',
+                        data: [20, 5, 40] // Avg, Min, Max Approval Times
+                    }],
+                    xaxis: {
+                        categories: ['Avg. Approval Time', 'Min. Approval Time', 'Max. Approval Time']
+                    },
+                    colors: ['#4CAF50', '#2196F3', '#F44336'], // Custom colors for bars
+                    plotOptions: {
+                        bar: {
+                            distributed: true, // Distribute colors to each bar
+                            dataLabels: {
+                                position: 'top' // Display data labels above bars
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val + ' min'; // Append "min" to each value
+                        },
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + ' minutes'; // Tooltip also shows time in minutes
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Approval Times (in minutes)',
+                        align: 'center',
+                        style: {
+                            fontSize: '16px',
+                            fontWeight: 'bold'
+                        }
                     }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val + ' min'; // Append "min" to each value
-                },
-                style: {
-                    fontSize: '14px',
-                    fontWeight: 'bold'
-                }
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + ' minutes'; // Tooltip also shows time in minutes
-                    }
-                }
-            },
-            title: {
-                text: 'Approval Times (in minutes)',
-                align: 'center',
-                style: {
-                    fontSize: '16px',
-                    fontWeight: 'bold'
-                }
-            }
-        };
-        
-        var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
-        barChart.render();
-    </script>
+                };
+
+                var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
+                barChart.render();
+            </script>
 
 
-</body>
+    </body>
 
-</html>
+    </html>
