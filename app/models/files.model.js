@@ -6,9 +6,9 @@ const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 
 // Create a new file
 module.exports.createFile = async (file, dbTransaction = null) => {
-	const { document_id, document_uuid, created_by } = file;
+	const { document_id, document_uuid, session_user } = file;
 	const query = `INSERT INTO files (document_id, document_uuid, created_by) VALUES ($1, $2, $3) RETURNING file_id, document_id, document_uuid;`;
-	const values = [document_id, document_uuid, created_by];
+	const values = [document_id, document_uuid, session_user];
 
 	const client = dbTransaction || sqlWrite;
 	const result = await client.query(query, values);
@@ -36,11 +36,30 @@ module.exports.deleteFile = async (file_id, dbTransaction = null) => {
 
 // Update a file
 module.exports.updateFile = async (file, dbTransaction = null) => {
-	const { file_id, latest_version_id, updated_by } = file;
+	const { file_id, latest_version_id, session_user } = file;
 	const query = `UPDATE files SET latest_version_id = $1, updated_by = $2, updated_at = CURRENT_TIMESTAMP WHERE file_id = $3;`;
-	const values = [latest_version_id, updated_by, file_id];
+	const values = [latest_version_id, session_user, file_id];
 
 	const client = dbTransaction || sqlWrite;
 	const result = await client.query(query, values);
 	return result.rowCount > 0;
 };
+
+module.exports.softDelByDocumentId = async (
+	data,
+	dbTransaction = null
+) => {
+    const { document_id, session_user } = data;
+	const query = `UPDATE files SET 
+    active = false,
+    updated_at = NOW(),
+    updated_by = $1
+    WHERE document_id = $2 
+    AND active = true;`;
+	const values = [session_user, document_id];
+
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
+	return result.rowCount > 0;
+};
+

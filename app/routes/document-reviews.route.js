@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const documentReviewController = require("../controllers/document-reviews.controller");
 const { asyncErrorHandler } = require("../middleware/error.middleware");
+const { transactionMiddleware } = require("../middleware/transaction-middleware");
 
 router.post(
 	"/create",
@@ -13,10 +14,11 @@ router.get(
 );
 router.get(
 	"/fetch",
-	asyncErrorHandler(documentReviewController.getAllDocumentReviews)
+	asyncErrorHandler(documentReviewController.getReviewsByDocId)
 );
 router.post(
 	"/update",
+	transactionMiddleware,
 	asyncErrorHandler(documentReviewController.updateDocumentReview)
 );
 router.delete(

@@ -5,21 +5,23 @@ const { getEntities } = require("../services/entities.service");
 const { MENTOR_SIGNS } = require("../constants");
 const { getStatusTypes } = require("../services/status-types.service");
 const { getDocumentStages } = require("../services/document-stages.service");
+
 const {
 	getFileVersionsByDocumentId,
 } = require("../services/file-versions.service");
 const {
-	getLatestReviewByDocumentId,
+	getLatestReviewByDocumentId, getReviewsByDocId
 } = require("../services/document-reviews.service");
 const {
 	getDocumentCategories,
 } = require("../services/document-categories.service");
 const {
-	checkIsDocumentReviewed,
+	isDocReviewable,
 } = require("../services/document-reviews.service");
 const {
 	getDocumentStageUsersExcludingUser,
 } = require("../services/document-stage-users.service");
+const { isDocEditable } = require("../models/documents.model");
 
 module.exports.renderDocuments = async (req, res, next) => {
 	// fetch all entities, MENTOR_SIGNS constants and render the documents view
@@ -97,7 +99,7 @@ module.exports.createDocument = async (req, res, next) => {
 					comments,
 					forwarded_to,
 					files,
-					created_by: req.session_username,
+					session_user: req.session_username,
 				},
 				req.dbTransaction
 			);
@@ -118,19 +120,56 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		getDocumentStageUsersExcludingUser(username, req.pgTransaction),
 		getFileVersionsByDocumentId(document_id, req.pgTransaction),
 		getLatestReviewByDocumentId(document_id, req.pgTransaction),
-		checkIsDocumentReviewed(document_id, username, req.pgTransaction),
+		isDocReviewable(
+			{ document_id, session_user: username },
+			req.pgTransaction
+		),
+		getReviewsByDocId(document_id, req.pgTransaction)
 	]);
-
+	
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
 		documentStageUsers: result[2],
 		fileVersions: result[3],
 		documentReviews: result[4],
-		reviewStatus: result[5]?.review_status,
+		isDocReviewable: result[5],
 	};
 
+	// console.log("Single Document Data >>>> ", data);
+
 	res.render("documents/single-document.ejs", { data });
+};
+
+module.exports.renderEditDocument = async (req, res, next) => {
+	const { document_id } = req.params;
+	const sessionUser = req.session_username;
+
+	const result = await Promise.all([
+		getEntities(),
+		getStatusTypes(),
+		getDocumentCategories(),
+		getDocumentStageUsersExcludingUser(sessionUser),
+		documentService.docEditableDetails({
+			document_id,
+			session_user: sessionUser,
+		}),
+		documentService.getDocumentById(document_id, req.pgTransaction),
+	]);
+
+	const data = {
+		entities: result[0],
+		statusTypes: result[1],
+		mentorSigns: MENTOR_SIGNS,
+		documentCategories: result[2],
+		documentStageUsers: result[3],
+		isDocEditable: result[4],
+	};
+
+	const document = result[5][0];
+	console.log("Document >>>> ", document);
+
+	res.render("documents/edit-document.ejs", { data, document });
 };
 
 module.exports.getDocuments = async (req, res, next) => {
@@ -154,8 +193,9 @@ module.exports.updateDocument = async (req, res, next) => {
 		try {
 			// If no error, continue with your logic
 			const {
+				document_id,
 				category_id,
-				ref_no,
+				is_update,
 				description,
 				received_from,
 				university_entt_id,
@@ -172,22 +212,26 @@ module.exports.updateDocument = async (req, res, next) => {
 			const files = req.files;
 
 			// Call the service to create the document and handle the files
-			const result = await documentService.updateDocument({
-				category_id,
-				ref_no,
-				description,
-				received_from,
-				university_entt_id,
-				campus_entt_id,
-				school_entt_id,
-				department_entt_id,
-				mentor_sign,
-				status,
-				comments,
-				forwarded_to,
-				files,
-				created_by: req.session_username,
-			});
+			const result = await documentService.updateDocument(
+				{
+					document_id,
+					category_id,
+					is_update,
+					description,
+					received_from,
+					university_entt_id,
+					campus_entt_id,
+					school_entt_id,
+					department_entt_id,
+					mentor_sign,
+					status,
+					comments,
+					forwarded_to,
+					files,
+					session_user: req.session_username,
+				},
+				req.dbTransaction
+			);
 
 			res.status(201).json(result);
 		} catch (error) {

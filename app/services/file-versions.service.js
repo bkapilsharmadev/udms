@@ -70,3 +70,11 @@ module.exports.downloadFile = async (version_id) => {
 
 	return { originalFileName, fileName, filePath };
 };
+
+module.exports.softDelByDocumentId = async (data, dbTransaction) => {
+	const result = await fileVersionModel.softDelByDocumentId(data, dbTransaction);
+	if (!result) {
+		throw new Error("Error deleting file version");
+	}
+	return { success: true, message: "File version deleted successfully" };
+};

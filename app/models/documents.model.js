@@ -8,7 +8,6 @@ const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
 module.exports.createDocument = async (documentData, dbTransaction = null) => {
 	const {
 		category_id,
-		ref_no,
 		description,
 		received_from,
 		university_entt_id,
@@ -17,13 +16,39 @@ module.exports.createDocument = async (documentData, dbTransaction = null) => {
 		department_entt_id,
 		mentor_sign,
 		document_stage,
-		created_by,
+		session_user,
 	} = documentData;
+
+	// Fetch the next unused reference
+	const refResult = await dbTransaction.query(
+		`SELECT id, ref_number
+        FROM document_refs
+        WHERE category_id = $1
+          AND is_used = FALSE
+          AND ref_date = CURRENT_DATE
+        ORDER BY seq_no
+        LIMIT 1
+        FOR UPDATE
+        `,
+		[category_id]
+	);
+
+	if (refResult.rows.length === 0) {
+		throw new Error("No available reference numbers for this category.");
+	}
+
+	const { id: refId, ref_number: refNumber } = refResult.rows[0];
+
+	// Mark the reference as used
+	await dbTransaction.query(
+		"UPDATE document_refs SET is_used = TRUE WHERE id = $1",
+		[refId]
+	);
 
 	const query = `INSERT INTO documents (category_id, ref_no, description, received_from, university_entt_id, campus_entt_id, school_entt_id, department_entt_id, mentor_sign, document_stage, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING document_id, document_uuid;`;
 	const values = [
 		category_id,
-		ref_no,
+		refNumber,
 		description,
 		received_from,
 		university_entt_id,
@@ -32,11 +57,10 @@ module.exports.createDocument = async (documentData, dbTransaction = null) => {
 		department_entt_id,
 		mentor_sign,
 		document_stage,
-		created_by,
+		session_user,
 	];
 
-    const client = dbTransaction || sqlWrite;
-	const result = await client.query(query, values);
+	const result = await dbTransaction.query(query, values);
 	return result?.rows?.[0] ?? [];
 };
 
@@ -122,13 +146,16 @@ WHERE d.active = TRUE
   );`;
 	const values = [sessionUsername];
 
-    const client = dbTransaction || sqlRead;
+	const client = dbTransaction || sqlRead;
 	const result = await client.query(query, values);
 	return result.rows;
 };
 
 // Get all my documents
-module.exports.getMyDocuments = async (sessionUsername, dbTransaction = null) => {
+module.exports.getMyDocuments = async (
+	sessionUsername,
+	dbTransaction = null
+) => {
 	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -194,19 +221,20 @@ LEFT JOIN LATERAL (
     INNER JOIN document_stage_users dsur ON dr.to_be_reviewed_by = dsur.username
     INNER JOIN document_stage_users dsu ON dr.created_by = dsu.username
     WHERE dr.document_id = d.document_id
+        AND dr.active = true
     ORDER BY dr.reviewed_at DESC NULLS FIRST
     LIMIT 1
 ) dr ON true
 WHERE d.active = TRUE AND d.created_by::TEXT = $1::TEXT;`;
 	const values = [sessionUsername];
-    
-    const client = dbTransaction || sqlRead;
+
+	const client = dbTransaction || sqlRead;
 	const result = await client.query(query, values);
 	return result.rows;
 };
 
 module.exports.getDocumentById = async (document_id, dbTransaction = null) => {
-    const query = `SELECT 
+	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
     d.ref_no, 
@@ -225,7 +253,7 @@ module.exports.getDocumentById = async (document_id, dbTransaction = null) => {
     ed.name AS entity_department,
     d.mentor_sign, 
     d.document_stage, 
-    d.status, 
+    d.status,
     d.is_final_approval,
     d.created_at, 
     d.updated_at, 
@@ -239,17 +267,20 @@ INNER JOIN entities eu ON d.university_entt_id = eu.entity_id
 INNER JOIN entities ec ON d.campus_entt_id = ec.entity_id
 INNER JOIN entities es ON d.school_entt_id = es.entity_id
 INNER JOIN entities ed ON d.department_entt_id = ed.entity_id
-WHERE d.document_id = $1;`
+WHERE d.document_id = $1;`;
 	const values = [document_id];
-    
-    const client = dbTransaction || sqlRead;
+
+	const client = dbTransaction || sqlRead;
 	const result = await client.query(query, values);
 	console.log(result.rows);
 	return result.rows;
 };
 
 // Get all documents
-module.exports.getReceivedDocuments = async (sessionUsername, dbTransaction = null) => {
+module.exports.getReceivedDocuments = async (
+	sessionUsername,
+	dbTransaction = null
+) => {
 	const query = `SELECT 
     d.document_id, 
     d.document_uuid, 
@@ -315,6 +346,7 @@ LEFT JOIN LATERAL (
     INNER JOIN document_stage_users dsur ON dr.to_be_reviewed_by = dsur.username
     INNER JOIN document_stage_users dsu ON dr.created_by = dsu.username
     WHERE dr.document_id = d.document_id
+        AND dr.active = true
     ORDER BY dr.reviewed_at DESC NULLS FIRST
     LIMIT 1
 ) dr ON true
@@ -329,8 +361,8 @@ WHERE d.active = TRUE
     )
     );`;
 	const values = [sessionUsername];
-    
-    const client = dbTransaction || sqlRead;
+
+	const client = dbTransaction || sqlRead;
 	const result = await client.query(query, values);
 	console.log(result.rows);
 	return result.rows;
@@ -340,8 +372,8 @@ WHERE d.active = TRUE
 module.exports.deleteDocument = async (document_id, dbTransaction = null) => {
 	const query = `UPDATE documents SET active = false WHERE document_id = $1;`;
 	const values = [document_id];
-    
-    const client = dbTransaction || sqlWrite;
+
+	const client = dbTransaction || sqlWrite;
 	const result = await client.query(query, values);
 	return result.rowCount > 0;
 };
@@ -350,7 +382,6 @@ module.exports.deleteDocument = async (document_id, dbTransaction = null) => {
 module.exports.updateDocument = async (documentData, dbTransaction = null) => {
 	const {
 		category_id,
-		ref_no,
 		description,
 		received_from,
 		university_entt_id,
@@ -359,47 +390,110 @@ module.exports.updateDocument = async (documentData, dbTransaction = null) => {
 		department_entt_id,
 		mentor_sign,
 		document_stage,
-		created_by,
+		session_user,
+		document_id,
 	} = documentData;
 
-	const query = `UPDATE documents SET category_id = $1, ref_no = $2, description = $3, received_from = $4, university_entt_id = $5, campus_entt_id = $6, school_entt_id = $7, department_entt_id = $8, mentor_sign = $9, document_stage = $10, updated_by = $11, updated_at = NOW() WHERE document_id = $12;`;
-	const values = [
-        category_id,
-        ref_no,
-        description,
-        received_from,
+	console.log('>>>>>', {
+		category_id,
+		description,
+		received_from,
 		university_entt_id,
 		campus_entt_id,
 		school_entt_id,
 		department_entt_id,
 		mentor_sign,
 		document_stage,
-		created_by
-    ];
+		session_user,
+		document_id,
+	});
 
-    const client = dbTransaction || sqlWrite;
+	const query = `UPDATE documents SET description = $1, received_from = $2, university_entt_id = $3, campus_entt_id = $4, school_entt_id = $5, department_entt_id = $6, mentor_sign = $7, document_stage = $8, updated_by = $9, updated_at = NOW() WHERE document_id = $10 RETURNING document_id, document_uuid;`;
+	const values = [
+		description,
+		received_from,
+		university_entt_id,
+		campus_entt_id,
+		school_entt_id,
+		department_entt_id,
+		mentor_sign,
+		document_stage,
+		session_user,
+		document_id,
+	];
+
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
+	return result?.rows[0] || {};
+};
+
+// Update the final approval status of a document
+module.exports.updateIsFinalApproval = async (
+	documentData,
+	dbTransaction = null
+) => {
+	const { document_id, is_final_approval, session_username } = documentData;
+	const query = `UPDATE documents SET is_final_approval = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
+	const values = [is_final_approval, session_username, document_id];
+
+	const client = dbTransaction || sqlWrite;
 	const result = await client.query(query, values);
 	return result.rowCount > 0;
 };
 
-// Update the final approval status of a document
-module.exports.updateIsFinalApproval = async (documentData, dbTransaction = null) => {
-    const { document_id, is_final_approval, session_username } = documentData;
-    const query = `UPDATE documents SET is_final_approval = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
-    const values = [is_final_approval, session_username, document_id];
+//update document status
+module.exports.updateDocumentStatus = async (
+	documentData,
+	dbTransaction = null
+) => {
+	const { document_id, status, session_username } = documentData;
+	const query = `UPDATE documents SET status = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
+	const values = [status, session_username, document_id];
 
-    const client = dbTransaction || sqlWrite;
-    const result = await client.query(query, values);
-    return result.rowCount > 0;
+	const client = dbTransaction || sqlWrite;
+	const result = await client.query(query, values);
+	return result.rowCount > 0;
 };
 
-//update document status
-module.exports.updateDocumentStatus = async (documentData, dbTransaction = null) => {
-    const { document_id, status, session_username } = documentData;
-    const query = `UPDATE documents SET status = $1, updated_by = $2, updated_at = NOW() WHERE document_id = $3;`;
-    const values = [status, session_username, document_id];
+// Check if a document is editable
+module.exports.docEditableDetails = async (data, dbTransaction) => {
+	const { document_id, session_user } = data;
 
-    const client = dbTransaction || sqlWrite;
-    const result = await client.query(query, values);
-    return result.rowCount > 0;
+	const query = `WITH review_cte AS (
+        SELECT 
+        d.document_id, 
+		d.created_by AS document_owner,
+        dr.review_id, 
+        dr.to_be_reviewed_by, 
+        dr.reviewed_by,
+        dr.status,
+        dr.created_by,
+        dr.created_status,
+        (SELECT COUNT(*) FROM document_reviews WHERE document_id = $1 and active = true) 
+        FROM document_reviews dr
+		INNER JOIN documents d ON d.document_id = dr.document_id
+        WHERE d.document_id = $1 
+			AND d.active = true 
+			AND dr.active = true
+        ORDER BY dr.reviewed_at DESC NULLS FIRST
+        LIMIT 1
+    )
+    SELECT 
+        *,
+        CASE
+            WHEN (count <= 2 AND reviewed_by IS NULL) 
+                OR (created_status = 'SENT FOR REVISION' AND to_be_reviewed_by = $2) 
+            THEN TRUE
+            ELSE FALSE
+        END AS is_editable
+    FROM review_cte;`;
+	const values = [document_id, session_user];
+
+	//print the query to be executed replacing the placeholders with the actual values
+	// console.log('Query to be executed: ', query, values);
+
+	const client = dbTransaction || sqlRead;
+	const result = await client.query(query, values);
+
+	return result?.rows?.[0] ?? {};
 };

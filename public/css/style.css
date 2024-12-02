@@ -23,6 +23,14 @@ body {
   /* width: 100%; */
 }
 
+.alert-danger {
+  padding: 10px;
+  background: #ffe9e9;
+  border-radius: 6px;
+  margin: 10px 0;
+  color: red;
+}
+
 .lms-input {
   background-color: #ffffff;
   color: #000000;

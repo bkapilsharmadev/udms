@@ -14,6 +14,7 @@ router.post("/update/is-final-approval", asyncErrorHandler(documentController.up
 router.post("/update", transactionMiddleware, asyncErrorHandler(documentController.updateDocument));
 
 router.get("/:document_id", asyncErrorHandler(documentController.renderSingleDocument));
+router.get("/edit/:document_id", asyncErrorHandler(documentController.renderEditDocument));
 
 router.get("/", asyncErrorHandler(documentController.renderDocuments));
 

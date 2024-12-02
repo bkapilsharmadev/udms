@@ -1,32 +1,35 @@
 function isRequired(fields) {
+	for (const field of fields) {
+		const { value, name } = field;
+		console.log("value and name ", JSON.stringify({ value, name }));
+		if (value == undefined || value == null || value == "") {
+			alert(`${name} Is Required`);
+			return false;
+		}
+	}
 
-    for (const field of fields) {
-        const { value, name } = field;
-        console.log('value and name ', JSON.stringify({ value, name }));
-        if (value == undefined || value == null || value == "") {
-            alert(`${name} Is Required`);
-            return false;
-        }
-    }
-
-    return true;
+	return true;
 }
 
-function areFilesValid(files) {
-    if (!files || files.length === 0) {
-        alert('At least one file is required');
-        return false;
-    }
+function areFilesValid(files, isUpdate) {
+	if (!isUpdate) {
+		return true;
+	}
 
-    const allowedExtensions = ['doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'pdf'];
+	if (!files || files.length === 0) {
+		alert("At least one file is required");
+		return false;
+	}
 
-    for (const file of files) {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (!allowedExtensions.includes(fileExtension)) {
-            alert(`Invalid file type: ${file.name}`);
-            return false;
-        }
-    }
+	const allowedExtensions = ["doc", "docx", "xls", "xlsx", "png", "jpg", "pdf"];
 
-    return true; 
+	for (const file of files) {
+		const fileExtension = file.name.split(".").pop().toLowerCase();
+		if (!allowedExtensions.includes(fileExtension)) {
+			alert(`Invalid file type: ${file.name}`);
+			return false;
+		}
+	}
+
+	return true;
 }

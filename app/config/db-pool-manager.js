@@ -32,6 +32,7 @@ module.exports.get = (name, config) => {
 
   pools.set(name, pool);
   return pools.get(name);
-}
+};
+
 
 module.exports.closeAll = () => Promise.all(Array.from(pools.values()).map((pool) => pool.end()));

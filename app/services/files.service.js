@@ -15,7 +15,7 @@ module.exports.createFile = async (fileData, dbTransaction) => {
 		document_uuid: fileData.document_uuid,
 		hash: "DEMO HASH",
 		file_url: fileData.file_url,
-		created_by: fileData.created_by,
+		session_user: fileData.session_user,
 	};
 
 	console.log("File Version Data>>>> ", fileVersionData);
@@ -30,7 +30,7 @@ module.exports.createFile = async (fileData, dbTransaction) => {
 		{
 			file_id: fileVersion.file_id,
 			latest_version_id: fileVersion.version_id,
-			updated_by: fileData.created_by,
+			session_user: fileData.session_user,
 		},
 		dbTransaction
 	);
@@ -49,7 +49,7 @@ module.exports.getFiles = async () => {
 	return result || [];
 };
 
-module.exports.deleteFile = async (file_id) => {
+module.exports.deleteFile = async (file_id, dbTransaction) => {
 	const result = await fileModel.deleteFile(file_id);
 	if (!result) {
 		throw new Error("Error deleting file");
@@ -63,4 +63,22 @@ module.exports.updateFile = async (file, dbTransaction) => {
 		throw new Error("Error updating file");
 	}
 	return { message: "File updated successfully" };
+};
+
+module.exports.softDelByDocumentId = async (data, dbTransaction) => {
+	const fileDeleted = await fileModel.softDelByDocumentId(data, dbTransaction);
+	if (!fileDeleted) {
+		throw new Error("Error deleting file");
+	}
+
+	const fileVersionsDeleted = await fileVersioModel.softDelByDocumentId(
+		data,
+		dbTransaction
+	);
+
+	if (!fileVersionsDeleted) {
+		throw new Error("Error deleting file versions");
+	}
+
+	return { success: true, message: "File deleted successfully" };
 };

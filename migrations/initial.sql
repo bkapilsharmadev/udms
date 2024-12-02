@@ -12,6 +12,64 @@ CREATE TABLE document_categories (
     active BOOLEAN DEFAULT TRUE
 );
 
+-- ===========================================
+DROP TABLE IF EXISTS document_refs;
+CREATE TABLE document_refs (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category_id INT NOT NULL,
+    abbr VARCHAR(20) NOT NULL, -- Stores the category abbreviation (e.g., PR/PO)
+    seq_no INT NOT NULL, -- Stores the sequence number (e.g., 001)
+    ref_date DATE NOT NULL, -- Stores the date (e.g., 2024-10-07)
+    ref_number VARCHAR(30) UNIQUE, -- Generated REF number (e.g., PR/PO-07102024-001)
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES document_categories(category_id),
+    UNIQUE (category_id, ref_date, seq_no) -- Ensures no duplicate sequence numbers per day/category
+);
+
+CREATE OR REPLACE FUNCTION generate_ref_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Construct the REF number
+    NEW.ref_number := NEW.abbr || '-' || TO_CHAR(NEW.ref_date, 'DDMMYYYY') || '-' || LPAD(NEW.seq_no::TEXT, 3, '0');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_insert_generate_ref_number
+BEFORE INSERT ON document_refs
+FOR EACH ROW
+EXECUTE FUNCTION generate_ref_number();
+
+-- -------------------------------------------
+DO $$
+DECLARE
+    category RECORD;
+    seq_no INT;
+    day_offset INT; -- Loop through days as offsets (0 to 6)
+    target_date DATE;
+BEGIN
+    -- Loop through all categories
+    FOR category IN
+        SELECT category_id, category_abbr FROM document_categories
+    LOOP
+        -- Loop through the next 7 days
+        FOR day_offset IN 0..6 LOOP
+            -- Calculate the target date for the current offset
+            target_date := CURRENT_DATE + day_offset;
+
+            -- Generate 1000 sequences for each category and day
+            FOR seq_no IN 1..1000 LOOP
+                INSERT INTO document_refs (category_id, abbr, seq_no, ref_date)
+                VALUES (category.category_id, category.category_abbr, seq_no, target_date)
+                ON CONFLICT DO NOTHING; -- Avoid duplicates if rerun
+            END LOOP;
+        END LOOP;
+    END LOOP;
+END $$;
+
+-- ===========================================
+
 DROP TYPE IF EXISTS document_stages;
 CREATE TABLE document_stages (
     document_stage VARCHAR(50) PRIMARY KEY,
@@ -132,7 +190,7 @@ CREATE TABLE file_versions (
     active BOOLEAN DEFAULT TRUE
 );
 
-DROP TABLE IF EXISTS document_reviews;
+DROP TABLE IF EXISTS document_reviews CASCADE;
 CREATE TABLE document_reviews (
     review_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     document_id INT NOT NULL REFERENCES documents (document_id),
@@ -142,7 +200,8 @@ CREATE TABLE document_reviews (
     reviewed_at TIMESTAMP,
     document_stage VARCHAR(50),
     forwarded_to VARCHAR(20),
-    status VARCHAR(50) REFERENCES status_types (status_type),
+    status VARCHAR(50) NOT NULL REFERENCES status_types (status_type),
+	created_status VARCHAR(50) NOT NULL REFERENCES status_types (status_type),
     comments TEXT,
     is_final_approval BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -152,8 +211,11 @@ CREATE TABLE document_reviews (
     active BOOLEAN DEFAULT TRUE
 );
 ALTER TABLE document_reviews ADD COLUMN IF NOT EXISTS is_final_approval BOOLEAN DEFAULT FALSE;
+ALTER TABLE document_reviews ADD COLUMN IF NOT EXISTS created_status VARCHAR(50) REFERENCES status_types (status_type);
 
+DROP TABLE IF EXISTS document_review_files CASCADE;
 CREATE TABLE IF NOT EXISTS document_review_files (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     review_id INT NOT NULL REFERENCES document_reviews (review_id),
     file_id INT NOT NULL REFERENCES files (file_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -182,6 +244,7 @@ BEFORE INSERT ON file_versions
 FOR EACH ROW
 EXECUTE FUNCTION increment_version_number();
 
+--==========================
 
 -- get all documents with their latest version and file details and other details
 SELECT 
@@ -488,3 +551,44 @@ SELECT * FROM document_reviews
     --   pageSize: perPageData,
     --   findById: false
     -- };
+
+
+-- CHECK EDITABLE DOCUMENTS
+WITH review_cte AS (
+	SELECT 
+	review_id, 
+	document_id, 
+	to_be_reviewed_by, 
+	reviewed_by,
+	status,
+	created_by,
+	created_status,
+	(SELECT COUNT(*) FROM document_reviews WHERE document_id = 1 and active = true) 
+	FROM document_reviews 
+	WHERE document_id = 1 AND active = true 
+	ORDER BY reviewed_at 
+	DESC LIMIT 1
+)
+SELECT 
+    review_id,
+    document_id,
+    CASE
+        WHEN (count <= 2 AND reviewed_by IS NULL) 
+             OR (created_status = 'SENT FOR REVISION' AND to_be_reviewed_by = '50583955') 
+		THEN TRUE
+        ELSE FALSE
+    END AS is_editable
+FROM review_cte;
+
+-- UPDATE DOCUMENT LOGIC
+-- 1. Check if the document has been reviewed by any user
+    -- IF NOT
+        -- Update the document details in "document" table.
+        -- Insert new file(s) and version(s) in "files" and "file_versions" table.
+        -- Update the existing "document_reviews(active)" for the "document_id" to "false".
+        -- Insert a new "document_reviews" record with the updated details.
+    -- IF YES
+        -- Update the document details in "document" table.
+        -- Insert new file(s) and version(s) in "files" and "file_versions" table.
+        -- Insert a new "document_reviews" record with the updated details.
+        
