@@ -4,8 +4,6 @@ const documentService = require("../services/documents.service");
 module.exports.renderDashboard = async (req, res, next) => {
 	const session_user = req.session_username;
 
-	console.log(session_user);
-
 	const result = await Promise.all([
 		reportsService.docsCreatedCount({ session_user }, req.dbTransaction),
 		reportsService.docsReceivedCount({ session_user }, req.dbTransaction),
@@ -54,7 +52,7 @@ module.exports.renderDashboard = async (req, res, next) => {
 		totalDocCount: result[7],
 	};
 
-	console.log(data);
+	// console.log(data);
 
 	res.render("dashboard.ejs", { data });
 };

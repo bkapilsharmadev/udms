@@ -105,7 +105,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
+                                   <% data.docs.forEach((doc, idx) => { %>
+                                    <tr data-id="<%- doc.document_id %>">
+                                        <td class="p-4 text-sm text-center"><%- idx + 1 %></td>
+                                        <td class="p-4 text-sm"><%- doc.ref_no %></td>
+                                        <td class="p-4 text-sm"><%- doc.status %></td>
+                                        <td class="p-4 text-sm"><%- doc.to_be_reviewed_by_name %></td>
+                                        <td class="p-4 text-sm"><%- doc.review_status %></td>
+                                        <td class="p-4 text-sm"><%- doc.document_category %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_from %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_university %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_campus %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_school %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_department %></td>
+                                        <td class="p-4 text-sm"><%- doc.comments %></td>
+                                        <td class="p-4 text-sm text-center">
+                                            <button class="btn btn-sm btn-primary">View</button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
                                 </tbody>
                             </table>
                         </div>
@@ -128,8 +146,8 @@
     <script src="<%- BASE_URL %>js/pagination.js"></script>
 
     <script>
-        let perPageData = 10;
-        let totalDataCount = 100;
+        let perPageData = 3;
+        let totalDataCount = '<%- data.totalDocCount %>';	
         let pageNum = 1;
         let totalPages = Math.ceil(Number(totalDataCount) / perPageData);
         let paginationArr = [];
@@ -149,11 +167,37 @@
 
         createPaginationDynamic(totalPages, pageNum, '#document-list');
 
+        // Paginate on next or previous button click
+        document.addEventListener("click", function (event) {
+            // Find the closest pagination button
+            const paginationButton = findClosestPaginationButton(event.target);
 
-        let filterCriteria = [
-            { logicalName: "documentStatus", value: 'PENDING' }
-        ];
-        updateDataFilters({ filterCriteria, pageNo: 1, cursor: '' });
+            // If no pagination button is found, return
+            if (!paginationButton) {
+                return;
+            }
+
+            // Prevent further actions if the button is active
+            if (paginationButton.classList.contains("active")) {
+                return;
+            }
+
+            // Get the current page number from the active pagination button
+            const activeBtn = document.querySelector('.pagination-btn.active');
+            const pageNum = Number(activeBtn?.querySelector('span')?.innerText || activeBtn?.innerText);
+
+            // Handle "Next" pagination logic
+            if (paginationButton.classList.contains("pag-next") && pageNum >= 4) {
+                const lastRow = document.querySelector('#document-list table tbody tr:last-child');
+                const cursor = Number(lastRow?.getAttribute('data-id'));
+                paginationArr[pageNum] = cursor; // Save the cursor for the current page
+            }
+
+            // Update filters and paginate the data
+            updateDataFilters({ pageNo: pageNum, cursor: paginationArr[pageNum] });
+            paginateData(dataFilterObj);
+        });
+      
 
         //GRAPH LOGIC
         (function(){
@@ -173,7 +217,34 @@
                 chart: {
                     type: 'pie',
                     width: '100%',
-                    height: '100%'
+                    height: '100%',
+                    events: {
+                        dataPointSelection: function (event, chartContext, config) {
+                            const selectedLabel = config.w.config.labels[config.dataPointIndex];
+                            const selectedValue = config.w.config.series[config.dataPointIndex];
+                            console.log({ selectedLabel, selectedValue });
+
+                            const DOCUMENT_STATUS = {
+                                'Pending': 'PENDING',
+                                'Approved': 'APPROVED',
+                                'Rejected': 'REJECTED'
+                            };
+
+                            let filterCriteria = [];
+                            if (selectedLabel === 'Pending') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Pending }];
+                            } else if (selectedLabel === 'Approved') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Approved }];
+                            } else if (selectedLabel === 'Rejected') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Rejected }];
+                            }
+
+                            console.log('filterCriteria>>>> ', filterCriteria);
+
+                            updateDataFilters({ filterCriteria, pageNo: 1, cursor: '' });
+                            paginateData(dataFilterObj);
+                        }
+                    }
                 },
                 series: [
                     Number(reportData.docsCreatedCount),
@@ -182,7 +253,7 @@
                     Number(reportData.docsApprovedCount),
                     Number(reportData.docsRejectedCount)
                 ],
-                labels: ['Docs Created', 'Docs Received', 'Pending', 'Approved', 'Rejected'],
+                labels: ['Created', 'Received', 'Pending', 'Approved', 'Rejected'],
                 colors: ['#1ec9c9', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
                 dataLabels: {
                     enabled: true,
@@ -262,80 +333,99 @@
 
         // GLOBAL FUNCTION
         //pagination functon
-        function paginationAjax(dataObj) {
+        function paginateData(dataObj) {
             console.log('>>>>>>> CALLING PAGINATION', dataObj);
             let pageNum = dataObj.pageNo;
             let perPageData = dataObj.pageSize;
 
-            $.ajax({
-                type: "GET",
-                url: `<%- BASE_URL %>documents/fetch`,
-                data: dataObj,
-                beforeSend: function () {
-                    //$('#car-loader').modal('show');
+            console.log('dataObj>>>> ', dataObj);
+            console.log(JSON.stringify(dataObj));
+
+            // Call the Fetch API
+            fetch(`<%- BASE_URL %>documents/fetch`, {
+                method: "POST", // Change method to POST for req.body
+                headers: {
+                    "Content-Type": "application/json", // Ensure the server knows it's JSON
                 },
-                success: function (data) {
-                    console.log('data>>>> ', data);
-                    //$('#main-table-wrapper').removeClass('d-none');
-                    updateDataFilters({ getTotalCount: false });
-                    totalDataCount = data?.totalDataCount || 0;
-
-                   // $('.search-result-count-wrapper .count').text(totalDataCount);
-
-                    let trStr = '';
-                    let totalPages = Math.ceil(Number(totalDataCount) / perPageData);
-                    let dataListArr = data.dataList || [];
-                    let serialNum = (pageNum - 1) * perPageData + 1;
-
-       
-                    dataListArr.forEach((booking, idx) => {
-
-                        trStr += `<tr data-lid="${booking.json_data.id}" data-trip-status="${tripStatus}" data-json="${ encodeURIComponent(JSON.stringify(booking.json_data)) }">
-                        <td class="col-sl-no" scope="col">${serialNum++} 
-                            ${checkbox}
-                        </td>
-                        <td class="col-actions">
-                            <button type="button" class="btn btn-light btn-sm trigger-context-menu">
-                            <img data-bs-toggle="tooltip" data-bs-title="Actions" src="/img/cog.png" title="Actions">
-                            </button>
-                        </td>
-                        <td class="col-status" scope="col" data-status="${tripStatus}"><span class="badge" data-status="${tripStatus}">${tripStatus.split('_').join(' ')}</span></td>
-                        <td class="col-ref-no" scope="col">${bookingRefNo}</td>
-                        <td class="col-reservation-date" scope="col">${reservationDateStr}</td>
-                        <td class="col-created-by" data-bs-toggle="tooltip" data-bs-title="${createdByWithPhone}" scope="col">${createdBy}</td>
-                        <td class="col-corp text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${corporateDetails.corporate_name}|${corporateDetails.corporate_branch}" scope="col">${corporateDetails.corporate_name} | ${corporateDetails.corporate_branch}</td>
-                        <td class="col-pax-name text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${paxNamesWithPhone}" scope="col">${paxNames}</td>
-                        <td class="col-booking-tag text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${bookingTagsTooltip || 'N.A'}" scope="col">${bookingTagsBadge}</td>
-                        <td class="col-vehicle-cat" scope="col">${vehicleDetails.vehicle_cat_type}</td>
-                        <td class="col-vehicle-details" scope="col">${allocatedVehicle ?? 'N.A'}</td>
-                        <td class="col-driver" scope="col" data-bs-toggle="tooltip" data-bs-title="${driverNameWithPhone}">${driverName ?? 'N.A'}</td>
-                        <td class="col-package" scope="col">${reservationDetails.package_name}</td>
-                        <td class="col-service-city" scope="col">${reservationDetails.service_city}</td>
-                        <td class="col-reporting-place text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${reservationDetails.reporting_place || 'N.A'}" scope="col">${reservationDetails.reporting_place}</td>
-                        <td class="col-drop-place text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${reservationDetails.drop_place || 'N.A'}" scope="col">${reservationDetails.drop_place}</td>
-                        <td class="col-instructions text-ellipsis-200" data-bs-toggle="tooltip" data-bs-title="${reservationDetails.instructions || 'N.A'}" scope="col">${reservationDetails.instructions}</td>
-                        </tr>
-                        `;
+                body: JSON.stringify(dataObj), // Send dataObj as JSON in the body
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    // If the response is not successful, throw an error
+                    return response.json().then((err) => {
+                        throw err;
                     });
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then((data) => {
+                console.log('data>>>> ', data);
+                
+                // Update filters or perform actions on success
+                updateDataFilters({ getTotalCount: false });
+                const totalDataCount = data?.totalDocCount || 0;
+                const totalPages = Math.ceil(Number(totalDataCount) / perPageData);
+                const dataListArr = data.docList || [];
+                const serialNum = (pageNum - 1) * perPageData + 1;
 
-                    $('#main-table tbody').html(trStr);
-                    createPaginationDynamic(totalPages, pageNum, '#document-list');
-                },
-                error: function (errors) {
-                $('#car-loader').modal('hide');
-                console.log("errors", errors.responseJSON)
+                // Update table content
+                let trStr = '';
+
+                dataListArr.forEach((doc, idx) => {
+                    trStr += `
+                        <tr data-id="${doc.document_id}">
+                            <td class="p-4 text-sm text-center">${serialNum + idx}</td>
+                            <td class="p-4 text-sm">${doc.ref_no}</td>
+                            <td class="p-4 text-sm">${doc.status}</td>
+                            <td class="p-4 text-sm">${doc.to_be_reviewed_by_name}</td>
+                            <td class="p-4 text-sm">${doc.review_status}</td>
+                            <td class="p-4 text-sm">${doc.document_category}</td>
+                            <td class="p-4 text-sm">${doc.entity_from}</td>
+                            <td class="p-4 text-sm">${doc.entity_university}</td>
+                            <td class="p-4 text-sm">${doc.entity_campus}</td>
+                            <td class="p-4 text-sm">${doc.entity_school}</td>
+                            <td class="p-4 text-sm">${doc.entity_department}</td>
+                            <td class="p-4 text-sm">${doc.comments ?? '...'}</td>
+                            <td class="p-4 text-sm text-center">
+                                <button class="btn btn-sm btn-primary">View</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+
+                // Update the table content
+                document.querySelector('#document-list table tbody').innerHTML = trStr;
+                
+                // Create dynamic pagination
+                createPaginationDynamic(totalPages, pageNum, '#document-list');
+            })
+            .catch((errors) => {
+                console.error("errors", errors);
                 createToast({
                     title: "ALERT",
-                    msg: errors?.responseJSON?.message || "Something went wrong! Please try again later.",
-                    type: "negative"
+                    msg: errors?.message || "Something went wrong! Please try again later.",
+                    type: "negative",
                 });
-                }
-            })
+            });
         }
         //update Data Filters
         function updateDataFilters(newValues) {
-        dataFilterObj = { ...dataFilterObj, ...newValues };
+            dataFilterObj = { ...dataFilterObj, ...newValues };
         };
+
+        function findClosestPaginationButton(element) {
+            while (element && element !== document) {
+                if (
+                    element.classList.contains("pagination-btn") &&
+                    (element.classList.contains("pag-previous") || element.classList.contains("pag-next"))
+                ) {
+                    return element; // Return the matching element
+                }
+                element = element.parentElement; // Move to the parent
+            }
+            return null; // No matching element found
+        }
 
     </script>
 

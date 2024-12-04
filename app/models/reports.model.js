@@ -44,7 +44,7 @@ module.exports.docsPendingCount = async (data, dbTransaction = null) => {
     FROM document_reviews dr
     INNER JOIN documents d ON d.document_id = dr.document_id
     WHERE 
-        d.status IS NULL
+        d.status = 'PENDING'
         AND d.active = true
         AND dr.active = true
         AND 

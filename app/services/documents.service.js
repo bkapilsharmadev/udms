@@ -145,7 +145,7 @@ module.exports.getDocumentsCount = async (payload, dbTransaction) => {
 	} = payload);
 
 	let totalDocCount = await documentModel.getDocumentsCount(sqlOptions, dbTransaction);
-	console.log("totalDocCount>>>> ", totalDocCount);
+	// console.log("totalDocCount>>>> ", totalDocCount);
 	return totalDocCount;
 };
 

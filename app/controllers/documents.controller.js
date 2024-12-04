@@ -170,7 +170,13 @@ module.exports.renderEditDocument = async (req, res, next) => {
 };
 
 module.exports.getDocuments = async (req, res, next) => {
-	const result = await documentService.getDocuments(
+	console.log(">>>> GET DOCUMENTS");
+
+	console.log("req.body>>>> ", req.body);
+	console.log("req.query>>>> ", req.query);
+	console.log("req.params>>>> ", req.params);
+
+	const docList = await documentService.getDocuments(
 		{
 			...req.body,
 			...req.query,
@@ -179,7 +185,23 @@ module.exports.getDocuments = async (req, res, next) => {
 		},
 		req.pgTransaction
 	);
-	res.status(200).json(result);
+	console.log("docList>>>> ", docList);
+
+	const totalDocCount = await documentService.getDocumentsCount(
+		{
+			...req.body,
+			...req.query,
+			...req.params,
+			session_user: req.session_username,
+		},
+		req.pgTransaction
+	);
+
+	
+	console.log("totalDocCount>>>> ", totalDocCount);
+
+
+	res.status(200).json({ docList, totalDocCount });
 };
 
 module.exports.deleteDocument = async (req, res, next) => {

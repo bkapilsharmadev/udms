@@ -170,7 +170,7 @@ module.exports.getDocuments = async (sqlOptions, dbTransaction = null) => {
 	console.log("Generated stmt>>> ", convertToPlainSQL(stmt));
 	const client = dbTransaction || sqlRead;
 	const result = await client.query(stmt);
-    console.log("Result>>> ", result.rows);
+    // console.log("Result>>> ", result.rows);
 	return result.rows;
 };
 
