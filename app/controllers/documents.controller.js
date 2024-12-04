@@ -10,14 +10,13 @@ const {
 	getFileVersionsByDocumentId,
 } = require("../services/file-versions.service");
 const {
-	getLatestReviewByDocumentId, getReviewsByDocId
+	getLatestReviewByDocumentId,
+	getReviewsByDocId,
 } = require("../services/document-reviews.service");
 const {
 	getDocumentCategories,
 } = require("../services/document-categories.service");
-const {
-	isDocReviewable,
-} = require("../services/document-reviews.service");
+const { isDocReviewable } = require("../services/document-reviews.service");
 const {
 	getDocumentStageUsersExcludingUser,
 } = require("../services/document-stage-users.service");
@@ -120,13 +119,10 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		getDocumentStageUsersExcludingUser(username, req.pgTransaction),
 		getFileVersionsByDocumentId(document_id, req.pgTransaction),
 		getLatestReviewByDocumentId(document_id, req.pgTransaction),
-		isDocReviewable(
-			{ document_id, session_user: username },
-			req.pgTransaction
-		),
-		getReviewsByDocId(document_id, req.pgTransaction)
+		isDocReviewable({ document_id, session_user: username }, req.pgTransaction),
+		getReviewsByDocId(document_id, req.pgTransaction),
 	]);
-	
+
 	const data = {
 		statusTypes: result[0],
 		document: result[1],
@@ -134,7 +130,7 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		fileVersions: result[3],
 		documentReviews: result[4],
 		isDocReviewable: result[5],
-		reviewHistory: result[6]
+		reviewHistory: result[6],
 	};
 
 	// console.log("Single Document Data >>>> ", data);
@@ -174,7 +170,15 @@ module.exports.renderEditDocument = async (req, res, next) => {
 };
 
 module.exports.getDocuments = async (req, res, next) => {
-	const result = await documentService.getDocuments();
+	const result = await documentService.getDocuments(
+		{
+			...req.body,
+			...req.query,
+			...req.params,
+			session_user: req.session_username,
+		},
+		req.pgTransaction
+	);
 	res.status(200).json(result);
 };
 

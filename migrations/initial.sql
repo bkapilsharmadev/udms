@@ -149,7 +149,7 @@ CREATE TABLE documents (
     department_entt_id INT REFERENCES entities (entity_id),
     mentor_sign _enum_mentor_sign_status DEFAULT 'NOT REQUIRED',
     document_stage VARCHAR(50) REFERENCES document_stages (document_stage),
-    status VARCHAR(50) REFERENCES status_types (status_type),
+    status VARCHAR(50) REFERENCES status_types (status_type) DEFAULT('PENDING'),
     is_final_approval BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
@@ -776,3 +776,89 @@ SELECT
 FROM formatted_durations;
 
 
+
+
+
+
+-- SELECT * FROM documents WHERE created_by = '50583955';
+
+-- SELECT DISTINCT(document_id) FROM document_reviews WHERE active = true
+-- 	AND to_be_reviewed_by = '50583955'
+
+WITH filtered_docs AS (
+	SELECT DISTINCT(document_id) 
+	FROM document_reviews 
+	WHERE 
+		active = true
+		AND to_be_reviewed_by = '50583955'
+)
+SELECT 
+    d.document_id, 
+    d.document_uuid, 
+    d.ref_no, 
+    d.description,
+	d.category_id,
+	dc.document_category,
+    d.received_from,
+    ef.name AS entity_from,
+    d.university_entt_id,
+    eu.name AS entity_university,
+    d.campus_entt_id,
+    ec.name AS entity_campus,
+    d.school_entt_id,
+    es.name AS entity_school,
+    d.department_entt_id,
+    ed.name AS entity_department,
+    d.mentor_sign, 
+    d.document_stage, 
+    d.status, 
+    d.created_at, 
+    d.updated_at, 
+    d.created_by,
+
+    -- Latest review details
+    dr.review_id,
+    dr.to_be_reviewed_by,
+	dr.to_be_reviewed_by_name,
+    dr.reviewed_by,
+    dr.reviewed_at,
+    dr.forwarded_to,
+    dr.review_status,
+    dr.comments,
+    dr.review_created_at,
+    dr.review_updated_at,
+    dr.review_created_by,
+    dr.review_created_by_name
+FROM documents d
+INNER JOIN filtered_docs fd ON fd.document_id  = d.document_id
+INNER JOIN document_categories dc ON d.category_id = dc.category_id
+-- Join with entities table for document-related entity information
+INNER JOIN entities ef ON d.received_from = ef.entity_id
+INNER JOIN entities eu ON d.university_entt_id = eu.entity_id
+INNER JOIN entities ec ON d.campus_entt_id = ec.entity_id
+INNER JOIN entities es ON d.school_entt_id = es.entity_id
+INNER JOIN entities ed ON d.department_entt_id = ed.entity_id
+
+-- Left join LATERAL to get the latest review for each document
+LEFT JOIN LATERAL (
+    SELECT 
+        dr.review_id,
+        dr.to_be_reviewed_by,
+		CONCAT(dsur.first_name, ' ', dsur.last_name, '-', dsur.document_stage) AS to_be_reviewed_by_name,
+        dr.reviewed_by,
+        dr.reviewed_at,
+        dr.forwarded_to, 
+        dr.status AS review_status,
+        dr.comments,
+        dr.created_at AS review_created_at,
+        dr.updated_at AS review_updated_at,
+        dr.created_by AS review_created_by,
+        CONCAT(dsu.first_name, ' ', dsu.last_name, '-', dsu.document_stage) AS review_created_by_name
+    FROM document_reviews dr
+    INNER JOIN document_stage_users dsur ON dr.to_be_reviewed_by = dsur.username
+    INNER JOIN document_stage_users dsu ON dr.created_by = dsu.username
+    WHERE dr.document_id = d.document_id
+        AND dr.active = true
+    ORDER BY dr.reviewed_at DESC NULLS FIRST
+    LIMIT 1
+) dr ON true

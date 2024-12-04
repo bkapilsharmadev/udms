@@ -844,6 +844,44 @@ table thead tr th {
   padding: 5px 15px;
 }
 
+/* PAGINATION CSS */
+
+#custom-pagination div,
+.custom-pagination div {
+  width: 200px;
+}
+
+#custom-pagination a:hover,
+.custom-pagination a:hover {
+  cursor: pointer;
+}
+
+#custom-pagination .out-of-range,
+.custom-pagination .out-of-range {
+  background-color: #fafafa;
+}
+
+#custom-pagination ul,
+.custom-pagination ul {
+  list-style: none;
+  display: flex;
+}
+
+#custom-pagination ul li a,
+.custom-pagination ul li a {
+  color: #222222;
+  border-radius: 5px;
+  background-color: #fdfeff;
+  padding: 5px 10px;
+  border: 1px solid rgb(226, 226, 226);
+  width: 20px;
+  user-select: none;
+}
+
+#custom-pagination ul li.active a,
+.custom-pagination ul li.active a {
+  background-color: rgb(255, 185, 185);
+}
 
 /* =============================@media================================= */
 

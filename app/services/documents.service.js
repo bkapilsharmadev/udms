@@ -2,7 +2,6 @@ const { dbError } = require("../utils/error/error");
 const documentModel = require("../models/documents.model");
 const fileService = require("./files.service");
 const documentReviewService = require("./document-reviews.service");
-const documentReviewFilesService = require("./document-review-files.service");
 
 module.exports.createDocument = async (documentData, dbTransaction) => {
 	const document = await documentModel.createDocument(
@@ -109,9 +108,45 @@ module.exports.createDocument = async (documentData, dbTransaction) => {
 	return { message: "Document created successfully" };
 };
 
-module.exports.getDocuments = async (sessionUsername, dbTransaction) => {
-	const result = await documentModel.getDocuments(sessionUsername);
+module.exports.getDocuments = async (payload, dbTransaction) => {
+	let {
+		pageNo,
+		pageSize,
+		cursor,
+		isOr,
+		filterCriteria = [],
+		orderCriteria = [],
+		searchCriteria = {},
+		findById = false,
+		session_user,
+	} = payload;
+
+	let sqlOptions = {
+		pageNo,
+		pageSize,
+		cursor,
+		isOr,
+		filterCriteria,
+		orderCriteria,
+		searchCriteria,
+		session_user,
+	};
+
+	const result = await documentModel.getDocuments(sqlOptions, dbTransaction);
 	return result || [];
+};
+
+module.exports.getDocumentsCount = async (payload, dbTransaction) => {
+	let sqlOptions = ({
+		isOr,
+		filterCriteria = [],
+		searchCriteria = {},
+		session_user,
+	} = payload);
+
+	let totalDocCount = await documentModel.getDocumentsCount(sqlOptions, dbTransaction);
+	console.log("totalDocCount>>>> ", totalDocCount);
+	return totalDocCount;
 };
 
 module.exports.getMyDocuments = async (sessionUsername, dbTransaction) => {
@@ -297,7 +332,10 @@ module.exports.updateIsFinalApproval = async (document, dbTransaction) => {
 };
 
 module.exports.updateDocumentStatus = async (document, dbTransaction) => {
-	const result = await documentModel.updateDocumentStatus(document, dbTransaction);
+	const result = await documentModel.updateDocumentStatus(
+		document,
+		dbTransaction
+	);
 	if (!result) {
 		throw dbError({ message: "Error updating document", data: result });
 	}
