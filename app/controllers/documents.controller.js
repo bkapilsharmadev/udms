@@ -134,6 +134,7 @@ module.exports.renderSingleDocument = async (req, res, next) => {
 		fileVersions: result[3],
 		documentReviews: result[4],
 		isDocReviewable: result[5],
+		reviewHistory: result[6]
 	};
 
 	// console.log("Single Document Data >>>> ", data);

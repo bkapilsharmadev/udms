@@ -208,6 +208,47 @@
                                 </div>
                                 <% } %>
                                     <!--  Review Actions//-->
+
+                            <div class="frame-container">
+                                <div class="frame-title">
+                                    <span>Review History</span>
+                                </div>
+                                <div class="frame-content" id="review-action-wrapper">
+                                    <div class="responsive-table overflow-x-auto">
+                                        <table class="min-w-full bg-white rounded-b-lg shadow">
+                                            <thead class="text-left">
+                                                <tr>
+                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                    <th class="p-4 text-xs font-bold">Status</th>
+                                                    <th class="p-4 text-xs font-bold">Reviewer</th>
+                                                    <th class="p-4 text-xs font-bold">Comments</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <% data.reviewHistory.forEach((review, index) => { %>
+                                                        <tr>
+                                                            <td class="p-4 text-sm text-center">
+                                                                <%= data.reviewHistory.length - index %>
+                                                            </td>
+                                                            <td class="p-4 text-sm">
+                                                                <%= review.status %>
+                                                            </td>
+                                                            <td class="p-4 text-sm">
+                                                                <%= review.first_name %> <%= review.last_name %> (<%= review.document_stage %>)
+                                                            </td>
+                                                            <td class="p-4 text-sm">
+                                                                <%= review.comments %>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tr>
+                                            </tbody>
+                                            <tfooter>
+                                            </tfooter>
+                                        </table>
+                                </div>
+                            </div>
                     </div>
                     <!-- main content// -->
             </div>

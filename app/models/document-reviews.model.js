@@ -80,10 +80,12 @@ module.exports.getLatestReviewByDocumentId = async (
 };
 
 module.exports.getReviewsByDocId = async (document_id, dbTransaction) => {
-	const query = `SELECT * FROM document_reviews 
-	WHERE active = true 
-		AND document_id = $1
-	ORDER BY reviewed_at DESC NULLS FIRST
+	const query = `SELECT dr.*, dsu.first_name, dsu.last_name, dsu.document_stage 
+	FROM document_reviews dr
+	INNER JOIN document_stage_users dsu ON dr.to_be_reviewed_by = dsu.username
+	WHERE dr.active = true 
+		AND dr.document_id = $1
+	ORDER BY dr.reviewed_at DESC NULLS FIRST
 	;`;
 	const values = [document_id];
 

@@ -592,3 +592,187 @@ FROM review_cte;
         -- Insert new file(s) and version(s) in "files" and "file_versions" table.
         -- Insert a new "document_reviews" record with the updated details.
         
+
+
+-- Docs Created
+SELECT document_id 
+FROM documents 
+WHERE 
+	created_by = '50583955'
+	AND active = true;
+
+-- Docs Received
+SELECT DISTINCT d.document_id, d.created_by
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+	dr.to_be_reviewed_by = '50583955'
+	AND d.created_by <> '50583955'
+	AND dr.active = true
+	AND d.active = true;
+
+-- Pending Docs
+SELECT dr.document_id, d.created_by, dr.to_be_reviewed_by, dr.reviewed_by
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+	d.status IS NULL
+	AND d.active = true
+	AND dr.active = true
+	AND 
+	( 
+		(
+			dr.to_be_reviewed_by = '50583955'
+			AND d.created_by <> '50583955'
+		)
+		OR
+		(
+			d.created_by = '50583955'
+		)
+	)
+
+
+
+
+-- Docs Created
+SELECT document_id 
+FROM documents 
+WHERE 
+	created_by = '50583955'
+	AND active = true;
+
+-- Docs Received
+SELECT DISTINCT COUNT(d.document_id)
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+	dr.to_be_reviewed_by = '50583955'
+	AND d.created_by <> '50583955'
+	AND dr.active = true
+	AND d.active = true;
+
+-- Pending Docs
+SELECT COUNT(DISTINCT dr.document_id)
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+	d.status IS NULL
+	AND d.active = true
+	AND dr.active = true
+	AND 
+	( 
+		(
+			dr.to_be_reviewed_by = '50583955'
+			AND d.created_by <> '50583955'
+		)
+		OR
+		(
+			d.created_by = '50583955'
+		)
+	)
+
+-- Docs Approved
+SELECT COUNT(DISTINCT dr.document_id) AS total_docs_approved
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+	d.status = 'APPROVED'
+	AND d.active = true
+	AND dr.active = true
+	AND 
+	( 
+		(
+			dr.to_be_reviewed_by = '50583955'
+			AND d.created_by <> '50583955'
+		)
+		OR
+		(
+			d.created_by = '50583955'
+		)
+	);
+
+-- Docs Rejected
+SELECT COUNT(DISTINCT dr.document_id) AS total_docs_rejected
+FROM document_reviews dr
+INNER JOIN documents d ON d.document_id = dr.document_id
+WHERE 
+    d.status = 'REJECTED'
+    AND d.active = true
+    AND dr.active = true
+    AND 
+    ( 
+        (
+            dr.to_be_reviewed_by = '50583955'
+            AND d.created_by <> '50583955'
+        )
+        OR
+        (
+            d.created_by = '50583955'
+        )
+    );
+
+-- Avg, Min and Max Time Taken
+WITH filtered_docs AS (
+    -- Select documents created by '50583955' with final approval
+    SELECT document_id 
+    FROM documents 
+    WHERE is_final_approval = true AND created_by = '50583955'
+    
+    UNION
+    
+    -- Select documents assigned to '50583955' for review but created by someone else
+    SELECT DISTINCT d.document_id
+    FROM document_reviews dr
+    INNER JOIN documents d ON d.document_id = dr.document_id
+    WHERE 
+        dr.to_be_reviewed_by = '50583955'
+        AND d.created_by <> '50583955'
+        AND dr.active = true
+        AND d.active = true
+        AND d.is_final_approval = true
+),
+document_time_diff AS (
+    -- Calculate the first and final review times for documents in filtered_docs
+    SELECT
+        dr.document_id,
+        MIN(dr.reviewed_at) AS first_review_time,
+        MAX(dr.reviewed_at) AS final_review_time
+    FROM document_reviews dr
+    WHERE dr.document_id IN (SELECT document_id FROM filtered_docs)
+    GROUP BY dr.document_id
+),
+document_durations AS (
+    -- Calculate the duration in seconds for each document
+    SELECT
+        document_id,
+        EXTRACT(EPOCH FROM (final_review_time - first_review_time)) AS duration_seconds
+    FROM document_time_diff
+),
+formatted_durations AS (
+    -- Calculate the minimum, maximum, and average durations
+    SELECT
+        MIN(duration_seconds) AS min_duration_seconds,
+        MAX(duration_seconds) AS max_duration_seconds,
+        AVG(duration_seconds) AS avg_duration_seconds
+    FROM document_durations
+)
+-- Convert durations into days, hours, and minutes
+SELECT
+    CONCAT(
+        TRUNC(min_duration_seconds / 86400), ' days, ',
+        TRUNC(MOD(min_duration_seconds, 86400) / 3600), ' hours, ',
+        TRUNC(MOD(min_duration_seconds, 3600) / 60), ' minutes'
+    ) AS min_time_taken,
+    CONCAT(
+        TRUNC(max_duration_seconds / 86400), ' days, ',
+        TRUNC(MOD(max_duration_seconds, 86400) / 3600), ' hours, ',
+        TRUNC(MOD(max_duration_seconds, 3600) / 60), ' minutes'
+    ) AS max_time_taken,
+    CONCAT(
+        TRUNC(avg_duration_seconds / 86400), ' days, ',
+        TRUNC(MOD(avg_duration_seconds, 86400) / 3600), ' hours, ',
+        TRUNC(MOD(avg_duration_seconds, 3600) / 60), ' minutes'
+    ) AS average_time_taken
+FROM formatted_durations;
+
+

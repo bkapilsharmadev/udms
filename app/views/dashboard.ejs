@@ -38,23 +38,23 @@
             <!-- Stats -->
             <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
                 <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">20</span>
+                    <span class="stat-value text-3xl font-bold"><%- data.docsCreatedCount %></span>
                     <p class="stat-label text-gray-600">Docs Created</p>
                 </div>
                 <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">06</span>
+                    <span class="stat-value text-3xl font-bold"><%- data.docsReceivedCount %></span>
                     <p class="stat-label text-gray-600">Docs Received</p>
                 </div>
                 <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">02</span>
+                    <span class="stat-value text-3xl font-bold"><%- data.docsPendingCount %></span>
                     <p class="stat-label text-gray-600">Pending</p>
                 </div>
                 <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">16</span>
+                    <span class="stat-value text-3xl font-bold"><%- data.docsApprovedCount %></span>
                     <p class="stat-label text-gray-600">Approved</p>
                 </div>
                 <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold">02</span>
+                    <span class="stat-value text-3xl font-bold"><%- data.docsRejectedCount %></span>
                     <p class="stat-label text-gray-600">Rejected</p>
                 </div>
             </div>
@@ -72,6 +72,43 @@
                 </div>
             </div>
 
+            <div class="frame-container">
+                <div class="frame-title">
+                    <span>Documents</span>
+                </div>
+                <div class="frame-content">
+                    <div class="mx-auto bg-gray-50 rounded-lg ">
+
+                        <!-- Table -->
+                        <div class="responsive-table overflow-x-auto">
+                            <table class="min-w-full bg-white rounded-b-lg shadow">
+                                <thead class="text-left">
+                                    <tr>
+                                        <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                        <th class="p-4 text-xs font-bold">Ref. No.</th>
+                                        <th class="p-4 text-xs font-bold">Doc Status</th>
+                                        <th class="p-4 text-xs font-bold">Reviewer</th>
+                                        <th class="p-4 text-xs font-bold">Review Status</th>
+                                        <th class="p-4 text-xs font-bold">Category</th>
+                                        <th class="p-4 text-xs font-bold">Received From</th>
+                                        <th class="p-4 text-xs font-bold">University</th>
+                                        <th class="p-4 text-xs font-bold">Campus</th>
+                                        <th class="p-4 text-xs font-bold">School</th>
+                                        <th class="p-4 text-xs font-bold">Department</th>
+                                        <th class="p-4 text-xs font-bold">Comments</th>
+                                        <th class="p-4 text-xs font-bold text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
          <!-- main content// -->
     </div>
@@ -82,16 +119,34 @@
     <script src="<%- BASE_URL %>js/fetch.js"></script>
 
     <script>
-        // Pie Chart Configuration
-        var pieOptions = {
+
+        function formatApprovalTime(totalHours) {
+            const days = Math.floor(totalHours / 24); // Get the number of full days
+            const remainingHours = totalHours % 24; // Get the remaining hours after full days
+            const hours = Math.floor(remainingHours); // Get the integer part of hours
+            const minutes = Math.round((remainingHours - hours) * 60); // Convert fractional hours to minutes
+
+            return `${days} days, ${hours} hours, ${minutes} minutes`;
+        }   
+
+        // PIE CHART CONFIGURATION
+        let reportData = '<%- JSON.stringify(data) %>';
+        reportData = JSON.parse(reportData);
+        const pieOptions = {
             chart: {
                 type: 'pie',
                 width: '100%',
                 height: '100%'
             },
-            series: [20, 6, 2, 16, 2],
+            series: [
+                Number(reportData.docsCreatedCount),
+                Number(reportData.docsReceivedCount),
+                Number(reportData.docsPendingCount),
+                Number(reportData.docsApprovedCount),
+                Number(reportData.docsRejectedCount)
+            ],
             labels: ['Docs Created', 'Docs Received', 'Pending', 'Approved', 'Rejected'],
-            colors: ['#4CAF50', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
+            colors: ['#1ec9c9', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
             dataLabels: {
                 enabled: true,
                 formatter: function (val, opts) {
@@ -105,23 +160,27 @@
             },
         };
 
-
-        var pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
+        const pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
         pieChart.render();
 
-        // Bar Chart Configuration
-        var barOptions = {
+        // BAR CHART CONFIGURATION
+        const approvalStats = reportData.docsApprovalTimeStats;
+        const barOptions = {
             chart: {
                 type: 'bar',
                 width: '100%',
                 height: '100%'
             },
             series: [{
-                name: 'Approval Time (in minutes)',
-                data: [20, 5, 40] // Avg, Min, Max Approval Times
+                name: 'Approval Time',
+                data: [
+                    approvalStats.average_time_in_hours, 
+                    approvalStats.min_time_in_hours, 
+                    approvalStats.max_time_in_hours
+                ] // Avg, Min, Max Approval Times
             }],
             xaxis: {
-                categories: ['Avg. Approval Time', 'Min. Approval Time', 'Max. Approval Time']
+                categories: ['Avg. Time', 'Min. Time', 'Max. Time']
             },
             colors: ['#4CAF50', '#2196F3', '#F44336'], // Custom colors for bars
             plotOptions: {
@@ -135,7 +194,7 @@
             dataLabels: {
                 enabled: true,
                 formatter: function (val) {
-                    return val + ' min'; // Append "min" to each value
+                    return val + ' hrs';
                 },
                 style: {
                     fontSize: '14px',
@@ -145,12 +204,12 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val + ' minutes'; // Tooltip also shows time in minutes
+                        return formatApprovalTime(val);
                     }
                 }
             },
             title: {
-                text: 'Approval Times (in minutes)',
+                text: 'Approval Times (in hours)',
                 align: 'center',
                 style: {
                     fontSize: '16px',
@@ -158,8 +217,8 @@
                 }
             }
         };
-        
-        var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
+    
+        const barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
         barChart.render();
     </script>
 
