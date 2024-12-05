@@ -220,15 +220,7 @@ module.exports.updateDocument = async (req, res, next) => {
 				category_id,
 				is_update,
 				description,
-				received_from,
-				university_entt_id,
-				campus_entt_id,
-				school_entt_id,
-				department_entt_id,
-				mentor_sign,
-				status,
-				comments,
-				forwarded_to,
+				updated_,
 			} = req.body;
 
 			// Get the files from req.files after Multer processes them
