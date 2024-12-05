@@ -106,6 +106,7 @@ module.exports.logout = async (req, res, next) => {
   await deleteRedisData(userId);
   res.clearCookie("user_id", {
     path: "/",
+    domain: process.env.COOKIE_DOMAIN,
   });
   res.removeHeader("user_id");
 
