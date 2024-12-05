@@ -14,6 +14,6 @@ module.exports.login = async(req,res,next) => {
 module.exports.logout = async(req,res,next) => {
     const BASE_URL = res.locals.BASE_URL;
     await authService.logout(req,res,next);
-    res.redirect(`/`);
+    res.redirect(BASE_URL);
     // return res.status(200).json({message : 'Logged out'});
 }
