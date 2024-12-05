@@ -121,6 +121,33 @@ module.exports.getDocuments = async (payload, dbTransaction) => {
 		session_user,
 	} = payload;
 
+	//find the obj with logicalName: "createdBy"
+	let createdBy = filterCriteria?.filter((item) => {
+		if (item.logicalName === "createdBy") {
+			return item.value;
+		}
+	})[0]?.value;
+
+	//remove the obj with logicalName: "createdBy"
+	filterCriteria = filterCriteria.filter(
+		(item) => item.logicalName !== "createdBy"
+	);
+
+	//if createdBy is not null, then add the createdBy filter
+	if (createdBy && createdBy === "SELF") {
+		filterCriteria.push({
+			logicalName: "createdBy",
+			operator: "=",
+			value: session_user,
+		});
+	} else if (createdBy && createdBy === "OTHERS") {
+		filterCriteria.push({
+			logicalName: "createdBy",
+			operator: "<>",
+			value: session_user,
+		});
+	}
+
 	let sqlOptions = {
 		pageNo,
 		pageSize,
@@ -137,14 +164,41 @@ module.exports.getDocuments = async (payload, dbTransaction) => {
 };
 
 module.exports.getDocumentsCount = async (payload, dbTransaction) => {
-	let sqlOptions = ({
-		isOr,
-		filterCriteria = [],
-		searchCriteria = {},
-		session_user,
-	} = payload);
+	let { isOr, filterCriteria, searchCriteria, session_user } = payload;
 
-	let totalDocCount = await documentModel.getDocumentsCount(sqlOptions, dbTransaction);
+	//find the obj with logicalName: "createdBy"
+	let createdBy = filterCriteria?.filter((item) => {
+		if (item.logicalName === "createdBy") {
+			return item.value;
+		}
+	})[0]?.value;
+
+	//remove the obj with logicalName: "createdBy"
+	filterCriteria = filterCriteria.filter(
+		(item) => item.logicalName !== "createdBy"
+	);
+
+	//if createdBy is not null, then add the createdBy filter
+	if (createdBy && createdBy === "SELF") {
+		filterCriteria.push({
+			logicalName: "createdBy",
+			operator: "=",
+			value: session_user,
+		});
+	} else if (createdBy && createdBy === "OTHERS") {
+		filterCriteria.push({
+			logicalName: "createdBy",
+			operator: "<>",
+			value: session_user,
+		});
+	}
+
+	let sqlOptions = { isOr, filterCriteria, searchCriteria, session_user };
+
+	let totalDocCount = await documentModel.getDocumentsCount(
+		sqlOptions,
+		dbTransaction
+	);
 	// console.log("totalDocCount>>>> ", totalDocCount);
 	return totalDocCount;
 };

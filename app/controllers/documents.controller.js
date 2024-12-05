@@ -172,10 +172,6 @@ module.exports.renderEditDocument = async (req, res, next) => {
 module.exports.getDocuments = async (req, res, next) => {
 	console.log(">>>> GET DOCUMENTS");
 
-	console.log("req.body>>>> ", req.body);
-	console.log("req.query>>>> ", req.query);
-	console.log("req.params>>>> ", req.params);
-
 	const docList = await documentService.getDocuments(
 		{
 			...req.body,
@@ -185,7 +181,7 @@ module.exports.getDocuments = async (req, res, next) => {
 		},
 		req.pgTransaction
 	);
-	console.log("docList>>>> ", docList);
+	// console.log("docList>>>> ", docList);
 
 	const totalDocCount = await documentService.getDocumentsCount(
 		{
