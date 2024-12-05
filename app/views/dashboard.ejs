@@ -401,7 +401,14 @@
                             <td class="p-4 text-sm">${doc.entity_department}</td>
                             <td class="p-4 text-sm">${doc.comments ?? '...'}</td>
                             <td class="p-4 text-sm text-center">
-                                <button class="btn btn-sm btn-primary">View</button>
+                                <a href="<%- BASE_URL %>documents/${doc.document_id}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <i class="text-red-500 fa-solid fa-eye"></i>
+                                </a>
+                                <a href="<%- BASE_URL %>documents/edit/${doc.document_id}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <i class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                </a>
                             </td>
                         </tr>
                     `;
