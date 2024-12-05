@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
   //Sub Menu Items Active
   subMenuItems.forEach((subMenuItem) => {
     if (location.pathname === subMenuItem.getAttribute("href")) {
-
       const parentMenuItem = subMenuItem.closest(".menu-item");
       const menuList = subMenuItem.closest(".sub-menu-itam");
       console.log("parent menu item ", parentMenuItem);
@@ -107,6 +106,30 @@ window.addEventListener("click", function (e) {
 function toggleDropdownProfile() {
   const profiledropdownMenu = document.getElementById("profiledropdownMenu");
   profiledropdownMenu.classList.toggle("hidden");
+}
+
+// Adding toggleDropdown on Right Click
+document.querySelectorAll("tbody tr").forEach((row) => {
+  row.addEventListener("contextmenu", toggleDropdownOnRightClick);
+});
+function toggleDropdownOnRightClick(event) {
+  event.preventDefault();
+
+  const currentDropdown = event.target.closest("tr").querySelector(".dropdown");
+  document.querySelectorAll(".dropdown").forEach((dropdown) => {
+    if (dropdown !== currentDropdown) {
+      dropdown.classList.add("hidden");
+    }
+  });
+  // Stop event propagation to prevent immediate closing
+  event.stopPropagation();
+
+  currentDropdown.style.position = "fixed";
+  currentDropdown.style.height = "min-content";
+  currentDropdown.style.left = `${event.clientX}px`;
+  currentDropdown.style.top = `${event.clientY}px`;
+
+  currentDropdown.classList.toggle("hidden");
 }
 
 // function toggleDropdown(event) {
