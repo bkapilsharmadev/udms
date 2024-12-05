@@ -59,7 +59,9 @@
                                                                 <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
                                                                 <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
                                                                 <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
-                                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
+                                                                <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>
+                                                                <% if (document.review_status === 'SENT FOR REVISION') { %> status-pending <% } %>
+                                                                ">
                                                                 <%= document.review_status %>
                                                             </span>
                                                         </td>

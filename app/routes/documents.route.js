@@ -3,7 +3,7 @@ const { transactionMiddleware } = require('../middleware/transaction-middleware'
 const { asyncErrorHandler } = require('../middleware/error.middleware');
 const documentController = require('../controllers/documents.controller');
 
-router.get("/fetch", asyncErrorHandler(documentController.getDocuments));
+router.post("/fetch", asyncErrorHandler(documentController.getDocuments));
 router.get("/fetch/:document_id", asyncErrorHandler(documentController.getDocumentById));
 router.get("/my-documents", asyncErrorHandler(documentController.renderMyDocumentList));
 router.get("/received-documents", asyncErrorHandler(documentController.renderReceivedDocumentList));
@@ -14,6 +14,7 @@ router.post("/update/is-final-approval", asyncErrorHandler(documentController.up
 router.post("/update", transactionMiddleware, asyncErrorHandler(documentController.updateDocument));
 
 router.get("/:document_id", asyncErrorHandler(documentController.renderSingleDocument));
+router.get("/edit/:document_id", asyncErrorHandler(documentController.renderEditDocument));
 
 router.get("/", asyncErrorHandler(documentController.renderDocuments));
 

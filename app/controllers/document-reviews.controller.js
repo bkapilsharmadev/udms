@@ -35,8 +35,9 @@ module.exports.getDocumentReviewById = async (req, res, next) => {
 	res.status(200).json(result);
 };
 
-module.exports.getAllDocumentReviews = async (req, res, next) => {
-	const result = await documentReviewService.getAllDocumentReviews();
+module.exports.getReviewsByDocId = async (req, res, next) => {
+	const { document_id } = req.query;
+	const result = await documentReviewService.getReviewsByDocId(document_id);
 	res.status(200).json(result);
 };
 
@@ -46,15 +47,18 @@ module.exports.updateDocumentReview = async (req, res, next) => {
 
 	console.log(req.body);
 
-	const result = await documentReviewService.updateDocumentReview({
-		review_id,
-		status,
-		comments,
-		is_final_approval,
-		forwarded_to,
-		reviewed_at: new Date(),
-		session_username: req.session_username,
-	});
+	const result = await documentReviewService.updateDocumentReview(
+		{
+			review_id,
+			status,
+			comments,
+			is_final_approval,
+			forwarded_to,
+			reviewed_at: new Date(),
+			session_user: req.session_username,
+		},
+		req.dbTransaction
+	);
 	res.status(200).json(result);
 };
 
@@ -67,6 +71,9 @@ module.exports.deleteDocumentReview = async (req, res, next) => {
 module.exports.checkIsDocumentReviewed = async (req, res, next) => {
 	const { document_id } = req.body;
 	const username = req.session_username;
-	const result = await documentReviewService.checkIsDocumentReviewed(document_id, username);
+	const result = await documentReviewService.checkIsDocumentReviewed(
+		document_id,
+		username
+	);
 	res.status(200).json(result);
-}
+};

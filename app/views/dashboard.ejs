@@ -34,31 +34,31 @@
                 <!-- navbar -->
                 <%- include("./partials/header.ejs") %>
 
-                    <!-- main content -->
-                    <div class="content space-y-7">
-                        <!-- Stats -->
-                        <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
-                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                                <span class="stat-value text-3xl font-bold">20</span>
-                                <p class="stat-label text-gray-600">Docs Created</p>
-                            </div>
-                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                                <span class="stat-value text-3xl font-bold">06</span>
-                                <p class="stat-label text-gray-600">Docs Received</p>
-                            </div>
-                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                                <span class="stat-value text-3xl font-bold">02</span>
-                                <p class="stat-label text-gray-600">Pending</p>
-                            </div>
-                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                                <span class="stat-value text-3xl font-bold">16</span>
-                                <p class="stat-label text-gray-600">Approved</p>
-                            </div>
-                            <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                                <span class="stat-value text-3xl font-bold">02</span>
-                                <p class="stat-label text-gray-600">Rejected</p>
-                            </div>
-                        </div>
+        <!-- main content -->
+        <div class="content space-y-7">
+            <!-- Stats -->
+            <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
+                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                    <span class="stat-value text-3xl font-bold"><%- data.docsCreatedCount %></span>
+                    <p class="stat-label text-gray-600">Docs Created</p>
+                </div>
+                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                    <span class="stat-value text-3xl font-bold"><%- data.docsReceivedCount %></span>
+                    <p class="stat-label text-gray-600">Docs Received</p>
+                </div>
+                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                    <span class="stat-value text-3xl font-bold"><%- data.docsPendingCount %></span>
+                    <p class="stat-label text-gray-600">Pending</p>
+                </div>
+                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                    <span class="stat-value text-3xl font-bold"><%- data.docsApprovedCount %></span>
+                    <p class="stat-label text-gray-600">Approved</p>
+                </div>
+                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                    <span class="stat-value text-3xl font-bold"><%- data.docsRejectedCount %></span>
+                    <p class="stat-label text-gray-600">Rejected</p>
+                </div>
+            </div>
 
                         <!-- Charts -->
                         <div class="dashboard-charts grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-7">
@@ -75,222 +75,362 @@
                             </div>
                         </div>
 
-
-                        <!-- My Documents -->
-                        <div class="frame-container">
-                            <div class="frame-title">
-                                <span>My Documents</span>
-                            </div>
-                            <div class="frame-content">
-                                <div class="mx-auto bg-gray-50 rounded-lg ">
-                                    <!-- Table Header -->
-                                    <!-- <div class="flex justify-between items-center px-4 py-3 bg-blue-50 rounded-t-lg">
-                <h2 class="text-lg font-semibold text-gray-700">Document Data</h2>
-            </div> -->
-
-                                    <!-- Table -->
-                                    <div class="responsive-table overflow-x-auto">
-                                        <table class="min-w-full bg-white rounded-b-lg shadow" id="document-table">
-                                            <thead class="text-left">
-                                                <tr>
-                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                                    <th class="p-4 text-xs font-bold">Current Reviewer</th>
-                                                    <th class="p-4 text-xs font-bold">Review Status</th>
-                                                    <th class="p-4 text-xs font-bold">Reference Number</th>
-                                                    <th class="p-4 text-xs font-bold">Category</th>
-                                                    <th class="p-4 text-xs font-bold">Received From</th>
-                                                    <th class="p-4 text-xs font-bold">University</th>
-                                                    <th class="p-4 text-xs font-bold">Campus</th>
-                                                    <th class="p-4 text-xs font-bold">School</th>
-                                                    <th class="p-4 text-xs font-bold">Department</th>
-                                                    <th class="p-4 text-xs font-bold">Comments</th>
-                                                    <th class="p-4 text-xs font-bold text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% data.myDocuments.forEach((document, index)=> { %>
-                                                    <tr class="hover:bg-blue-50 trigger-context-menu">
-                                                        <td
-                                                            class="p-4 text-sm text-gray-700 text-center font-semibold ">
-                                                            <%= ++index %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.to_be_reviewed_by_name %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700">
-                                                            <span
-                                                                class="
-                                                    <% if (document.review_status === 'PENDING') { %> status-pending <% } %>
-                                                    <% if (document.review_status === 'APPROVED') { %> status-approved <% } %>
-                                                    <% if (document.review_status === 'REJECTED') { %> status-rejected <% } %>
-                                                    <% if (document.review_status === 'TO BE DISCUSSED') { %> status-discussed <% } %>
-                                                    <% if (document.review_status === 'SENT FOR OB') { %> status-ob <% } %>">
-                                                                <%= document.review_status %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.ref_no %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.document_category %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_from %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_university %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_campus %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_school %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.entity_department %>
-                                                        </td>
-                                                        <td class="p-4 text-sm text-gray-700 ">
-                                                            <%= document.comments %>
-                                                        </td>
-                                                        <td class="p-4 text-center relative">
-                                                            <button 
-                                                                class="focus:outline-none text-gray-600 px-4"><i
-                                                                    class="fa-solid fa-ellipsis-vertical"></i></button>
-
-                                                            <!-- Dropdown menu -->
-                                                            <div id="dropdown-0"
-                                                                class="dropdown text-sm hidden absolute bottom-0 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                                    <i class="text-red-500 fa-solid fa-eye"></i> <span
-                                                                        class="ml-2">View</span>
-                                                                </a>
-                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                                    <i class="text-red-500 fa-solid fa-pen"></i> <span
-                                                                        class="ml-2">Edit</span>
-                                                                </a>
-                                                                <a href="<%- BASE_URL %>documents/<%= document.document_id %>"
-                                                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                                    <i class="text-red-500 fa-solid fa-trash"></i> <span
-                                                                        class="ml-2">Delete</span>
-                                                                </a>
-                                                            </div>
-
-                                                        </td>
-                                                    </tr>
-                                                    <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
+            <div class="frame-container" id="document-list">
+                <div class="frame-title">
+                    <span>Documents</span>
+                </div>
+                <div class="frame-content">
+                    <div class="mx-auto rounded-lg ">
+                        <select id="row-per-page" class="row-per-page">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <!-- Table -->
+                        <div class="responsive-table overflow-x-auto">
+                            <table class="min-w-full bg-white rounded-b-lg shadow">
+                                <thead class="text-left">
+                                    <tr>
+                                        <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                        <th class="p-4 text-xs font-bold">Ref. No.</th>
+                                        <th class="p-4 text-xs font-bold">Doc Status</th>
+                                        <th class="p-4 text-xs font-bold">Reviewer</th>
+                                        <th class="p-4 text-xs font-bold">Review Status</th>
+                                        <th class="p-4 text-xs font-bold">Category</th>
+                                        <th class="p-4 text-xs font-bold">Received From</th>
+                                        <th class="p-4 text-xs font-bold">University</th>
+                                        <th class="p-4 text-xs font-bold">Campus</th>
+                                        <th class="p-4 text-xs font-bold">School</th>
+                                        <th class="p-4 text-xs font-bold">Department</th>
+                                        <th class="p-4 text-xs font-bold">Comments</th>
+                                        <th class="p-4 text-xs font-bold text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   <% data.docs.forEach((doc, idx) => { %>
+                                    <tr data-id="<%- doc.document_id %>">
+                                        <td class="p-4 text-sm text-center"><%- idx + 1 %></td>
+                                        <td class="p-4 text-sm"><%- doc.ref_no %></td>
+                                        <td class="p-4 text-sm"><%- doc.status %></td>
+                                        <td class="p-4 text-sm"><%- doc.to_be_reviewed_by_name %></td>
+                                        <td class="p-4 text-sm"><%- doc.review_status %></td>
+                                        <td class="p-4 text-sm"><%- doc.document_category %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_from %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_university %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_campus %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_school %></td>
+                                        <td class="p-4 text-sm"><%- doc.entity_department %></td>
+                                        <td class="p-4 text-sm"><%- doc.comments %></td>
+                                        <td class="p-4 text-sm text-center">
+                                            <button class="btn btn-sm btn-primary">View</button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
                         </div>
-
-
+                        <div class="mt-8 flex justify-end">
+                            <div class="custom-pagination"></div>
+                        </div>
                     </div>
-                    <!-- main content// -->
+
+                </div>
             </div>
 
-            <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-            <script src="<%- BASE_URL %>js/utils.js"></script>
-            <script src="<%- BASE_URL %>js/fetch.js"></script>
+        </div>
+         <!-- main content// -->
+    </div>
 
-            <script>
-                // Pie Chart Configuration
-                var pieOptions = {
-                    chart: {
-                        type: 'pie',
-                        width: '100%',
-                        height: '100%'
-                    },
-                    series: [20, 6, 2, 16, 2],
-                    labels: ['Docs Created', 'Docs Received', 'Pending', 'Approved', 'Rejected'],
-                    colors: ['#4CAF50', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function (val, opts) {
-                            // Show the number (raw value) instead of percentage
-                            return opts.w.config.series[opts.seriesIndex];
-                        },
-                        style: {
-                            fontSize: '14px',
-                            fontWeight: 'bold'
-                        }
-                    },
-                };
+    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="<%- BASE_URL %>js/utils.js"></script>
+    <script src="<%- BASE_URL %>js/fetch.js"></script>
+    <script src="<%- BASE_URL %>js/pagination.js"></script>
 
+    <script>
+        let perPageData = 3;
+        let totalDataCount = '<%- data.totalDocCount %>';	
+        let pageNum = 1;
+        let totalPages = Math.ceil(Number(totalDataCount) / perPageData);
+        let paginationArr = [];
+        let dataFilterObj = {
+            getTotalCount: false,
+            pageNo: 1,
+            cursor: undefined,
+            filterCriteria: [],
+            searchCriteria: {
+                searchColumns: [],
+                searchTerms: []
+            },
+            orderCriteria: [],
+            pageSize: perPageData,
+            findById: false
+        };
 
-                var pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
-                pieChart.render();
+        createPaginationDynamic(totalPages, pageNum, '#document-list');
 
-                // Bar Chart Configuration
-                var barOptions = {
-                    chart: {
-                        type: 'bar',
-                        width: '100%',
-                        height: '100%'
-                    },
-                    series: [{
-                        name: 'Approval Time (in minutes)',
-                        data: [20, 5, 40] // Avg, Min, Max Approval Times
-                    }],
-                    xaxis: {
-                        categories: ['Avg. Approval Time', 'Min. Approval Time', 'Max. Approval Time']
-                    },
-                    colors: ['#4CAF50', '#2196F3', '#F44336'], // Custom colors for bars
-                    plotOptions: {
-                        bar: {
-                            distributed: true, // Distribute colors to each bar
-                            dataLabels: {
-                                position: 'top' // Display data labels above bars
+        // Paginate on next or previous button click
+        document.addEventListener("click", function (event) {
+            // Find the closest pagination button
+            const paginationButton = findClosestPaginationButton(event.target);
+
+            // If no pagination button is found, return
+            if (!paginationButton) {
+                return;
+            }
+
+            // Prevent further actions if the button is active
+            if (paginationButton.classList.contains("active")) {
+                return;
+            }
+
+            // Get the current page number from the active pagination button
+            const activeBtn = document.querySelector('.pagination-btn.active');
+            const pageNum = Number(activeBtn?.querySelector('span')?.innerText || activeBtn?.innerText);
+
+            // Handle "Next" pagination logic
+            if (paginationButton.classList.contains("pag-next") && pageNum >= 4) {
+                const lastRow = document.querySelector('#document-list table tbody tr:last-child');
+                const cursor = Number(lastRow?.getAttribute('data-id'));
+                paginationArr[pageNum] = cursor; // Save the cursor for the current page
+            }
+
+            // Update filters and paginate the data
+            updateDataFilters({ pageNo: pageNum, cursor: paginationArr[pageNum] });
+            paginateData(dataFilterObj);
+        });
+      
+
+        //GRAPH LOGIC
+        (function(){
+            function formatApprovalTime(totalHours) {
+                const days = Math.floor(totalHours / 24); // Get the number of full days
+                const remainingHours = totalHours % 24; // Get the remaining hours after full days
+                const hours = Math.floor(remainingHours); // Get the integer part of hours
+                const minutes = Math.round((remainingHours - hours) * 60); // Convert fractional hours to minutes
+
+                return `${days} days, ${hours} hours, ${minutes} minutes`;
+            }   
+
+            // PIE CHART CONFIGURATION
+            let reportData = '<%- JSON.stringify(data) %>';
+            reportData = JSON.parse(reportData);
+            const pieOptions = {
+                chart: {
+                    type: 'pie',
+                    width: '100%',
+                    height: '100%',
+                    events: {
+                        dataPointSelection: function (event, chartContext, config) {
+                            const selectedLabel = config.w.config.labels[config.dataPointIndex];
+                            const selectedValue = config.w.config.series[config.dataPointIndex];
+                            console.log({ selectedLabel, selectedValue });
+
+                            const DOCUMENT_STATUS = {
+                                'Pending': 'PENDING',
+                                'Approved': 'APPROVED',
+                                'Rejected': 'REJECTED'
+                            };
+
+                            let filterCriteria = [];
+                            if (selectedLabel === 'Pending') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Pending }];
+                            } else if (selectedLabel === 'Approved') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Approved }];
+                            } else if (selectedLabel === 'Rejected') {
+                                filterCriteria = [{ logicalName: 'documentStatus', value: DOCUMENT_STATUS.Rejected }];
                             }
+
+                            console.log('filterCriteria>>>> ', filterCriteria);
+
+                            updateDataFilters({ filterCriteria, pageNo: 1, cursor: '' });
+                            paginateData(dataFilterObj);
                         }
+                    }
+                },
+                series: [
+                    Number(reportData.docsCreatedCount),
+                    Number(reportData.docsReceivedCount),
+                    Number(reportData.docsPendingCount),
+                    Number(reportData.docsApprovedCount),
+                    Number(reportData.docsRejectedCount)
+                ],
+                labels: ['Created', 'Received', 'Pending', 'Approved', 'Rejected'],
+                colors: ['#1ec9c9', '#2196F3', '#FFC107', '#8BC34A', '#F44336'], // Custom colors
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+                        // Show the number (raw value) instead of percentage
+                        return opts.w.config.series[opts.seriesIndex];
                     },
-                    dataLabels: {
-                        enabled: true,
+                    style: {
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                    }
+                },
+            };
+
+            const pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieOptions);
+            pieChart.render();
+
+            // BAR CHART CONFIGURATION
+            const approvalStats = reportData.docsApprovalTimeStats;
+            const barOptions = {
+                chart: {
+                    type: 'bar',
+                    width: '100%',
+                    height: '100%'
+                },
+                series: [{
+                    name: 'Approval Time',
+                    data: [
+                        approvalStats.average_time_in_hours, 
+                        approvalStats.min_time_in_hours, 
+                        approvalStats.max_time_in_hours
+                    ] // Avg, Min, Max Approval Times
+                }],
+                xaxis: {
+                    categories: ['Avg. Time', 'Min. Time', 'Max. Time']
+                },
+                colors: ['#4CAF50', '#2196F3', '#F44336'], // Custom colors for bars
+                plotOptions: {
+                    bar: {
+                        distributed: true, // Distribute colors to each bar
+                        dataLabels: {
+                            position: 'top' // Display data labels above bars
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val + ' hrs';
+                    },
+                    style: {
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                    }
+                },
+                tooltip: {
+                    y: {
                         formatter: function (val) {
-                            return val + ' min'; // Append "min" to each value
-                        },
-                        style: {
-                            fontSize: '14px',
-                            fontWeight: 'bold'
-                        }
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function (val) {
-                                return val + ' minutes'; // Tooltip also shows time in minutes
-                            }
-                        }
-                    },
-                    title: {
-                        text: 'Approval Times (in minutes)',
-                        align: 'center',
-                        style: {
-                            fontSize: '16px',
-                            fontWeight: 'bold'
+                            return formatApprovalTime(val);
                         }
                     }
-                };
-
-                var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
-                barChart.render();
-
-                document.getElementById('document-table').addEventListener('click', (e) => {
-                    const row = e.target.closest('.trigger-context-menu');
-                    console.log('row ',row);
-                    if (row) {
-                        const dropdown = row.querySelector('.dropdown');
-                        if (dropdown) {
-                            dropdown.classList.toggle('hidden');
-                        }
+                },
+                title: {
+                    text: 'Approval Times (in hours)',
+                    align: 'center',
+                    style: {
+                        fontSize: '16px',
+                        fontWeight: 'bold'
                     }
+                }
+            };
+        
+            const barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
+            barChart.render();
+        })();
+
+
+        // GLOBAL FUNCTION
+        //pagination functon
+        function paginateData(dataObj) {
+            console.log('>>>>>>> CALLING PAGINATION', dataObj);
+            let pageNum = dataObj.pageNo;
+            let perPageData = dataObj.pageSize;
+
+            console.log('dataObj>>>> ', dataObj);
+            console.log(JSON.stringify(dataObj));
+
+            // Call the Fetch API
+            fetch(`<%- BASE_URL %>documents/fetch`, {
+                method: "POST", // Change method to POST for req.body
+                headers: {
+                    "Content-Type": "application/json", // Ensure the server knows it's JSON
+                },
+                body: JSON.stringify(dataObj), // Send dataObj as JSON in the body
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    // If the response is not successful, throw an error
+                    return response.json().then((err) => {
+                        throw err;
+                    });
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then((data) => {
+                console.log('data>>>> ', data);
+                
+                // Update filters or perform actions on success
+                updateDataFilters({ getTotalCount: false });
+                const totalDataCount = data?.totalDocCount || 0;
+                const totalPages = Math.ceil(Number(totalDataCount) / perPageData);
+                const dataListArr = data.docList || [];
+                const serialNum = (pageNum - 1) * perPageData + 1;
+
+                // Update table content
+                let trStr = '';
+
+                dataListArr.forEach((doc, idx) => {
+                    trStr += `
+                        <tr data-id="${doc.document_id}">
+                            <td class="p-4 text-sm text-center">${serialNum + idx}</td>
+                            <td class="p-4 text-sm">${doc.ref_no}</td>
+                            <td class="p-4 text-sm">${doc.status}</td>
+                            <td class="p-4 text-sm">${doc.to_be_reviewed_by_name}</td>
+                            <td class="p-4 text-sm">${doc.review_status}</td>
+                            <td class="p-4 text-sm">${doc.document_category}</td>
+                            <td class="p-4 text-sm">${doc.entity_from}</td>
+                            <td class="p-4 text-sm">${doc.entity_university}</td>
+                            <td class="p-4 text-sm">${doc.entity_campus}</td>
+                            <td class="p-4 text-sm">${doc.entity_school}</td>
+                            <td class="p-4 text-sm">${doc.entity_department}</td>
+                            <td class="p-4 text-sm">${doc.comments ?? '...'}</td>
+                            <td class="p-4 text-sm text-center">
+                                <button class="btn btn-sm btn-primary">View</button>
+                            </td>
+                        </tr>
+                    `;
                 });
 
-            </script>
+
+                // Update the table content
+                document.querySelector('#document-list table tbody').innerHTML = trStr;
+                
+                // Create dynamic pagination
+                createPaginationDynamic(totalPages, pageNum, '#document-list');
+            })
+            .catch((errors) => {
+                console.error("errors", errors);
+                createToast({
+                    title: "ALERT",
+                    msg: errors?.message || "Something went wrong! Please try again later.",
+                    type: "negative",
+                });
+            });
+        }
+        //update Data Filters
+        function updateDataFilters(newValues) {
+            dataFilterObj = { ...dataFilterObj, ...newValues };
+        };
+
+        function findClosestPaginationButton(element) {
+            while (element && element !== document) {
+                if (
+                    element.classList.contains("pagination-btn") &&
+                    (element.classList.contains("pag-previous") || element.classList.contains("pag-next"))
+                ) {
+                    return element; // Return the matching element
+                }
+                element = element.parentElement; // Move to the parent
+            }
+            return null; // No matching element found
+        }
+
+    </script>
 
 
     </body>

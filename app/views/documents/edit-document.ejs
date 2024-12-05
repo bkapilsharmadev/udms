@@ -12,7 +12,9 @@
                     <!-- main content -->
                     <div class="content">
                         <div class="content-title">
-                            <h2>Form</h2>
+                            <% if(!data.isDocEditable.is_editable) { %>
+                            <p class="alert-danger">This document is not editable.</p>
+                            <% } %>
                         </div>
                         <!-- <h2>title TITLE</h2> -->
                         <div class="frame-container">
@@ -21,39 +23,27 @@
                             </div>
                             <div class="frame-content">
                                 <form class="flex flex-wrap gap-y-4" id="document-form">
-                                    <!-- Category -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                        <div class="lms-input-container">
-                                            <select id="category" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select Category</option>
-                                                <% data.documentCategories.forEach(category=> { %>
-                                                    <option value="<%= category.category_id %>">
-                                                        <%= category.document_category %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                            <div class="lms-cut-dropdown"></div>
-                                            <label for="category"
-                                                class="lms-placeholder-dropdown">Category<span>*</span></label>
-                                        </div>
+                                        <span class="view-title">Reference Number</span>
+                                        <p class="view-details">
+                                            <%= document.ref_no %>
+                                        </p>
                                     </div>
 
-                                    <!-- Reference Number -->
-                                    <!-- <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
-                                        <div class="lms-input-container ">
-                                            <input id="ref-no" class="lms-input" type="text" placeholder="" value="">
-                                            <div class="lms-cut"></div>
-                                            <label for="ref-no" class="lms-placeholder">Reference No <span>*</span></label>
-                                        </div>
-                                    </div> -->
+                                    <!-- Category -->
+                                    <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <span class="view-title">Category</span>
+                                        <p class="view-details">
+                                            <%= document.document_category %>
+                                        </p>
+                                    </div>
 
                                     <!-- From -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
                                             <select id="received-from" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select From</option>
                                                 <% data.entities.forEach(entity=> { %>
-                                                    <option value="<%= entity.entity_id %>">
+                                                    <option value="<%= entity.entity_id %>" <%= document.received_from == entity.entity_id ? "selected" : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% }) %>
@@ -68,10 +58,9 @@
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
                                             <select id="university" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select University</option>
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "UNIVERSITY") { %>
-                                                    <option value="<%= entity.entity_id %>">
+                                                    <option value="<%= entity.entity_id %>" <%= document.university_entt_id == entity.entity_id ? "selected" : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -86,10 +75,9 @@
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
                                             <select id="campus" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select Campus</option>
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "CAMPUS") { %>
-                                                    <option value="<%= entity.entity_id %>">
+                                                    <option value="<%= entity.entity_id %>" <%= document.campus_entt_id == entity.entity_id ? "selected" : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -104,10 +92,9 @@
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
                                             <select id="school" class="lms-dropdropdown">
-                                                <option value="" disabled selected hidden>Select School</option>
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "SCHOOL") { %>
-                                                    <option value="<%= entity.entity_id %>">
+                                                    <option value="<%= entity.entity_id %>" <%= document.school_entt_id == entity.entity_id ? "selected" : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -125,7 +112,7 @@
                                                 <option value="" disabled selected hidden>Select Department</option>
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "DEPARTMENT") { %>
-                                                    <option value="<%= entity.entity_id %>">
+                                                    <option value="<%= entity.entity_id %>" <%= document.department_entt_id == entity.entity_id ? "selected" : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -141,7 +128,7 @@
                                         <div class="lms-input-container">
                                             <select id="mentor-sign" class="lms-dropdropdown">
                                                 <% data.mentorSigns.forEach(mentorSign=> { %>
-                                                    <option value="<%= mentorSign %>">
+                                                    <option value="<%= mentorSign %>" <%= document.mentor_sign == mentorSign ? "selected" : "" %>>
                                                         <%= mentorSign %>
                                                     </option>
                                                     <% }) %>
@@ -155,7 +142,7 @@
                                     <!-- Details -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container ">
-                                            <input id="description" class="lms-input" type="text" placeholder="">
+                                            <input id="description" class="lms-input" type="text" placeholder="" value="<%= document.description %>">
                                             <label for="description" class="lms-placeholder">Details</label>
                                         </div>
                                     </div>
@@ -169,13 +156,14 @@
                                                     class="flex cursor-pointer items-center justify-center space-x-2">
                                                     <i class="fa-solid fa-arrow-up-from-bracket text-red-600"></i>
                                                     <span class="font-semibold text-lg">File Upload</span>
-                                                    <input id="doc-files" type="file" class="hidden" multiple />
+                                                    <input id="doc-files" type="file" class="hidden" multiple/>
+                                                    <input type="checkbox" id="is-update" checked class="hidden">
                                                 </label>
                                             </div>
                                             <!-- Preview Button -->
-                                            <button class="text-red-600">
+                                            <!-- <button class="text-red-600">
                                                 <i class="fa-solid fa-circle-info"></i>
-                                            </button>
+                                            </button> -->
                                         </div>
                                         <!-- File count display -->
                                         <p id="fileCount" class="text-sm text-gray-500 mt-1 ml-2">No files selected</p>
@@ -184,10 +172,24 @@
                                     <!-- Details -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container ">
-                                            <input id="comments" class="lms-input" type="text" placeholder="">
+                                            <input id="comments" class="lms-input" type="text" placeholder="" value="<%= document.description %>">
                                             <label for="comments" class="lms-placeholder">Comments</label>
                                         </div>
                                     </div>
+
+                                     <!-- Status Type-->
+                                    <!-- <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
+                                        <div class="lms-input-container">
+                                            <select id="status-type" class="lms-dropdropdown">
+                                                <option value="" disabled selected hidden>Select Status</option>
+                                                <% data.statusTypes.forEach(statusType => { %>
+                                                    <option value="<%= statusType.status_type %>"><%= statusType.status_type %></option>
+                                                <% }) %>
+                                            </select>
+                                            <div class="lms-cut-dropdown"></div>
+                                            <label for="status-type" class="lms-placeholder-dropdown">Status<span>*</span></label>
+                                        </div>
+                                    </div> -->
 
                                     <!-- Forward To -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
@@ -212,7 +214,7 @@
                                     <div class="w-full px-2">
                                         <button type="submit"
                                             class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">
-                                            Submit
+                                            Update Document
                                         </button>
                                     </div>
 
@@ -230,6 +232,13 @@
             <script src="<%- BASE_URL %>js/validation.js"></script>
 
             <script>
+                const DOCUMENT_ID = '<%- document.document_id %>';
+
+                document.querySelector('#is-update').addEventListener('change', function (event) {
+                    const isChecked = event.target.checked;
+                    document.getElementById('doc-files').disabled = !isChecked;
+                });
+
                 document.querySelector('#doc-files').addEventListener('change', function (event) {
                     const fileCount = event.target.files.length;
                     const fileCountText = fileCount === 1 ? "1 file selected" : `${fileCount} files selected`;
@@ -240,7 +249,7 @@
                     e.preventDefault(); // Prevent default form submission
 
                     const fields = [
-                        { value: document.getElementById('category').value, name: 'Category' },
+                        { value: DOCUMENT_ID, name: 'Document ID' },
                         { value: document.getElementById('received-from').value, name: 'Document From Selection' },
                         { value: document.getElementById('university').value, name: 'University' },
                         { value: document.getElementById('campus').value, name: 'Campus' },
@@ -257,7 +266,8 @@
                         const formData = new FormData(); // Initialize FormData
 
                         // Get all form fields and append them to FormData
-                        formData.append('category_id', document.getElementById('category').value);
+                        formData.append('document_id', DOCUMENT_ID);
+                        formData.append('is_update', document.getElementById('is-update').checked);
                         formData.append('received_from', document.getElementById('received-from').value);
                         formData.append('university_entt_id', document.getElementById('university').value);
                         formData.append('campus_entt_id', document.getElementById('campus').value);
@@ -269,8 +279,9 @@
                         formData.append('forwarded_to', document.getElementById('forwarded-to').value);
 
                         // Get file(s) selected and append them to FormData
+                        const isUpdate = document.getElementById('is-update').checked;
                         const files = document.getElementById('doc-files').files;
-                        const checkFiles = areFilesValid(files);
+                        const checkFiles = areFilesValid(files, isUpdate); //set tru for now
 
                         if(!checkFiles) {
                            return;
@@ -282,10 +293,12 @@
 
                         try {
                             // Send the form data to the server using Fetch API 
-                            const response = await fetch('<%- BASE_URL %>documents/create', {
+                            const response = await fetch('<%- BASE_URL %>documents/update', {
                                 method: 'POST',
                                 body: formData, // Send form data (including files)
                             });
+
+                            console.log('response>>> ', response);
 
                             // Check if the response is successful
                             if (response.ok) {
@@ -295,7 +308,7 @@
                                 location.reload();
                                 // You can add logic to handle success here (e.g., show a success message)
                             } else {
-                                throw new Error('Something went wrong');
+                                alert("Failed! Something went wrong!");
                             }
                         } catch (error) {
                             console.error('Error:', error);
