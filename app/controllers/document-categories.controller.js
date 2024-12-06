@@ -1,4 +1,3 @@
-
 const documentCategoryService = require("../services/document-categories.service");
 
 module.exports.renderDocumentCategories = async (req, res, next) => {
@@ -17,6 +16,22 @@ module.exports.createDocumentCategory = async (req, res, next) => {
     });
     res.status(201).json(result);
 };
+
+module.exports.createDocumentCategoriesViaExcel = async (req,res,next) => {
+	if(!req.file){
+		// throw 
+	}
+    let buffer = req.file.buffer;    
+    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer);
+    if(result){
+     res.status(200).json({
+        success: true,
+        message: 'Document categories created successfully',
+        data: result
+      });    
+    }
+   
+}
 
 module.exports.updateDocumentCategory = async (req, res, next) => {
     const { category_id, document_category, category_abbr, description, parent_id } = req.body;

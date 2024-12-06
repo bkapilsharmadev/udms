@@ -123,30 +123,6 @@
         </div>
       </div>
     </div>
-    <div class="frame-container">
-        <div class="frame-title"><span>Add Stage Users With File Upload</span></div>
-        <div class="frame-content">
-            <form class="w-full lg:w-3/4 xl:w-3/6 px-2">
-                <div class="flex items-center space-x-2">
-                    <label
-                        class="flex cursor-pointer items-center justify-center rounded-lg border-2 border-red-300 p-2 hover:shadow-lg transition-shadow duration-200 ease-in-out bg-white w-full space-x-2 w-full">
-                        <i class="fa-solid fa-arrow-up-from-bracket text-red-600"></i>
-                        <span class="font-semibold text-lg">File Upload</span>
-                        <input id="excel-file" type="file" class="hidden w-full" />
-                    </label>
-                    <div
-                        class="flex space-x-2 flex cursor-pointer items-center justify-center rounded-lg border-2 border-green-500 p-2 hover:shadow-lg transition-shadow duration-200 ease-in-out bg-white w-full">
-                        <i class="fa-regular fa-circle-down text-green-500"></i>
-                        <span class="font-semibold text-lg text-nowrap cursor-pointer">Download Template</span>
-                    </div>
-                </div>
-                <!-- File count display -->
-                <p id="excel-file-info" class="text-sm text-gray-500 mt-1 ml-2">No files selected</p>
-                <button type="submit" id="submit-excel-file" class="w-full px-2 bg-red-600 mt-5 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded w-full sm:w-auto">Add +</button>
-            </form>
-        </div>
-    </div>
-
     <!-- table -->
     <div class="frame-container">
       <div class="frame-title">
@@ -379,16 +355,5 @@
         }
       }
     });
-  
-    document.querySelector('#excel-file').addEventListener('change', function (event) { 
-        document.querySelector('#excel-file-info').textContent = event.target.files.length > 0 ? event.target.files[0].name : "No files selected";
-    });
-    document.querySelector("#submit-excel-file").addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const excelFile = document.getElementById('excel-file').files[0];
-        const formData = new FormData();
-        // formData.append
-    })
-    
   </script>
 </body>
