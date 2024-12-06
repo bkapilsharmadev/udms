@@ -385,29 +385,40 @@ module.exports.generateRandomUUID = () => {
 }
 
 module.exports.excelBufferToJSON = (buffer) => {
-    // Parse Excel File
-    let workbook = xlsx.read(buffer, {type: "buffer"});
-    // Get First Sheet
-    let worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    // 
-    let excelData = xlsx.utils.sheet_to_json(worksheet,{
-        header: 1, 
-        defval: null,
-        blankrows: false 
-    });
-    const excelHeader = excelData[0];
-    const jsonData = excelData.slice(1).map((row) => {
-        const record = {};
-        excelHeader.forEach((header,index) => {
-            record[header] = row[index];
-        })
-        return record;
-    })
-    if (!jsonData || jsonData.length === 0) {
-        throw new Error("No data found in the Excel file");
-     }
-    return jsonData;
-}
+    try {
+        // Parse Excel File
+        const workbook = xlsx.read(buffer, { type: "buffer" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const excelData = xlsx.utils.sheet_to_json(worksheet, {
+            header: 1,
+            defval: null,
+            blankrows: false,
+        });
+
+        const excelHeader = excelData[0];
+        if (!excelHeader) {
+            throw new Error("No headers found in the Excel file");
+        }
+
+        const jsonData = excelData.slice(1).map((row) => {
+            const record = {};
+            excelHeader.forEach((header, index) => {
+                record[header] = row[index];
+            });
+            return record;
+        });
+
+        if (!jsonData || jsonData.length === 0) {
+            throw new Error("No data found in the Excel file");
+        }
+
+        return jsonData;
+    } catch (error) {
+        console.error("Error while processing Excel buffer:", error.message);
+        throw new Error("Failed to process Excel file");
+    }
+};
+
 module.exports.validateExcel = (jsonData,headers) => {
     // Validating the Headers of Excel File.
     for (const { fieldName } of headers) {
@@ -421,8 +432,6 @@ module.exports.validateExcel = (jsonData,headers) => {
     // Check that all required fields are non-null in all records
     for (const record of jsonData) {
         for (const { fieldName, isRequired } of headers) {
-            // console.log(fieldName,isRequired,record);
-            
             if (isRequired && (record[fieldName] === null || record[fieldName] === undefined)) {
                 return false; // Required field is null or undefined
             }

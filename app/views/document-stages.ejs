@@ -110,6 +110,9 @@
 
                         </div>
                     </div>
+                    <%- include("./home/loader.ejs") %>
+                        <%- include("./home/toaster.ejs") %>
+
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -119,6 +122,7 @@
 
             <script>
                 document.getElementById('submit-btn').addEventListener('click', async () => {
+                    isLoader(true);
                     const document_stage = document.getElementById('document-stage').value;
                     const description = document.getElementById('description').value;
 
@@ -128,6 +132,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
@@ -136,17 +141,24 @@
                         const obj = { document_stage, description };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             appendDataToTable({ document_stage, description });
                             document.getElementById('document-stage').value = '';
                             document.getElementById('description').value = '';
-                            alert(data.message);
                         }
                         console.log('data ', JSON.stringify(data));
                     }
@@ -188,6 +200,7 @@
 
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
+                        isLoader(true);
                         const row = event.target.closest("tr");
                         const documentStage = row.getAttribute("data-document-stage");
 
@@ -196,15 +209,22 @@
                         const obj = { documentStage };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             row.remove();
-                            alert(data.message);
                         }
                     }
                 });

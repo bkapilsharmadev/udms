@@ -13,8 +13,8 @@
                     <div class="content">
                         <div class="content-title">
                             <% if(!data.isDocEditable.is_editable) { %>
-                            <p class="alert-danger">This document is not editable.</p>
-                            <% } %>
+                                <p class="alert-danger">This document is not editable.</p>
+                                <% } %>
                         </div>
                         <!-- <h2>title TITLE</h2> -->
                         <div class="frame-container">
@@ -43,7 +43,9 @@
                                         <div class="lms-input-container">
                                             <select id="received-from" class="lms-dropdropdown">
                                                 <% data.entities.forEach(entity=> { %>
-                                                    <option value="<%= entity.entity_id %>" <%= document.received_from == entity.entity_id ? "selected" : "" %>>
+                                                    <option value="<%= entity.entity_id %>"
+                                                        <%=document.received_from==entity.entity_id ? "selected" : "" %>
+                                                        >
                                                         <%= entity.name %>
                                                     </option>
                                                     <% }) %>
@@ -60,7 +62,9 @@
                                             <select id="university" class="lms-dropdropdown">
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "UNIVERSITY") { %>
-                                                    <option value="<%= entity.entity_id %>" <%= document.university_entt_id == entity.entity_id ? "selected" : "" %>>
+                                                    <option value="<%= entity.entity_id %>"
+                                                        <%=document.university_entt_id==entity.entity_id ? "selected"
+                                                        : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -77,7 +81,9 @@
                                             <select id="campus" class="lms-dropdropdown">
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "CAMPUS") { %>
-                                                    <option value="<%= entity.entity_id %>" <%= document.campus_entt_id == entity.entity_id ? "selected" : "" %>>
+                                                    <option value="<%= entity.entity_id %>"
+                                                        <%=document.campus_entt_id==entity.entity_id ? "selected" : ""
+                                                        %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -94,7 +100,9 @@
                                             <select id="school" class="lms-dropdropdown">
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "SCHOOL") { %>
-                                                    <option value="<%= entity.entity_id %>" <%= document.school_entt_id == entity.entity_id ? "selected" : "" %>>
+                                                    <option value="<%= entity.entity_id %>"
+                                                        <%=document.school_entt_id==entity.entity_id ? "selected" : ""
+                                                        %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -112,7 +120,9 @@
                                                 <option value="" disabled selected hidden>Select Department</option>
                                                 <% data.entities.forEach(entity=> {
                                                     if(entity.entity_type === "DEPARTMENT") { %>
-                                                    <option value="<%= entity.entity_id %>" <%= document.department_entt_id == entity.entity_id ? "selected" : "" %>>
+                                                    <option value="<%= entity.entity_id %>"
+                                                        <%=document.department_entt_id==entity.entity_id ? "selected"
+                                                        : "" %>>
                                                         <%= entity.name %>
                                                     </option>
                                                     <% } }) %>
@@ -128,7 +138,8 @@
                                         <div class="lms-input-container">
                                             <select id="mentor-sign" class="lms-dropdropdown">
                                                 <% data.mentorSigns.forEach(mentorSign=> { %>
-                                                    <option value="<%= mentorSign %>" <%= document.mentor_sign == mentorSign ? "selected" : "" %>>
+                                                    <option value="<%= mentorSign %>"
+                                                        <%=document.mentor_sign==mentorSign ? "selected" : "" %>>
                                                         <%= mentorSign %>
                                                     </option>
                                                     <% }) %>
@@ -142,7 +153,8 @@
                                     <!-- Details -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container ">
-                                            <input id="description" class="lms-input" type="text" placeholder="" value="<%= document.description %>">
+                                            <input id="description" class="lms-input" type="text" placeholder=""
+                                                value="<%= document.description %>">
                                             <label for="description" class="lms-placeholder">Details</label>
                                         </div>
                                     </div>
@@ -156,7 +168,7 @@
                                                     class="flex cursor-pointer items-center justify-center space-x-2">
                                                     <i class="fa-solid fa-arrow-up-from-bracket text-red-600"></i>
                                                     <span class="font-semibold text-lg">File Upload</span>
-                                                    <input id="doc-files" type="file" class="hidden" multiple/>
+                                                    <input id="doc-files" type="file" class="hidden" multiple />
                                                     <input type="checkbox" id="is-update" checked class="hidden">
                                                 </label>
                                             </div>
@@ -172,12 +184,13 @@
                                     <!-- Details -->
                                     <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container ">
-                                            <input id="comments" class="lms-input" type="text" placeholder="" value="<%= document.description %>">
+                                            <input id="comments" class="lms-input" type="text" placeholder=""
+                                                value="<%= document.description %>">
                                             <label for="comments" class="lms-placeholder">Comments</label>
                                         </div>
                                     </div>
 
-                                     <!-- Status Type-->
+                                    <!-- Status Type-->
                                     <!-- <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                         <div class="lms-input-container">
                                             <select id="status-type" class="lms-dropdropdown">
@@ -224,6 +237,9 @@
                         </div>
                     </div>
                     <!-- main content// -->
+                    <%- include("../home/loader.ejs") %>
+                    <%- include("../home/toaster.ejs") %>
+
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -247,7 +263,7 @@
 
                 document.querySelector('#document-form').addEventListener('submit', async (e) => {
                     e.preventDefault(); // Prevent default form submission
-
+                    isLoader(true);
                     const fields = [
                         { value: DOCUMENT_ID, name: 'Document ID' },
                         { value: document.getElementById('received-from').value, name: 'Document From Selection' },
@@ -260,6 +276,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
@@ -283,8 +300,9 @@
                         const files = document.getElementById('doc-files').files;
                         const checkFiles = areFilesValid(files, isUpdate); //set tru for now
 
-                        if(!checkFiles) {
-                           return;
+                        if (!checkFiles) {
+                            isLoader(false);
+                            return;
                         }
 
                         for (let i = 0; i < files.length; i++) {
@@ -299,18 +317,26 @@
                             });
 
                             console.log('response>>> ', response);
+                            isLoader(false);
 
                             // Check if the response is successful
                             if (response.ok) {
                                 const result = await response.json();
                                 console.log('Success:', result);
-                                alert('Document created successfully');
+                                showAlert({
+                                    alert: 'success',
+                                    message: 'Document created successfully'
+                                });
                                 location.reload();
                                 // You can add logic to handle success here (e.g., show a success message)
                             } else {
-                                alert("Failed! Something went wrong!");
+                                showAlert({
+                                    alert: 'error',
+                                    message: "Failed! Something went wrong!"
+                                });
                             }
                         } catch (error) {
+                            isLoader(false);
                             console.error('Error:', error);
                             // Handle error (e.g., show an error message)
                         }

@@ -170,6 +170,8 @@
                             </div>
                         </div>
                     </div>
+                    <%- include("./home/loader.ejs") %>
+                    <%- include("./home/toaster.ejs") %>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -180,6 +182,7 @@
             <script>
                 //Create Entity    
                 document.getElementById('submitEntity').addEventListener('click', async () => {
+                    isLoader(true);
                     const name = document.querySelector('#name-entity').value;
                     const entity_type = document.querySelector('#type').value;
                     const parentEntityId = document.querySelector('#parent-entity').value?.null;
@@ -190,6 +193,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
                         const entityData = { name: name, entity_type: entity_type, parent_id: parentEntityId };
@@ -197,14 +201,23 @@
                         const url = '<%- BASE_URL %>entities/create';
 
                         let { error, data } = await fetchApi(url, 'POST', entityData);
+                        isLoader(false);
+
                         if (error) {
-                            alert(error.message)
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
+                            return;
                         }
                         if (data) {
                             document.querySelector('#name-entity').value = '';
                             document.querySelector('#type').value = '';
                             document.querySelector('#parent-entity').value = '';
-                            alert("Entity Created Successfully");
+                            showAlert({
+                                alert: 'success',
+                                message: "Entity Created Successfully"
+                            });
                             const entity_id = data.entity_id;
                             appendToTable({ name, entity_type, entity_id });
                         }
@@ -215,6 +228,7 @@
                 //Delete Enitity
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
+                        isLoader(true);
                         const row = event.target.closest("tr");
                         const entityId = row.getAttribute("data-id");
 
@@ -226,12 +240,21 @@
                         const obj = { entity_id: entityId };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
+
                         if (error) {
-                            alert(error.message)
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
+                            return;
                         }
                         if (data) {
+                            showAlert({
+                                alert: 'error',
+                                message: "Entity Deleted Successfully"
+                            });
                             row.remove();
-                            alert('Deleted successfully!');
                         }
                     }
                 });
@@ -248,7 +271,11 @@
                         const url = `<%- BASE_URL %>entities/fetch/${id}`;
                         const { error, data } = await fetchApi(url)
                         if (error) {
-                            alert(error.message)
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
+                            return;
                         }
 
                         document.getElementById('update-submit-btn').setAttribute('data-entity-id', id);
@@ -317,7 +344,7 @@
                                 break;
                             }
                         }
-                        openModal()
+                        openModal();
                     }
                 })
 
@@ -370,6 +397,7 @@
 
                 //submit updated entity data
                 document.getElementById('update-submit-btn').addEventListener('click', async (event) => {
+                    isLoader(true);
                     const name = document.getElementById('entity-name-edit').value;
                     const entityType = document.getElementById('entity-type-edit').value;
                     const parentEntityType = document.getElementById('parent-entity-edit').value?.null;
@@ -381,6 +409,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
@@ -389,8 +418,14 @@
                         const obj = { entity_id: entityId, name: name, entity_type: entityType, parent_id: parentEntityType };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
+
                         if (error) {
-                            alert(error.message)
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
+                            return;
                         }
                         if (data) {
                             const row = document.querySelector(`tr[data-id="${entityId}"]`);
@@ -431,7 +466,10 @@
 
 
                             closeModal()
-                            alert(data.message);
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });;
                         }
                     }
                 })

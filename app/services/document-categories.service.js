@@ -18,7 +18,7 @@ module.exports.createDocumentCategory = async (documentCategory) => {
     }
     return result;
 }
-module.exports.createDocumentCategoryViaExcel = async(buffer) => {
+module.exports.createDocumentCategoryViaExcel = async(buffer,created_by) => {
     let jsonData = excelBufferToJSON(buffer);
     // Validate headers and data
     const headers = [
@@ -26,13 +26,19 @@ module.exports.createDocumentCategoryViaExcel = async(buffer) => {
         { fieldName: 'Category Abbreviation', isRequired: true },
         { fieldName: 'Description', isRequired: false },
         { fieldName: 'Parent Category', isRequired: false }
-    ]
-    console.log(jsonData[1]);
-    
+    ]    
     const validateExcelData = validateExcel(jsonData,headers);
-    console.log(validateExcelData);
-        
+    if (!validateExcelData) {
+        throw new Error("Excel Data validation failed");
+    }
+    const updatedData = jsonData.map((item) => ({
+        ...item,
+        created_by,
+    }));
 
+    const result = await documentCategoryModel.createDocumentCategoriesViaExcel(updatedData)
+    console.log(result);
+    
     // Perform bulk insert or individual inserts
     // const result = await documentCategoryModel.bulkCreateCategories(
     //     processedCategories

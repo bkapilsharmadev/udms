@@ -18,11 +18,12 @@ module.exports.createDocumentCategory = async (req, res, next) => {
 };
 
 module.exports.createDocumentCategoriesViaExcel = async (req,res,next) => {
+    const created_by = req.session_username;
 	if(!req.file){
 		// throw 
 	}
     let buffer = req.file.buffer;    
-    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer);
+    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer, created_by);
     if(result){
      res.status(200).json({
         success: true,

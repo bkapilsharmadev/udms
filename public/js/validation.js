@@ -3,7 +3,10 @@ function isRequired(fields) {
 		const { value, name } = field;
 		console.log("value and name ", JSON.stringify({ value, name }));
 		if (value == undefined || value == null || value == "") {
-			alert(`${name} Is Required`);
+			showAlert({
+				alert: 'error',
+				message: `${name} Is Required`
+			});
 			return false;
 		}
 	}
@@ -19,7 +22,10 @@ function areFilesValid(files, isUpdate) {
 	}
 
 	if (!files || files.length === 0) {
-		alert("At least one file is required");
+		showAlert({
+			alert: 'error',
+			message: "At least one file is required"
+		});
 		return false;
 	}
 
@@ -28,7 +34,10 @@ function areFilesValid(files, isUpdate) {
 	for (const file of files) {
 		const fileExtension = file.name.split(".").pop().toLowerCase();
 		if (!allowedExtensions.includes(fileExtension)) {
-			alert(`Invalid file type: ${file.name}`);
+			showAlert({
+				alert: 'error',
+				message: `Invalid file type: ${file.name}`
+			});
 			return false;
 		}
 	}

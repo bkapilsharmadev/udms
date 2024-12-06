@@ -1,0 +1,71 @@
+<div id="error-alert" class="z-50 fixed right-10 bottom-5 hidden">
+    <div class="flex items-center max-w-xs p-4 space-x-4 bg-white rounded-lg shadow-lg border border-gray-200"
+        style="background:linear-gradient(to right, #fee2e2 0%, #ffffff 100%);">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-9 h-9 bg-red-100 rounded-full">
+            <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+        </div>
+        <!-- Message -->
+        <div id="error-alert-content">
+        </div>
+        <!-- Close Button -->
+        <button class="text-gray-400 hover:text-gray-800" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+
+<div id="success-alert" class="z-50 fixed right-10 bottom-5 hidden">
+    <div class="flex items-center max-w-xs p-4 space-x-4 bg-white rounded-lg shadow-lg border border-gray-200 
+    bg-gradient-to-r from-green-100 to-white">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-9 h-9 bg-green-100 rounded-full">
+            <i class="fa-solid fa-circle-check text-green-500"></i>
+        </div>
+        <!-- Message -->
+        <div id="success-alert-content">
+        </div>
+        <!-- Close Button -->
+        <button class="text-gray-400 hover:text-gray-800" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+<div id="warning-alert" class=" z-50 fixed right-10 bottom-5 hidden">
+    <div class="flex items-center max-w-xs p-4 space-x-4 bg-white rounded-lg shadow-lg border border-gray-200"
+        style="background:linear-gradient(to right, #fef9c3 0%, #ffffff 100%);">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-9 h-9 bg-yellow-100 rounded-full">
+            <i class="fa-solid fa-triangle-exclamation text-yellow-600"></i>
+            <!-- <i class="fa-solid fa-circle-exclamation text-yellow-600"></i> -->
+        </div>
+        <!-- Message -->
+        <div id="warning-alert-content">
+        </div>
+        <!-- Close Button -->
+        <button class="text-gray-400 hover:text-gray-800" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+<!-- info Toast Message -->
+<div id="info-alert" class=" z-50 fixed right-10 bottom-5 hidden">
+    <div class="flex items-center max-w-xs p-4 space-x-4 bg-white rounded-lg shadow-lg border border-gray-200"
+        style="background:linear-gradient(to right, #dbeafe 0%, #ffffff 100%);">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-9 h-9 bg-blue-100 rounded-full">
+            <i class="fa-solid fa-circle-info text-blue-600"></i>
+        </div>
+        <!-- Message -->
+        <div id="info-alert-content">
+        </div>
+        <!-- Close Button -->
+        <button class="text-gray-400 hover:text-gray-800" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+

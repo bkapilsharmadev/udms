@@ -164,7 +164,8 @@
                                             <div class="mb-4 w-full sm:w-1/2 lg:w-1/4 px-2">
                                                 <div class="lms-input-container ">
                                                     <input id="comments" class="lms-input" type="text" placeholder="">
-                                                    <label for="comments" class="lms-placeholder">Comments <span>*</span></label>
+                                                    <label for="comments" class="lms-placeholder">Comments
+                                                        <span>*</span></label>
                                                 </div>
                                             </div>
 
@@ -209,24 +210,24 @@
                                 <% } %>
                                     <!--  Review Actions//-->
 
-                            <div class="frame-container">
-                                <div class="frame-title">
-                                    <span>Review History</span>
-                                </div>
-                                <div class="frame-content" id="review-action-wrapper">
-                                    <div class="responsive-table overflow-x-auto">
-                                        <table class="min-w-full bg-white rounded-b-lg shadow">
-                                            <thead class="text-left">
-                                                <tr>
-                                                    <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                                    <th class="p-4 text-xs font-bold">Status</th>
-                                                    <th class="p-4 text-xs font-bold">Reviewer</th>
-                                                    <th class="p-4 text-xs font-bold">Comments</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <% data.reviewHistory.forEach((review, index) => { %>
+                                    <div class="frame-container">
+                                        <div class="frame-title">
+                                            <span>Review History</span>
+                                        </div>
+                                        <div class="frame-content" id="review-action-wrapper">
+                                            <div class="responsive-table overflow-x-auto">
+                                                <table class="min-w-full bg-white rounded-b-lg shadow">
+                                                    <thead class="text-left">
+                                                        <tr>
+                                                            <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                            <th class="p-4 text-xs font-bold">Status</th>
+                                                            <th class="p-4 text-xs font-bold">Reviewer</th>
+                                                            <th class="p-4 text-xs font-bold">Comments</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <% data.reviewHistory.forEach((review, index)=> { %>
                                                         <tr>
                                                             <td class="p-4 text-sm text-center">
                                                                 <%= data.reviewHistory.length - index %>
@@ -235,89 +236,113 @@
                                                                 <%= review.status %>
                                                             </td>
                                                             <td class="p-4 text-sm">
-                                                                <%= review.first_name %> <%= review.last_name %> (<%= review.document_stage %>)
+                                                                <%= review.first_name %>
+                                                                    <%= review.last_name %> (<%= review.document_stage
+                                                                            %>)
                                                             </td>
                                                             <td class="p-4 text-sm">
                                                                 <%= review.comments %>
                                                             </td>
                                                         </tr>
                                                         <% }) %>
-                                                </tr>
-                                            </tbody>
-                                            <tfooter>
-                                            </tfooter>
-                                        </table>
-                                </div>
-                            </div>
+                                                            </tr>
+                                                    </tbody>
+                                                    <tfooter>
+                                                    </tfooter>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- main content// -->
+                                    <%- include("../home/loader.ejs") %>
+                                        <%- include("../home/toaster.ejs") %>
+
                     </div>
-                    <!-- main content// -->
-            </div>
 
-            <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
-            <script src="<%- BASE_URL %>js/utils.js"></script>
-            <script src="<%- BASE_URL %>js/fetch.js"></script>
-            <script src="<%- BASE_URL %>js/validation.js"></script>
+                    <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
+                    <script src="<%- BASE_URL %>js/utils.js"></script>
+                    <script src="<%- BASE_URL %>js/fetch.js"></script>
+                    <script src="<%- BASE_URL %>js/validation.js"></script>
 
-            <script>
-                document.getElementById("lms-toggle").addEventListener("click", async () => {
-                    let isChecked = document.getElementById("lms-toggle").checked;
-                    if (isChecked) {
-                        document.getElementById("forwarded-to").firstElementChild.selected = true;
-                        document.getElementById("forward-document").classList.add("hidden");
-                    } else {
-                        document.getElementById("forward-document").classList.remove("hidden");
-                    }
-                });
+                    <script>
+                        document.getElementById("lms-toggle").addEventListener("click", async () => {
+                            let isChecked = document.getElementById("lms-toggle").checked;
+                            if (isChecked) {
+                                document.getElementById("forwarded-to").firstElementChild.selected = true;
+                                document.getElementById("forward-document").classList.add("hidden");
+                            } else {
+                                document.getElementById("forward-document").classList.remove("hidden");
+                            }
+                        });
 
-                document.getElementById("document-review-submit").addEventListener("click", async (event) => {
-                    event.preventDefault();
-                    const review_id = event.target.getAttribute("data-review-id");
-                    const status = document.getElementById("status-type").value;
-                    const comments = document.getElementById("comments").value;
-                    const is_final_approval = document.getElementById("lms-toggle").checked;
-                    let forwarded_to = is_final_approval != true ? document.getElementById("forwarded-to").value : null;
+                        document.getElementById("document-review-submit").addEventListener("click", async (event) => {
+                            event.preventDefault();
+                            isLoader(true);
+                            const review_id = event.target.getAttribute("data-review-id");
+                            const status = document.getElementById("status-type").value;
+                            const comments = document.getElementById("comments").value;
+                            const is_final_approval = document.getElementById("lms-toggle").checked;
+                            let forwarded_to = is_final_approval != true ? document.getElementById("forwarded-to").value : null;
 
-                    const url = '<%- BASE_URL %>document-reviews/update';
-                    const method = 'POST';
-                    const obj = { review_id, status, comments, is_final_approval, forwarded_to };
+                            const url = '<%- BASE_URL %>document-reviews/update';
+                            const method = 'POST';
+                            const obj = { review_id, status, comments, is_final_approval, forwarded_to };
 
-                    if(!status){
-                        alert('Please select a status.');
-                        return;
-                    }
+                            if (!status) {
+                                isLoader(false);
+                                showAlert({
+                                    alert: 'error',
+                                    message: 'Please select a status.'
+                                });
+                                return;
+                            }
 
-                    if(!comments){
-                        alert('Please enter comments.');
-                        return;
-                    }
+                            if (!comments) {
+                                isLoader(false);
+                                showAlert({
+                                    alert: 'error',
+                                    message: 'Please enter comments.'
+                                });
+                                return;
+                            }
 
-                    if(!is_final_approval && !forwarded_to){
-                        alert('Please select a user to forward to.');
-                        return;
-                    }
+                            if (!is_final_approval && !forwarded_to) {
+                                isLoader(false);
+                                showAlert({
+                                    alert: 'error',
+                                    message: 'Please select a user to forward to.'
+                                });
+                                return;
+                            }
 
-                    const fields = [
-                        { value: status, name: 'Status' },
-                        { value: comments, name: 'Comments' },
-                    ];
+                            const fields = [
+                                { value: status, name: 'Status' },
+                                { value: comments, name: 'Comments' },
+                            ];
 
-                    const checkVal = isRequired(fields);
+                            const checkVal = isRequired(fields);
+                            if (!checkVal) isLoader(false);
 
-                    if (checkVal) {
-                        const { error, data } = await fetchApi(url, method, obj);
+                            if (checkVal) {
+                                const { error, data } = await fetchApi(url, method, obj);
+                                isLoader(false);
 
-                        if (error) {
-                            alert(error.message);
-                            return;
-                        }
+                                if (error) {
+                                    showAlert({
+                                        alert: 'error',
+                                        message: error.message
+                                    });
+                                    return;
+                                }
+                                showAlert({
+                                    alert: 'success',
+                                    message: "Review updated successfully."
+                                });
+                                location.reload();
+                            }
+                        });
 
-                        alert("Review updated successfully.");
-
-                        location.reload();
-                    }
-                });
-
-            </script>
+                    </script>
     </body>
 
     </html>

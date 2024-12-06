@@ -81,8 +81,12 @@
                 </div>
                 <div class="frame-content">
                     <div class="mx-auto rounded-lg ">
-                        <!-- Filters -->
-                         <%- include("./partials/filter-table.ejs") %>
+                        <!-- <select id="row-per-page" class="row-per-page">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select> -->
                         <!-- Table -->
                         <div class="responsive-table overflow-x-auto">
                             <table class="min-w-full bg-white rounded-b-lg shadow">
@@ -142,6 +146,7 @@
             </div>
 
         </div>
+        <%- include("./home/toaster.ejs") %>
          <!-- main content// -->
     </div>
 

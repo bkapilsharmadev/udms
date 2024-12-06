@@ -108,6 +108,21 @@ function toggleDropdownProfile() {
   profiledropdownMenu.classList.toggle("hidden");
 }
 
+// function toggleDropdown(event) {
+//   console.log("toggled ");
+
+//   document.querySelectorAll(".dropdown").forEach((dropdown) => {
+//     dropdown.classList.add("hidden");
+//   });
+
+//   const button = event.currentTarget;
+//   const dropdown = button.nextElementSibling;
+
+//   if (dropdown && dropdown.classList.contains("dropdown")) {
+//     dropdown.classList.toggle("hidden");
+//   }
+// }
+
 // Adding toggleDropdown on Right Click
 document.querySelectorAll("tbody tr").forEach((row) => {
   row.addEventListener("contextmenu", toggleDropdownOnRightClick);
@@ -132,20 +147,6 @@ function toggleDropdownOnRightClick(event) {
   currentDropdown.classList.toggle("hidden");
 }
 
-// function toggleDropdown(event) {
-//   console.log("toggled ");
-
-//   document.querySelectorAll(".dropdown").forEach((dropdown) => {
-//     dropdown.classList.add("hidden");
-//   });
-
-//   const button = event.currentTarget;
-//   const dropdown = button.nextElementSibling;
-
-//   if (dropdown && dropdown.classList.contains("dropdown")) {
-//     dropdown.classList.toggle("hidden");
-//   }
-// }
 
 function openModal() {
   document.getElementById("modal-background").classList.remove("hidden");
@@ -153,4 +154,69 @@ function openModal() {
 
 function closeModal() {
   document.getElementById("modal-background").classList.add("hidden");
+}
+
+function isLoader(isLoad) {
+  if (isLoad) {
+    document.querySelector('.loader').style.display = "flex";
+  } else {
+    document.querySelector('.loader').style.display = "none";
+  }
+}
+
+function showAlert(obj) {
+  switch (obj.alert) {
+    case "success":
+      const successMessage = `<p class="text-sm text-gray-600">${obj.message}</p>`;
+      document.getElementById("success-alert-content").innerHTML = successMessage;
+      document.getElementById("success-alert").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("success-alert-content").innerHTML = '';
+        document.getElementById("success-alert").classList.add("hidden");
+      }, 5000);
+      break;
+    case "error":
+      const errorMessage = `<p class="text-sm text-gray-600">${obj.message}</p>`;
+      document.getElementById("error-alert-content").innerHTML = errorMessage;
+      document.getElementById("error-alert").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("error-alert-content").innerHTML = '';
+        document.getElementById("error-alert").classList.add("hidden");
+      }, 5000);
+      break;
+    case "warning":
+      const warningMessage = `<p class="text-sm text-gray-600">${obj.message}</p>`;
+      document.getElementById("warning-alert-content").innerHTML = warningMessage;
+      document.getElementById("warning-alert").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("warning-alert-content").innerHTML = '';
+        document.getElementById("warning-alert").classList.add("hidden");
+      }, 5000);
+      break;
+    case "info":
+      const infoMessage = `<p class="text-sm text-gray-600">${obj.message}</p>`;
+      document.getElementById("info-alert-content").innerHTML = infoMessage;
+      document.getElementById("info-alert").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("info-alert-content").innerHTML = '';
+        document.getElementById("info-alert").classList.add("hidden");
+      }, 5000);
+      break;
+    default:
+      break;
+  }
+}
+
+function validateExcelFile(file){
+  if(file){
+    const allowedTypes = [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+      'application/vnd.ms-excel'
+    ];
+
+    if (allowedTypes.includes(file.type)) {
+        return true
+    }
+  }
+  return false
 }

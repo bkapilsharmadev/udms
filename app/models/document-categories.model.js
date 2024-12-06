@@ -25,6 +25,36 @@ module.exports.createDocumentCategory = async (documentCategory, dbTransaction) 
     const result = await client.query(query, values);
     return result.rows[0];
 };
+module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransaction) => {
+
+    const query = `
+    INSERT INTO document_categories (document_category, category_abbr, description, parent_id, created_by)
+    VALUES 
+    ${updatedData
+        .map(
+            (_, index) =>
+                `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${index * 5 + 4}, $${index * 5 + 5})`
+        )
+        .join(", ")}
+    RETURNING category_id;
+`;
+
+// Flatten the values array
+const values = updatedData.flatMap((item) => [
+    item["Category Name"],
+    item["Category Abbreviation"],
+    item["Description"],
+    item["Parent Category"], // Can be null
+    item["created_by"],
+]);
+console.log(values);
+
+const client = dbTransaction || sqlWrite;
+// Execute the query
+const result = await client.query(query, values);
+return result.rows;
+    
+}
 
 //Query To Update Document Query
 module.exports.updateDocumentCategory = async (documentCategory, dbTransaction) => {
