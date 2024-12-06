@@ -166,7 +166,10 @@
                                 </button>
                             </div>
                         </div>
+
                     </div>
+
+                    <%- include("./home/loader.ejs") %>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -177,6 +180,7 @@
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
+                    isLoader(true);
                     const document_category = document.getElementById('category-name').value;
                     const category_abbr = document.getElementById('category-abbr').value;
                     const description = document.getElementById('description').value;
@@ -189,6 +193,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
@@ -197,6 +202,7 @@
                         const obj = { document_category, category_abbr, description, parent_id };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
                             alert(error.message);
@@ -263,6 +269,7 @@
 
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
+                        isLoader(true);
                         const row = event.target.closest("tr");
                         const category_id = row.getAttribute("data-category-type");
 
@@ -271,6 +278,7 @@
                         const obj = { category_id };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
                             alert(error.message);
@@ -379,6 +387,7 @@
                 }
 
                 document.getElementById('update-submit-btn').addEventListener('click', async (event) => {
+                    isLoader(true);
                     const category_id = event.target.getAttribute("data-category-id");
                     const document_category = document.getElementById("category-name-edit").value;
                     const category_abbr = document.getElementById("category-abbr-edit").value;
@@ -392,6 +401,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
                         const url = '<%- BASE_URL %>document-categories/update';
@@ -399,6 +409,7 @@
                         const obj = { category_id, document_category, category_abbr, description, parent_id };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
                             alert(error.message);

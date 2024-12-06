@@ -108,6 +108,9 @@
                             </div>
                         </div>
                     </div>
+                    <%- include("./home/loader.ejs") %>
+                        <%- include("./home/toaster.ejs") %>
+
             </div>
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
             <script src="<%- BASE_URL %>js/fetch.js"></script>
@@ -117,6 +120,7 @@
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
+                    isLoader(true);
                     const entity_type = document.getElementById('entity-type').value;
                     const description = document.getElementById('description').value;
 
@@ -130,21 +134,29 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             appendDataToTable({ entity_type, description });
                             document.getElementById('entity-type').value = '';
                             document.getElementById('description').value = '';
-                            alert(data.message);
                         }
                         console.log('data ', JSON.stringify(data));
                     }
@@ -187,6 +199,7 @@
 
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
+                        isLoader(true);
                         const row = event.target.closest("tr");
                         const entityType = row.getAttribute("data-entity-type");
 
@@ -195,15 +208,22 @@
                         const obj = { entityType };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             row.remove();
-                            alert(data.message);
                         }
                     }
                 });

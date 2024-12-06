@@ -159,6 +159,8 @@
 
                         </div>
                     </div>
+                    <%- include("./home/loader.ejs") %>
+                        <%- include("./home/toaster.ejs") %>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -169,6 +171,7 @@
             <script>
 
                 document.getElementById('submit-btn').addEventListener('click', async () => {
+                    isLoader(true);
                     const first_name = document.getElementById('firstname').value;
                     const last_name = document.getElementById('lastname').value;
                     const username = document.getElementById('username').value;
@@ -186,6 +189,7 @@
                     ];
 
                     const checkVal = isRequired(fields);
+                    if (!checkVal) isLoader(false);
 
                     if (checkVal) {
 
@@ -194,13 +198,21 @@
                         const obj = { first_name, last_name, email, username, description, document_stage };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             appendDataToTable({ first_name, last_name, email, username, description, document_stage });
                             document.getElementById('firstname').value = "";
                             document.getElementById('lastname').value = "";
@@ -208,7 +220,6 @@
                             document.getElementById('email').value = "";
                             document.getElementById('description').value = "";
                             document.getElementById('document-stage').firstElementChild.selected = true;
-                            alert(data.message);
                         }
                         console.log('data ', JSON.stringify(data));
                     }
@@ -262,6 +273,7 @@
 
                 document.addEventListener("click", async function (event) {
                     if (event.target.closest(".delete-btn")) {
+                        isLoader(true);
                         const row = event.target.closest("tr");
                         const username = row.getAttribute("data-stage-user");
 
@@ -270,15 +282,22 @@
                         const obj = { username };
 
                         const { error, data } = await fetchApi(url, method, obj);
+                        isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             row.remove();
-                            alert(data.message);
                         }
                     }
                 });
