@@ -54,7 +54,7 @@ BEGIN
         SELECT category_id, category_abbr FROM document_categories
     LOOP
         -- Loop through the next 7 days
-        FOR day_offset IN 0..6 LOOP
+        FOR day_offset IN 0..30 LOOP
             -- Calculate the target date for the current offset
             target_date := CURRENT_DATE + day_offset;
 
