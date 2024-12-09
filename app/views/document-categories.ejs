@@ -69,7 +69,38 @@
 
                         </div>
                     </div>
+                    <!-- Upload VIA EXCEL -->
+                    <div class="frame-container">
+                        <div class="frame-title"><span>Upload VIA EXCEL</span></div>
+                        <div class="frame-content">
+                            <form class="px-2" id="upload-categories-excel">
+                                <div class="flex items-start gap-4">
+                                    <label
+                                        class="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-red-600 p-2 hover:border-solid ease-in-out bg-white space-x-2  w-48">
+                                        <i class="fa-solid fa-arrow-up-from-bracket text-red-500"></i>
+                                        <span class=" text-md">Upload File</span>
+                                        <input name="excel-file-input" id="excel-file" type="file" accept=".xlsx,.xls"
+                                            class="hidden" required />
+                                    </label><!-- File count display -->
+                                    <button type="submit" id="submit-excel-file"
+                                        class="w-min-content p-2 border border-red-600 h-full bg-red-600 hover:bg-red-700 text-white font-semibold h-[44px] px-4 rounded-lg">
+                                        Upload
+                                    </button>
+                                </div>
+                                <p id="excel-file-info" class="text-sm text-gray-500 mt-2 ml-1">
+                                    No files selected
+                                </p>
 
+                            </form>
+                            <div id="download-category-excel"
+                                class="space-x-2 mt-4 flex cursor-pointer flex items-center p-2 bg-white">
+                                <i class="fa-regular fa-circle-down text-red-500"></i>
+                                <span class="font-medium text-md text-nowrap cursor-pointer text-red-500">Download
+                                    Template</span>
+                            </div>
+
+                        </div>
+                    </div>
                     <!-- table -->
                     <div class="frame-container">
                         <div class="frame-title">
@@ -170,6 +201,7 @@
                     </div>
 
                     <%- include("./home/loader.ejs") %>
+                        <%- include("./home/toaster.ejs") %>
             </div>
 
             <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
@@ -205,18 +237,24 @@
                         isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: "Document Category Created Successfully !"
+                            });
                             const category_id = data.category_id;
                             appendDataToTable({ document_category, category_abbr, description, parent_id, category_id });
                             document.getElementById('category-name').value = '';
                             document.getElementById('category-abbr').value = '';
                             document.getElementById('description').value = '';
                             document.getElementById('parent-category').firstElementChild.selected = true;
-                            alert("Document Category Created Successfully !");
                         }
                         console.log('data ', JSON.stringify(data));
                     }
@@ -281,13 +319,19 @@
                         isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             row.remove();
-                            alert(data.message);
                         }
                     }
 
@@ -301,7 +345,10 @@
                         const { error, data } = await fetchApi(url, method, null);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
@@ -412,11 +459,18 @@
                         isLoader(false);
 
                         if (error) {
-                            alert(error.message);
+                            showAlert({
+                                alert: 'error',
+                                message: error.message
+                            });
                             return;
                         }
 
                         if (data) {
+                            showAlert({
+                                alert: 'success',
+                                message: data.message
+                            });
                             document.getElementById('category-name-edit').value = '';
                             document.getElementById('category-abbr-edit').value = '';
                             document.getElementById('description-edit').value = '';
@@ -461,12 +515,110 @@
                                         </td>`;
 
                             closeModal();
-                            alert(data.message);
                         }
                         console.log('data ', JSON.stringify(data));
                     }
                 });
 
+                // Excel File Upload Event Listeners
+                document.querySelector('#excel-file').addEventListener('change', function (event) {
+                    const file = event.target.files[0];
+                    const fileInfoElement = document.querySelector('#excel-file-info');
+                    const validFile = validateExcelFile(file);
 
+                    if (file) {
+                        if (validFile) {
+                            fileInfoElement.textContent = file.name;
+                            fileInfoElement.classList.remove('text-red-500');
+                            fileInfoElement.classList.add('text-gray-500');
+                            document.querySelector('#submit-excel-file').disabled = false;
+                        } else {
+                            fileInfoElement.textContent = 'Invalid file type. Please upload an Excel file.';
+                            fileInfoElement.classList.remove('text-gray-500');
+                            fileInfoElement.classList.add('text-red-500');
+                            document.querySelector('#submit-excel-file').disabled = true;
+                            event.target.value = '';
+                        }
+                    } else {
+                        fileInfoElement.textContent = 'No files selected';
+                        document.querySelector('#submit-excel-file').disabled = true;
+                    }
+                });
+                document.querySelector('#upload-categories-excel').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const fileInput = document.getElementById('excel-file');
+                    const excelFile = fileInput.files[0];
+                    const submitButton = document.querySelector("#submit-excel-file");
+                    const fileInfoElement = document.querySelector('#excel-file-info');
+
+                    // Validate file presence
+                    if (!excelFile) {
+                        fileInfoElement.textContent = 'Please select a file to upload';
+                        fileInfoElement.classList.remove('text-gray-500');
+                        fileInfoElement.classList.add('text-red-500');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('excel', excelFile);
+
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = `
+                        <span class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Uploading...
+                        </span>
+                    `;
+
+                    const { error, data } = await fetchApi('<%- BASE_URL %>document-categories/create-via-excel', "POST", formData);
+
+                    if (error) {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = 'Upload';
+                        alert(error.message);
+                        showAlert({
+                            alert: 'error',
+                            message: error.message
+                        });
+                        return;
+                    }
+
+                    if (data) {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = 'Upload';
+                        showAlert({
+                            alert: 'success',
+                            message: data.message
+                        });
+                        location.reload();
+                    }
+                });
+
+
+                // Excel File Download Event Listener
+                document.querySelector("#download-category-excel").addEventListener("click", async (event) => {
+                    try {
+                        const response = await fetch('<%- BASE_URL %>document-categories/download-excel-categories');
+                        const blob = await response.blob();
+
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "document-categories.xlsx";
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    } catch (error) {
+                        showAlert({
+                            alert: 'error',
+                            message: error.message
+                        });
+                        console.error("Error downloading file:", error);
+                    }
+                });
             </script>
     </body>

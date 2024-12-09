@@ -13,7 +13,9 @@ function isRequired(fields) {
 
 	return true;
 }
-
+function isExcelFile(file){
+	
+}
 function areFilesValid(files, isUpdate) {
 	if (!isUpdate) {
 		return true;

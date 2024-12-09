@@ -1,5 +1,7 @@
 const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
+const xlsx = require("xlsx");
+const exceljs = require("exceljs");
 
 module.exports.checkKeysAndValues = (obj, keysArray) => {
     return keysArray.every(key => obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== undefined && obj[key] !== '');
@@ -380,4 +382,105 @@ module.exports.generateRandomUUID = () => {
             v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
     });
+}
+
+module.exports.excelBufferToJSON = (buffer) => {
+    try {
+        // Parse Excel File
+        const workbook = xlsx.read(buffer, { type: "buffer" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const excelData = xlsx.utils.sheet_to_json(worksheet, {
+            header: 1,
+            defval: null,
+            blankrows: false,
+        });
+
+        const excelHeader = excelData[0];
+        if (!excelHeader) {
+            throw new Error("No headers found in the Excel file");
+        }
+
+        const jsonData = excelData.slice(1).map((row) => {
+            const record = {};
+            excelHeader.forEach((header, index) => {
+                record[header] = row[index];
+            });
+            return record;
+        });
+
+        if (!jsonData || jsonData.length === 0) {
+            throw new Error("No data found in the Excel file");
+        }
+
+        return jsonData;
+    } catch (error) {
+        console.error("Error while processing Excel buffer:", error.message);
+        throw new Error("Failed to process Excel file");
+    }
+};
+
+module.exports.validateExcel = (jsonData,headers) => {
+    // Validating the Headers of Excel File.
+    for (const { fieldName } of headers) {
+        if (!jsonData[0].hasOwnProperty(fieldName)) {
+            console.log(fieldName, jsonData[0]);
+            
+            return false; // Missing key in the first record
+        }
+    }
+
+    // Check that all required fields are non-null in all records
+    for (const record of jsonData) {
+        for (const { fieldName, isRequired } of headers) {
+            if (isRequired && (record[fieldName] === null || record[fieldName] === undefined)) {
+                return false; // Required field is null or undefined
+            }
+        }
+    }
+    return true;
+}
+
+// module.exports.createExcelFile = (headers,dropDownOptions,validationColumn = null) => {
+//     // DropDown should be an array of strings.
+//     const workbook = xlsx.utils.book_new();
+//     // convert data to worksheet
+//     const worksheet = xlsx.utils.aoa_to_sheet([headers]);
+//     if(dropDownOptions){
+//         worksheet["!dataValidations"] = [
+//             {
+//               type: "list",
+//               allowBlank: true,
+//               sqref: validationColumn, // Apply dropdown validation to column D (starting row 2)
+//               formula1: `"${dropDownOptions.join(",")}"`,
+//             },
+//           ];
+//     }
+//     // Add the sheet to the workbook
+//     xlsx.utils.book_append_sheet(workbook, worksheet, "Categories");
+
+//     const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
+//     return buffer;
+// }
+
+module.exports.createExcelFile = async (headers,dropDownOptions,validationColumn = null) => {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Document Categories");
+    worksheet.columns = headers.map((header,index) => ({
+        header: header,
+        key: index,
+        width: 25,
+      }));    
+    if(validationColumn && dropDownOptions){
+        for(let x=2; x<100; x++){
+             worksheet.getCell(`${validationColumn + x}`).dataValidation = {
+                type: "list",
+                allowBlank: true,
+                formulae : [`"${dropDownOptions.join(",")}"`],
+                showErrorMessage: true,
+                error: "Invalid selection", // Error message when invalid selection
+            };
+        }
+    }       
+    const buffer = await workbook.xlsx.writeBuffer();
+    return buffer;
 }

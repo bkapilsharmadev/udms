@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
   //Sub Menu Items Active
   subMenuItems.forEach((subMenuItem) => {
     if (location.pathname === subMenuItem.getAttribute("href")) {
-
       const parentMenuItem = subMenuItem.closest(".menu-item");
       const menuList = subMenuItem.closest(".sub-menu-itam");
       console.log("parent menu item ", parentMenuItem);
@@ -109,20 +108,45 @@ function toggleDropdownProfile() {
   profiledropdownMenu.classList.toggle("hidden");
 }
 
-function toggleDropdown(event) {
-  console.log("toggled ");
+// function toggleDropdown(event) {
+//   console.log("toggled ");
 
+//   document.querySelectorAll(".dropdown").forEach((dropdown) => {
+//     dropdown.classList.add("hidden");
+//   });
+
+//   const button = event.currentTarget;
+//   const dropdown = button.nextElementSibling;
+
+//   if (dropdown && dropdown.classList.contains("dropdown")) {
+//     dropdown.classList.toggle("hidden");
+//   }
+// }
+
+// Adding toggleDropdown on Right Click
+document.querySelectorAll("tbody tr").forEach((row) => {
+  row.addEventListener("contextmenu", toggleDropdownOnRightClick);
+});
+function toggleDropdownOnRightClick(event) {
+  event.preventDefault();
+
+  const currentDropdown = event.target.closest("tr").querySelector(".dropdown");
   document.querySelectorAll(".dropdown").forEach((dropdown) => {
-    dropdown.classList.add("hidden");
+    if (dropdown !== currentDropdown) {
+      dropdown.classList.add("hidden");
+    }
   });
+  // Stop event propagation to prevent immediate closing
+  event.stopPropagation();
 
-  const button = event.currentTarget;
-  const dropdown = button.nextElementSibling;
+  currentDropdown.style.position = "fixed";
+  currentDropdown.style.height = "min-content";
+  currentDropdown.style.left = `${event.clientX}px`;
+  currentDropdown.style.top = `${event.clientY}px`;
 
-  if (dropdown && dropdown.classList.contains("dropdown")) {
-    dropdown.classList.toggle("hidden");
-  }
+  currentDropdown.classList.toggle("hidden");
 }
+
 
 function openModal() {
   document.getElementById("modal-background").classList.remove("hidden");
@@ -181,6 +205,20 @@ function showAlert(obj) {
     default:
       break;
   }
+}
+
+function validateExcelFile(file){
+  if(file){
+    const allowedTypes = [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+      'application/vnd.ms-excel'
+    ];
+
+    if (allowedTypes.includes(file.type)) {
+        return true
+    }
+  }
+  return false
 }
 
 const toggleDropdownSelect = () => {

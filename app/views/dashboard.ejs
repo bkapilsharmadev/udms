@@ -30,202 +30,123 @@
 
         <%- include("./partials/side-nav.ejs") %>
 
-            <div class="content-body">
-                <!-- navbar -->
-                <%- include("./partials/header.ejs") %>
+        <div class="content-body">
+            <!-- navbar -->
+            <%- include("./partials/header.ejs") %>
 
-        <!-- main content -->
-        <div class="content space-y-7">
-            <!-- Stats -->
-            <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold"><%- data.docsCreatedCount %></span>
-                    <p class="stat-label text-gray-600">Docs Created</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold"><%- data.docsReceivedCount %></span>
-                    <p class="stat-label text-gray-600">Docs Received</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold"><%- data.docsPendingCount %></span>
-                    <p class="stat-label text-gray-600">Pending</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold"><%- data.docsApprovedCount %></span>
-                    <p class="stat-label text-gray-600">Approved</p>
-                </div>
-                <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
-                    <span class="stat-value text-3xl font-bold"><%- data.docsRejectedCount %></span>
-                    <p class="stat-label text-gray-600">Rejected</p>
-                </div>
-            </div>
+                <!-- main content -->
+                <div class="content space-y-7">
+                    <!-- Stats -->
+                    <div class="dashboard-stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 text-center ">
+                        <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                            <span class="stat-value text-3xl font-bold"><%- data.docsCreatedCount %></span>
+                            <p class="stat-label text-gray-600">Docs Created</p>
+                        </div>
+                        <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                            <span class="stat-value text-3xl font-bold"><%- data.docsReceivedCount %></span>
+                            <p class="stat-label text-gray-600">Docs Received</p>
+                        </div>
+                        <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                            <span class="stat-value text-3xl font-bold"><%- data.docsPendingCount %></span>
+                            <p class="stat-label text-gray-600">Pending</p>
+                        </div>
+                        <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                            <span class="stat-value text-3xl font-bold"><%- data.docsApprovedCount %></span>
+                            <p class="stat-label text-gray-600">Approved</p>
+                        </div>
+                        <div class="dashboard-stat-card border px-4 py-6 hover:text-red-600">
+                            <span class="stat-value text-3xl font-bold"><%- data.docsRejectedCount %></span>
+                            <p class="stat-label text-gray-600">Rejected</p>
+                        </div>
+                    </div>
 
-                        <!-- Charts -->
-                        <div class="dashboard-charts grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-7">
-                            <div
-                                class="chart-pie flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
-                                <!-- <span class="font-bold text-lg mb-4">Pie Chart</span> -->
-                                <div id="pie-chart" class="w-full"></div>
-                            </div>
-
-                            <div
-                                class="chart-bar flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
-                                <!-- <span class="font-bold text-lg mb-4">Bar Chart</span> -->
-                                <div id="bar-chart" class="w-full"></div>
-                            </div>
+                    <!-- Charts -->
+                    <div class="dashboard-charts grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-7">
+                        <div
+                            class="chart-pie flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
+                            <!-- <span class="font-bold text-lg mb-4">Pie Chart</span> -->
+                            <div id="pie-chart" class="w-full"></div>
                         </div>
 
-            <div class="frame-container" id="document-list">
-                <div class="frame-title">
-                    <span>Documents</span>
-                </div>
-                <div class="frame-content">
-                    <div class="mx-auto rounded-lg ">
-                        <!-- Filters -->
-                        <!-- <div class="table-filter-wrapper mt-3">
-                            <div class="default-filter">
-                                <div class="input-group">
-                                    <span class="input-group-text">Show</span>
-                                    <select id="row-per-page" class="row-per-page form-select">
-                                    <option value="3">3</option>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    </select>
-                                </div>
-            
-                                <div class="input-group ms-auto me-2">
-                                    <input type="search" class="form-control search-input tagify--outside" id="search-input" placeholder="Keyword...">
-                                    <button class="btn btn-primary" type="button" id="search-btn">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                    </button>
-                                </div>
-            
-                                <button class="filter-btn btn btn-outline-dark">
-                                    <i class="fa-solid fa-filter"></i>
-                                </button>
-                            </div>
-        
-                            <div class="filter-options">
-                                <div class="row">
-                                    
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">From Date:</label>
-                                    <input type="date" class="form-control from-date" data-logical-name="fromDate">
-                                    </div>
-                                   
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">To Date:</label>
-                                    <input type="date" class="form-control to-date" data-logical-name="toDate">
-                                    </div>
-                                   
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">Service Branch:</label>
-                                    <select class="form-select service-branch" data-logical-name="serviceBranchLid">
-                                        <option selected disabled></option>
-                                    </select>
-                                    </div>
-                                  
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">Source Branch:</label>
-                                    <select class="form-select source-branch" data-logical-name="sourceBranchLid">
-                                        <option selected disabled></option>
-                                    </select>
-                                    </div>
-                                 
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">Corporate:</label>
-                                    <select class="form-select org" data-logical-name="orgLid">
-                                        <option selected disabled></option>
-                                    </select>
-                                    </div>
-                                  
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">Entity:</label>
-                                    <select class="form-select branch" data-logical-name="orgBranchLid" disabled>
-                                        <option selected disabled></option>
-                                    </select>
-                                    </div>
-                                 
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 col-12 mb-4">
-                                    <label class="fw-bold">Vendor:</label>
-                                    <select class="form-select vendor" data-logical-name="vendorLid">
-                                        <option selected disabled></option>
-                                    </select>
-                                    </div>
-                                </div>
-            
-                                <div class="row">
-                                    <div class="col-12 d-flex justify-content-center">
-                                    <button class="btn btn-danger clear-filter mx-2">Clear Filter</button>
-                                    <button class="btn btn-primary apply-filter mx-2">Apply Filter</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- Table -->
-                        <div class="responsive-table overflow-x-auto">
-                            <table class="min-w-full bg-white rounded-b-lg shadow">
-                                <thead class="text-left">
-                                    <tr>
-                                        <th class="p-4 text-xs font-bold text-center">S.No</th>
-                                        <th class="p-4 text-xs font-bold">Ref. No.</th>
-                                        <th class="p-4 text-xs font-bold">Doc Status</th>
-                                        <th class="p-4 text-xs font-bold">Reviewer</th>
-                                        <th class="p-4 text-xs font-bold">Review Status</th>
-                                        <th class="p-4 text-xs font-bold">Category</th>
-                                        <th class="p-4 text-xs font-bold">Received From</th>
-                                        <th class="p-4 text-xs font-bold">University</th>
-                                        <th class="p-4 text-xs font-bold">Campus</th>
-                                        <th class="p-4 text-xs font-bold">School</th>
-                                        <th class="p-4 text-xs font-bold">Department</th>
-                                        <th class="p-4 text-xs font-bold">Comments</th>
-                                        <th class="p-4 text-xs font-bold text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                   <% data.docs.forEach((doc, idx) => { %>
-                                    <tr data-id="<%- doc.document_id %>">
-                                        <td class="p-4 text-sm text-center"><%- idx + 1 %></td>
-                                        <td class="p-4 text-sm"><%- doc.ref_no %></td>
-                                        <td class="p-4 text-sm"><%- doc.status %></td>
-                                        <td class="p-4 text-sm"><%- doc.to_be_reviewed_by_name %></td>
-                                        <td class="p-4 text-sm"><%- doc.review_status %></td>
-                                        <td class="p-4 text-sm"><%- doc.document_category %></td>
-                                        <td class="p-4 text-sm"><%- doc.entity_from %></td>
-                                        <td class="p-4 text-sm"><%- doc.entity_university %></td>
-                                        <td class="p-4 text-sm"><%- doc.entity_campus %></td>
-                                        <td class="p-4 text-sm"><%- doc.entity_school %></td>
-                                        <td class="p-4 text-sm"><%- doc.entity_department %></td>
-                                        <td class="p-4 text-sm"><%- doc.comments %></td>
-                                        <td class="p-4 text-sm text-center">
-                                            <a href="<%- BASE_URL %>documents/<%= doc.document_id %>"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                <i class="text-red-500 fa-solid fa-eye"></i>
-                                            </a>
-                                            <a href="<%- BASE_URL %>documents/edit/<%= doc.document_id %>"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
-                                                <i class="text-red-500 fa-solid fa-pen-to-square"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
+                        <div
+                            class="chart-bar flex flex-col justify-center items-center bg-white shadow-md rounded-lg p-5">
+                            <!-- <span class="font-bold text-lg mb-4">Bar Chart</span> -->
+                            <div id="bar-chart" class="w-full"></div>
                         </div>
-                        <div class="mt-8 flex justify-end">
-                            <div class="custom-pagination"></div>
+                    </div>
+
+                    <div class="frame-container" id="document-list">
+                        <div class="frame-title">
+                            <span>Documents</span>
+                        </div>
+
+                        <%- include("./partials/filter-table.ejs") %>
+
+                    
+                        <div class="frame-content">
+                            <div class="mx-auto rounded-lg ">
+                                <!-- Table -->
+                                <div class="responsive-table overflow-x-auto">
+                                    <table class="min-w-full bg-white rounded-b-lg shadow">
+                                        <thead class="text-left">
+                                            <tr>
+                                                <th class="p-4 text-xs font-bold text-center">S.No</th>
+                                                <th class="p-4 text-xs font-bold">Ref. No.</th>
+                                                <th class="p-4 text-xs font-bold">Doc Status</th>
+                                                <th class="p-4 text-xs font-bold">Reviewer</th>
+                                                <th class="p-4 text-xs font-bold">Review Status</th>
+                                                <th class="p-4 text-xs font-bold">Category</th>
+                                                <th class="p-4 text-xs font-bold">Received From</th>
+                                                <th class="p-4 text-xs font-bold">University</th>
+                                                <th class="p-4 text-xs font-bold">Campus</th>
+                                                <th class="p-4 text-xs font-bold">School</th>
+                                                <th class="p-4 text-xs font-bold">Department</th>
+                                                <th class="p-4 text-xs font-bold">Comments</th>
+                                                <th class="p-4 text-xs font-bold text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.docs.forEach((doc, idx) => { %>
+                                            <tr data-id="<%- doc.document_id %>">
+                                                <td class="p-4 text-sm text-center"><%- idx + 1 %></td>
+                                                <td class="p-4 text-sm"><%- doc.ref_no %></td>
+                                                <td class="p-4 text-sm"><%- doc.status %></td>
+                                                <td class="p-4 text-sm"><%- doc.to_be_reviewed_by_name %></td>
+                                                <td class="p-4 text-sm"><%- doc.review_status %></td>
+                                                <td class="p-4 text-sm"><%- doc.document_category %></td>
+                                                <td class="p-4 text-sm"><%- doc.entity_from %></td>
+                                                <td class="p-4 text-sm"><%- doc.entity_university %></td>
+                                                <td class="p-4 text-sm"><%- doc.entity_campus %></td>
+                                                <td class="p-4 text-sm"><%- doc.entity_school %></td>
+                                                <td class="p-4 text-sm"><%- doc.entity_department %></td>
+                                                <td class="p-4 text-sm"><%- doc.comments %></td>
+                                                <td class="p-4 text-sm text-center">
+                                                    <a href="<%- BASE_URL %>documents/<%= doc.document_id %>"
+                                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                        <i class="text-red-500 fa-solid fa-eye"></i>
+                                                    </a>
+                                                    <a href="<%- BASE_URL %>documents/edit/<%= doc.document_id %>"
+                                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                                                        <i class="text-red-500 fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-8 flex justify-end">
+                                    <div class="custom-pagination"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                 </div>
-            </div>
 
+            <%- include("./home/toaster.ejs") %>
+            <!-- main content// -->
         </div>
-        <%- include("./home/toaster.ejs") %>
-         <!-- main content// -->
-    </div>
 
     <script src="https://kit.fontawesome.com/16de02e9e0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -529,6 +450,5 @@
     </script>
 
 
-    </body>
-
-    </html>
+</body>
+</html>
