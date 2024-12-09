@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
 const xlsx = require("xlsx");
-
+const exceljs = require("exceljs");
 
 module.exports.checkKeysAndValues = (obj, keysArray) => {
     return keysArray.every(key => obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== undefined && obj[key] !== '');
@@ -440,3 +440,47 @@ module.exports.validateExcel = (jsonData,headers) => {
     return true;
 }
 
+// module.exports.createExcelFile = (headers,dropDownOptions,validationColumn = null) => {
+//     // DropDown should be an array of strings.
+//     const workbook = xlsx.utils.book_new();
+//     // convert data to worksheet
+//     const worksheet = xlsx.utils.aoa_to_sheet([headers]);
+//     if(dropDownOptions){
+//         worksheet["!dataValidations"] = [
+//             {
+//               type: "list",
+//               allowBlank: true,
+//               sqref: validationColumn, // Apply dropdown validation to column D (starting row 2)
+//               formula1: `"${dropDownOptions.join(",")}"`,
+//             },
+//           ];
+//     }
+//     // Add the sheet to the workbook
+//     xlsx.utils.book_append_sheet(workbook, worksheet, "Categories");
+
+//     const buffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
+//     return buffer;
+// }
+
+module.exports.createExcelFile = async (headers,dropDownOptions,validationColumn = null) => {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Document Categories");
+    worksheet.columns = headers.map((header,index) => ({
+        header: header,
+        key: index,
+        width: 25,
+      }));    
+    if(validationColumn && dropDownOptions){
+        for(let x=2; x<100; x++){
+             worksheet.getCell(`${validationColumn + x}`).dataValidation = {
+                type: "list",
+                allowBlank: true,
+                formulae : [`"${dropDownOptions.join(",")}"`],
+                showErrorMessage: true,
+                error: "Invalid selection", // Error message when invalid selection
+            };
+        }
+    }       
+    const buffer = await workbook.xlsx.writeBuffer();
+    return buffer;
+}

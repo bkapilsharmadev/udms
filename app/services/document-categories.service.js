@@ -1,6 +1,7 @@
 const { dbError } = require("../utils/error/error");
 const documentCategoryModel = require("../models/document-categories.model");
-const { excelBufferToJSON, validateExcel } = require("../utils/utils");
+const { excelBufferToJSON, validateExcel, createExcelFile } = require("../utils/utils");
+const { DOCUMENT_CATEGORY_HEADERS } = require("../constants");
 
 module.exports.getDocumentCategories = async () => {
     const result = await documentCategoryModel.getDocumentCategories();
@@ -36,16 +37,25 @@ module.exports.createDocumentCategoryViaExcel = async(buffer,created_by) => {
         created_by,
     }));
 
-    const result = await documentCategoryModel.createDocumentCategoriesViaExcel(updatedData)
-    console.log(result);
-    
-    // Perform bulk insert or individual inserts
-    // const result = await documentCategoryModel.bulkCreateCategories(
-    //     processedCategories
-    // );
-    
+    const result = await documentCategoryModel.createDocumentCategoriesViaExcel(updatedData);
+    if(!result){
+        throw dbError({
+            moduleName: "document-categories.service.js",
+            message: "Error creating document category By Excel",
+            data: result,
+        });
+    }
     return true;
 }
+module.exports.downloadCreateCategoriesExcel = async () => {
+    const headers = DOCUMENT_CATEGORY_HEADERS.map((field) => field.fieldName);
+    const documentCategories = await documentCategoryModel.getDocumentCategories();    
+    const dropDownOptions = documentCategories.map(i => i.document_category);
+
+    const buffer = await createExcelFile(headers,dropDownOptions,"D");
+    return buffer;
+}
+
 module.exports.updateDocumentCategory = async (documentCategory) => {
     const result = documentCategoryModel.updateDocumentCategory(documentCategory);
     if (!result) {

@@ -16,3 +16,10 @@ module.exports.COOKIE_OPTIONS_PERMANENT = {
 };
 
 module.exports.MENTOR_SIGNS = ['NOT REQUIRED', 'YES', 'NO', 'ON LEAVE'];
+
+module.exports.DOCUMENT_CATEGORY_HEADERS = [
+    { fieldName: 'Category Name', isRequired: true },
+    { fieldName: 'Category Abbreviation', isRequired: true },
+    { fieldName: 'Description', isRequired: false },
+    { fieldName: 'Parent Category', isRequired: false }
+]    
