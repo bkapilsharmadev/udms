@@ -182,3 +182,34 @@ function showAlert(obj) {
       break;
   }
 }
+
+const toggleDropdownSelect = () => {
+  const dropdownContent = document.getElementById("dropdownContent");
+  const arrowIcon = document.querySelector(".arrow-icon");
+
+  dropdownContent.classList.toggle("active");
+  arrowIcon.style.transform = dropdownContent.classList.contains("active")
+      ? "rotate(180deg)"
+      : "rotate(0deg)";
+};
+
+const filterOptionsSelect = (event) => {
+  const query = event.target.value.toLowerCase();
+  const options = document.querySelectorAll(".option");
+
+  options.forEach((option) => {
+      const text = option.textContent.toLowerCase();
+      option.style.display = text.includes(query) ? "block" : "none";
+  });
+};
+
+const selectOption = (value) => {
+  const selectedOptions = document.getElementById("selectedOptions");
+  const dropdownPlaceholder = document.getElementById("dropdownPlaceholder");
+
+  dropdownPlaceholder.style.display = "none";
+  selectedOptions.innerHTML = "";
+  selectedOptions.innerHTML += `<span>${value}</span>`;
+  document.getElementById("dropdownContent").classList.remove("active");
+  document.querySelector(".arrow-icon").style.transform = "rotate(0deg)";
+};
