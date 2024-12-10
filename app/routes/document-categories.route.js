@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { asyncErrorHandler } = require("../middleware/error.middleware");
 const documentCategoryController = require("../controllers/document-categories.controller");
 const { uploadExcelInMemory } = require("../middleware/file-upload.middleware");
+const { transactionMiddleware } = require("../middleware/transaction-middleware");
 
 router.post(
   "/create",
@@ -10,6 +11,7 @@ router.post(
 router.post(
   "/create-via-excel",
   uploadExcelInMemory,
+  transactionMiddleware,
   asyncErrorHandler(documentCategoryController.createDocumentCategoriesViaExcel)
 );
 

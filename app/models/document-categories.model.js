@@ -1,5 +1,6 @@
 const { read_db_config, write_db_config } = require("../config/db-config");
 const dbPoolManager = require("../config/db-pool-manager");
+const { dbError } = require("../utils/error/error");
 
 const sqlRead = dbPoolManager.get("sqlRead", read_db_config);
 const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
@@ -25,7 +26,7 @@ module.exports.createDocumentCategory = async (documentCategory, dbTransaction) 
     const result = await client.query(query, values);
     return result.rows[0];
 };
-module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransaction) => {
+module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransaction = null) => {
 
     const documentCategories = await this.getDocumentCategories();
     const categoriesWithId = documentCategories.map((i) => ([i.document_category, i.category_id]));
@@ -38,12 +39,8 @@ module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransacti
             (_, index) =>
                 `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${index * 5 + 4}, $${index * 5 + 5})`
         )
-        .join(", ")}
-    RETURNING category_id;
+        .join(", ")};
 `;
-
-
-    // Flatten the values array
     const values = updatedData.flatMap((item) => [
         item["Category Name"],
         item["Category Abbreviation"],
@@ -51,12 +48,10 @@ module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransacti
         (categoriesWithId.find((i) => i[0] === item["Parent Category"])?.[1] || null),
         item["created_by"],
     ]);
-
-    const client = dbTransaction || sqlWrite;
-    // Execute the query
-    const result = await client.query(query, values);
-    return result.rows;
     
+    const client = dbTransaction || sqlWrite;
+    const result = await client.query(query, values);
+    return result?.rows;
 }
 
 //Query To Update Document Query

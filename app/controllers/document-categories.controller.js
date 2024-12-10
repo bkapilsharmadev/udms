@@ -22,22 +22,18 @@ module.exports.createDocumentCategoriesViaExcel = async (req,res,next) => {
 		// throw 
 	}
     let buffer = req.file.buffer;    
-    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer, req.session_username);
-    if(result){
-     res.status(200).json({
+    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer, req.dbTransaction, req.session_username);
+    res.status(200).json({
         success: true,
         message: 'Document categories created successfully',
         data: result
-      });    
-    }
+    });    
 }
 
 module.exports.downloadCreateCategoriesExcel = async (req,res,next) => {
 
     const buffer = await documentCategoryService.downloadCreateCategoriesExcel();
-    console.log("buffer : ",buffer);
-    
-    // Step 4: Set headers and send the buffer
+
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", 'attachment; filename="example.xlsx"');
     res.send(buffer);

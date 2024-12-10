@@ -82,7 +82,7 @@
                                         <input name="excel-file-input" id="excel-file" type="file" accept=".xlsx,.xls"
                                             class="hidden" required />
                                     </label><!-- File count display -->
-                                    <button type="submit" id="submit-excel-file"
+                                    <button type="submit" id="submit-excel-file" disabled
                                         class="w-min-content p-2 border border-red-600 h-full bg-red-600 hover:bg-red-700 text-white font-semibold h-[44px] px-4 rounded-lg">
                                         Upload
                                     </button>
@@ -578,14 +578,12 @@
                     if (error) {
                         submitButton.disabled = false;
                         submitButton.innerHTML = 'Upload';
-                        alert(error.message);
                         showAlert({
                             alert: 'error',
-                            message: error.message
+                            message: error.message || "Validation Failed For the Excel File"
                         });
                         return;
                     }
-
                     if (data) {
                         submitButton.disabled = false;
                         submitButton.innerHTML = 'Upload';
@@ -593,7 +591,9 @@
                             alert: 'success',
                             message: data.message
                         });
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        },2000)
                     }
                 });
 
