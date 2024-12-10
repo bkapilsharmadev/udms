@@ -1,6 +1,5 @@
 const { read_db_config, write_db_config } = require("../config/db-config");
 const dbPoolManager = require("../config/db-pool-manager");
-const { dbError } = require("../utils/error/error");
 
 const sqlRead = dbPoolManager.get("sqlRead", read_db_config);
 const sqlWrite = dbPoolManager.get("sqlWrite", write_db_config);
@@ -26,10 +25,7 @@ module.exports.createDocumentCategory = async (documentCategory, dbTransaction) 
     const result = await client.query(query, values);
     return result.rows[0];
 };
-module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransaction = null) => {
-
-    const documentCategories = await this.getDocumentCategories();
-    const categoriesWithId = documentCategories.map((i) => ([i.document_category, i.category_id]));
+module.exports.createDocumentCategoriesViaExcel = async (existingData,updatedData,dbTransaction = null) => {
 
     const query = `
     INSERT INTO document_categories (document_category, category_abbr, description, parent_id, created_by)
@@ -39,13 +35,13 @@ module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransacti
             (_, index) =>
                 `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${index * 5 + 4}, $${index * 5 + 5})`
         )
-        .join(", ")};
+        .join(", ")} RETURNING document_category;
 `;
     const values = updatedData.flatMap((item) => [
         item["Category Name"],
         item["Category Abbreviation"],
         item["Description"],
-        (categoriesWithId.find((i) => i[0] === item["Parent Category"])?.[1] || null),
+        (existingData.find((i) => i["document_category"] === item["Parent Category"])?.["category_id"] || null),
         item["created_by"],
     ]);
     
@@ -57,6 +53,7 @@ module.exports.createDocumentCategoriesViaExcel = async (updatedData,dbTransacti
 //Query To Update Document Query
 module.exports.updateDocumentCategory = async (documentCategory, dbTransaction) => {
     const { category_id, document_category, category_abbr, description, parent_id, updated_by } = documentCategory;
+    console.log("categories ",JSON.stringify({ category_id, document_category, category_abbr, description, parent_id, updated_by }));
 
     const query = `UPDATE document_categories
 	SET document_category = $1, category_abbr = $2, description = $3, parent_id = $4, updated_by = $5, updated_at = NOW()

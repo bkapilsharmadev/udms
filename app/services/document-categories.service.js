@@ -1,6 +1,6 @@
-const { dbError } = require("../utils/error/error");
+const { dbError, invalidRequestError } = require("../utils/error/error");
 const documentCategoryModel = require("../models/document-categories.model");
-const { excelBufferToJSON, validateExcel, createExcelFile } = require("../utils/utils");
+const { excelBufferToJSON, validateExcel, createExcelFile, areFieldsUnique } = require("../utils/utils");
 const { DOCUMENT_CATEGORY_HEADERS } = require("../constants");
 
 module.exports.getDocumentCategories = async () => {
@@ -21,27 +21,46 @@ module.exports.createDocumentCategory = async (documentCategory) => {
 }
 module.exports.createDocumentCategoryViaExcel = async(buffer, dbTransaction, created_by) => {
     let jsonData = await excelBufferToJSON(buffer);
-    // Validate headers and data
-    const headers = [
-        { fieldName: 'Category Name', isRequired: true },
-        { fieldName: 'Category Abbreviation', isRequired: true },
-        { fieldName: 'Description', isRequired: false },
-        { fieldName: 'Parent Category', isRequired: false }
-    ]    
-    const validateExcelData = validateExcel(jsonData,headers);
+    if(!jsonData){
+        throw invalidRequestError({
+            message: "Invalid Excel File. Please Upload In Mentioned Format",
+            moduleName: "document-categories.service.js"
+        })
+    }
+    // Validate headers and data  
+    const validateExcelData = validateExcel(jsonData,DOCUMENT_CATEGORY_HEADERS);
     if (!validateExcelData) {
-        throw dbError({
+        throw invalidRequestError({
             moduleName: "document-categories.service.js",
             message: "Validation Failed",
-            data: result,
         });
     }
+
+    // Checking Existing Documents
+    const existingDocumentCategories = await documentCategoryModel.getDocumentCategories();
+
+    if(existingDocumentCategories){
+        const fieldMapping = {
+            "Category Name": "document_category",
+            "Category Abbreviation": "category_abbr"
+        };
+        const fieldsUnique = areFieldsUnique(jsonData, existingDocumentCategories, fieldMapping);
+        console.log("reached", fieldsUnique);
+        
+        if (!fieldsUnique) {
+            throw invalidRequestError({
+                moduleName: "document-categories.service.js",
+                message: "Category Name OR Abbrevation Already Exists"
+            })
+        }
+    }
+
     const updatedData = jsonData.map((item) => ({
         ...item,
         created_by,
     }));
 
-    const result = await documentCategoryModel.createDocumentCategoriesViaExcel(updatedData,dbTransaction);
+    const result = await documentCategoryModel.createDocumentCategoriesViaExcel(existingDocumentCategories, updatedData,dbTransaction);
     if(!result){
         throw dbError({
             moduleName: "document-categories.service.js",
@@ -53,10 +72,10 @@ module.exports.createDocumentCategoryViaExcel = async(buffer, dbTransaction, cre
 }
 
 module.exports.downloadCreateCategoriesExcel = async () => {
-    const headers = DOCUMENT_CATEGORY_HEADERS.map((field) => field.fieldName);
+    const headers = DOCUMENT_CATEGORY_HEADERS.map((field) => field.fieldName);    
     const documentCategories = await documentCategoryModel.getDocumentCategories();    
     const dropDownOptions = documentCategories.map(i => i.document_category);
-
+    
     const buffer = await createExcelFile(headers,dropDownOptions,"D");
     return buffer;
 }

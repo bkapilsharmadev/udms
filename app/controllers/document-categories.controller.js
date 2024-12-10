@@ -6,38 +6,40 @@ module.exports.renderDocumentCategories = async (req, res, next) => {
 };
 
 module.exports.createDocumentCategory = async (req, res, next) => {
-    const { document_category, category_abbr, description, parent_id } = req.body;
-    const result = await documentCategoryService.createDocumentCategory({
-        document_category,
-        category_abbr,
-        description,
-        parent_id,
-        created_by : req.session_username
-    });
-    res.status(201).json(result);
+  const { document_category, category_abbr, description, parent_id } = req.body;
+  const result = await documentCategoryService.createDocumentCategory({
+    document_category,
+    category_abbr,
+    description,
+    parent_id,
+    created_by: req.session_username,
+  });
+  res.status(201).json(result);
 };
 
-module.exports.createDocumentCategoriesViaExcel = async (req,res,next) => {
-	if(!req.file){
-		// throw 
-	}
-    let buffer = req.file.buffer;    
-    const result = await documentCategoryService.createDocumentCategoryViaExcel(buffer, req.dbTransaction, req.session_username);
-    res.status(200).json({
-        success: true,
-        message: 'Document categories created successfully',
-        data: result
-    });    
-}
+module.exports.createDocumentCategoriesViaExcel = async (req, res, next) => {
+  let buffer = req.file.buffer;
+  const result = await documentCategoryService.createDocumentCategoryViaExcel(
+    buffer,
+    req.dbTransaction,
+    req.session_username
+  );
+  res.status(200).json({
+    success: true,
+    message: "Document categories created successfully",
+    data: result,
+  });
+};
 
-module.exports.downloadCreateCategoriesExcel = async (req,res,next) => {
-
-    const buffer = await documentCategoryService.downloadCreateCategoriesExcel();
-
-    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", 'attachment; filename="example.xlsx"');
-    res.send(buffer);
-}
+module.exports.downloadCreateCategoriesExcel = async (req, res, next) => {
+  const buffer = await documentCategoryService.downloadCreateCategoriesExcel();
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader("Content-Disposition", 'attachment; filename="example.xlsx"');
+  res.send(buffer);
+};
 
 module.exports.updateDocumentCategory = async (req, res, next) => {
     const { category_id, document_category, category_abbr, description, parent_id } = req.body;
@@ -45,6 +47,7 @@ module.exports.updateDocumentCategory = async (req, res, next) => {
         category_id,
         document_category,
         category_abbr,
+
         description,
         parent_id,
         updated_by : req.session_username
